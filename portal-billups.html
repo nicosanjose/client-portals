@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>billups · Campaign Intelligence Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:           #060609;
+            --bg-2:         #0C0C13;
+            --bg-3:         #111119;
+            --card:         rgba(255,255,255,0.035);
+            --card-h:       rgba(255,255,255,0.06);
+            --border:       rgba(255,255,255,0.07);
+            --border-s:     rgba(255,255,255,0.13);
+            --accent:       #B8FF57;
+            --accent-dim:   rgba(184,255,87,0.10);
+            --accent-glow:  rgba(184,255,87,0.20);
+            --text-1:       #F0EDE8;
+            --text-2:       rgba(240,237,232,0.52);
+            --text-3:       rgba(240,237,232,0.26);
+            --green:        #4ADE80;
+            --blue:         #60A5FA;
+            --orange:       #FB923C;
+            --red:          #F87171;
+            --purple:       #A78BFA;
+            --r-sm: 10px; --r-md: 16px; --r-lg: 24px; --r-xl: 32px;
+            --tx: all 0.45s cubic-bezier(0.32,0.72,0,1);
+        }
+
+        html, body {
+            height: 100%; background: var(--bg); color: var(--text-1);
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            font-size: 14px; line-height: 1.5;
+            -webkit-font-smoothing: antialiased; overflow: hidden;
+        }
+
+        /* ─── LAYOUT ─── */
+        .layout { display: flex; height: 100vh; }
+
+        /* ─── SIDEBAR ─── */
+        .sidebar {
+            width: 236px; flex-shrink: 0;
+            background: var(--bg-2); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column;
+            padding: 18px 10px; z-index: 10;
+        }
+        .sidebar-logo {
+            padding: 6px 12px 22px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .sidebar-logo img { height: 20px; filter: brightness(0) invert(1); }
+        .logo-fallback {
+            font-size: 17px; font-weight: 800; letter-spacing: -0.8px;
+            color: var(--text-1); display: none;
+        }
+        .s-label {
+            font-size: 10px; font-weight: 700; letter-spacing: 0.13em;
+            text-transform: uppercase; color: var(--text-3);
+            padding: 8px 12px 5px;
+        }
+        .nav-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 9px 12px; border-radius: var(--r-sm);
+            cursor: pointer; transition: var(--tx);
+            color: var(--text-2); font-size: 13.5px; font-weight: 500;
+            user-select: none; margin-bottom: 1px;
+        }
+        .nav-item:hover { background: rgba(255,255,255,0.04); color: var(--text-1); }
+        .nav-item.active { background: var(--accent-dim); color: var(--accent); }
+        .nav-item svg { flex-shrink: 0; opacity: 0.8; }
+        .nav-item.active svg { opacity: 1; }
+        .sidebar-foot {
+            margin-top: auto; padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+        .user-row {
+            display: flex; align-items: center; gap: 10px;
+            padding: 8px 12px; border-radius: var(--r-sm); cursor: pointer;
+        }
+        .avatar {
+            width: 30px; height: 30px; border-radius: 50%;
+            background: linear-gradient(135deg,#B8FF57,#4ADE80);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 800; color: #060609; flex-shrink: 0;
+        }
+        .u-name { font-size: 13px; font-weight: 600; color: var(--text-1); }
+        .u-role { font-size: 11px; color: var(--text-3); }
+
+        /* ─── MAIN ─── */
+        .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+        /* ─── TOPBAR ─── */
+        .topbar {
+            height: 54px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; padding: 0 26px; gap: 12px;
+            background: rgba(6,6,9,0.85);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            position: sticky; top: 0; z-index: 5; flex-shrink: 0;
+        }
+        .page-title { font-size: 14.5px; font-weight: 700; letter-spacing: -0.3px; }
+        .tb-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+        .btn {
+            height: 34px; padding: 0 14px; border-radius: 100px;
+            border: 1px solid var(--border); background: var(--card);
+            color: var(--text-2); font-family: inherit; font-size: 13px; font-weight: 500;
+            cursor: pointer; transition: var(--tx); display: flex; align-items: center; gap: 6px;
+        }
+        .btn:hover { background: var(--card-h); color: var(--text-1); border-color: var(--border-s); }
+        .btn.primary { background: var(--accent); color: #060609; border-color: transparent; font-weight: 700; }
+        .btn.primary:hover { background: #CAFF6A; transform: scale(1.02); }
+        .icon-btn {
+            width: 34px; height: 34px; border-radius: 100px;
+            border: 1px solid var(--border); background: var(--card);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--text-2); transition: var(--tx); position: relative;
+        }
+        .icon-btn:hover { background: var(--card-h); color: var(--text-1); border-color: var(--border-s); }
+        .notif-dot {
+            width: 7px; height: 7px; background: var(--accent); border-radius: 50%;
+            position: absolute; top: 6px; right: 6px; border: 1.5px solid var(--bg-2);
+        }
+        .search-wrap { position: relative; }
+        .search-wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; }
+        .search-input {
+            height: 34px; padding: 0 14px 0 34px;
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 100px; color: var(--text-1); font-family: inherit;
+            font-size: 13px; outline: none; transition: var(--tx); width: 200px;
+        }
+        .search-input::placeholder { color: var(--text-3); }
+        .search-input:focus { border-color: var(--border-s); width: 240px; }
+
+        /* ─── CONTENT ─── */
+        .content {
+            flex: 1; overflow-y: auto; padding: 26px;
+            scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent;
+        }
+        .content::-webkit-scrollbar { width: 4px; }
+        .content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 100px; }
+
+        /* ─── VIEWS ─── */
+        .view { display: none; animation: vIn 0.38s cubic-bezier(0.32,0.72,0,1); }
+        .view.active { display: block; }
+        @keyframes vIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+        /* ─── CARDS ─── */
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 22px; transition: var(--tx); }
+        .card:hover { border-color: var(--border-s); }
+        .card-outer { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: var(--r-xl); padding: 5px; }
+        .card-inner {
+            background: rgba(255,255,255,0.04); border-radius: calc(var(--r-xl) - 5px);
+            padding: 20px; box-shadow: inset 0 1px 1px rgba(255,255,255,0.07);
+        }
+
+        /* ─── STATS ─── */
+        .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 20px; }
+        .stat-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: var(--r-lg); padding: 18px; transition: var(--tx);
+        }
+        .stat-card:hover { background: var(--card-h); transform: translateY(-2px); }
+        .stat-label { font-size: 11px; font-weight: 600; color: var(--text-3); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
+        .stat-value { font-size: 28px; font-weight: 800; letter-spacing: -1.5px; color: var(--text-1); line-height: 1; margin-bottom: 8px; }
+        .stat-delta { font-size: 12px; font-weight: 500; display: flex; align-items: center; gap: 4px; }
+        .up { color: var(--green); } .down { color: var(--red); }
+
+        /* ─── BENTO ─── */
+        .bento { display: grid; grid-template-columns: repeat(12,1fr); gap: 14px; margin-bottom: 20px; }
+        .b-lg { grid-column: span 7; } .b-md { grid-column: span 5; } .b-full { grid-column: span 12; }
+
+        /* ─── EYEBROW ─── */
+        .eyebrow {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--accent-dim); border: 1px solid rgba(184,255,87,0.18);
+            border-radius: 100px; padding: 3px 11px;
+            font-size: 9.5px; font-weight: 700; letter-spacing: 0.16em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 10px;
+        }
+        .sec-title { font-size: 22px; font-weight: 800; letter-spacing: -0.8px; color: var(--text-1); margin-bottom: 4px; }
+        .sec-sub { font-size: 13px; color: var(--text-2); margin-bottom: 22px; }
+        .card-title { font-size: 14px; font-weight: 700; letter-spacing: -0.3px; color: var(--text-1); margin-bottom: 4px; }
+        .card-sub { font-size: 12px; color: var(--text-2); margin-bottom: 14px; }
+
+        /* ─── BADGES ─── */
+        .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: 100px; font-size: 11px; font-weight: 600; }
+        .bg { background: rgba(74,222,128,0.12); color: var(--green); }
+        .bo { background: rgba(251,146,60,0.12); color: var(--orange); }
+        .bb { background: rgba(96,165,250,0.12); color: var(--blue); }
+        .br { background: rgba(248,113,113,0.12); color: var(--red); }
+        .bp { background: rgba(167,139,250,0.12); color: var(--purple); }
+        .ba { background: var(--accent-dim); color: var(--accent); }
+
+        /* ─── TABLE ─── */
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 3px; }
+        thead th { font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); padding: 6px 14px; text-align: left; white-space: nowrap; }
+        tbody tr { background: var(--card); transition: var(--tx); cursor: pointer; }
+        tbody tr:hover { background: var(--card-h); }
+        tbody td { padding: 12px 14px; font-size: 13px; color: var(--text-1); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); white-space: nowrap; }
+        tbody td:first-child { border-left: 1px solid var(--border); border-radius: var(--r-sm) 0 0 var(--r-sm); }
+        tbody td:last-child { border-right: 1px solid var(--border); border-radius: 0 var(--r-sm) var(--r-sm) 0; }
+        tbody tr:hover td { border-color: var(--border-s); }
+
+        /* ─── PROGRESS ─── */
+        .prog { height: 4px; background: rgba(255,255,255,0.07); border-radius: 100px; overflow: hidden; }
+        .prog-fill { height: 100%; border-radius: 100px; }
+
+        /* ─── TIMELINE ─── */
+        .tl { height: 6px; background: rgba(255,255,255,0.07); border-radius: 100px; overflow: hidden; }
+        .tl-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg,var(--accent),rgba(184,255,87,0.5)); }
+
+        /* ─── TABS ─── */
+        .tabs { display: flex; gap: 3px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 100px; padding: 3px; width: fit-content; margin-bottom: 18px; }
+        .tab { padding: 6px 16px; border-radius: 100px; font-size: 13px; font-weight: 500; color: var(--text-2); cursor: pointer; transition: var(--tx); }
+        .tab.active { background: var(--accent); color: #060609; font-weight: 700; }
+        .tab:not(.active):hover { color: var(--text-1); background: rgba(255,255,255,0.04); }
+
+        /* ─── FILTER ROW ─── */
+        .filter-row { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+        .fsel {
+            height: 34px; padding: 0 28px 0 12px;
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 100px; color: var(--text-2); font-family: inherit;
+            font-size: 13px; outline: none; cursor: pointer; appearance: none; transition: var(--tx);
+        }
+        .fsel:hover { border-color: var(--border-s); color: var(--text-1); }
+        .fsel option { background: #111119; }
+
+        /* ─── INVENTORY ─── */
+        .inv-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+        .inv-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; cursor: pointer; transition: var(--tx); }
+        .inv-card:hover { background: var(--card-h); border-color: var(--border-s); transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.45); }
+        .inv-thumb { height: 140px; display: flex; align-items: center; justify-content: center; font-size: 44px; position: relative; overflow: hidden; }
+        .inv-thumb::after { content:''; position:absolute; inset:0; background: linear-gradient(180deg, transparent 40%, var(--bg-2) 100%); }
+        .inv-body { padding: 14px; }
+        .inv-name { font-size: 13px; font-weight: 700; color: var(--text-1); margin-bottom: 3px; }
+        .inv-loc { font-size: 12px; color: var(--text-2); display: flex; align-items: center; gap: 4px; margin-bottom: 10px; }
+        .inv-meta { display: flex; justify-content: space-between; align-items: flex-end; }
+        .cpm-val { font-size: 16px; font-weight: 800; letter-spacing: -0.5px; }
+        .cpm-sub { font-size: 10px; color: var(--text-3); }
+
+        /* ─── ANALYTICS ─── */
+        .ana-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+        .chart-wrap { position: relative; height: 190px; }
+        .att-score { font-size: 54px; font-weight: 800; letter-spacing: -3px; color: var(--accent); line-height: 1; }
+
+        /* ─── REPORTS ─── */
+        .rep-item { display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: var(--r-md); background: var(--card); border: 1px solid var(--border); cursor: pointer; transition: var(--tx); margin-bottom: 7px; }
+        .rep-item:hover { background: var(--card-h); border-color: var(--border-s); }
+        .rep-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 20px; }
+        .rep-name { font-size: 13.5px; font-weight: 600; color: var(--text-1); margin-bottom: 2px; }
+        .rep-meta { font-size: 11px; color: var(--text-3); }
+
+        /* ─── PANEL ─── */
+        .panel { position: fixed; right: -480px; top: 0; bottom: 0; width: 460px; background: var(--bg-2); border-left: 1px solid var(--border); z-index: 100; transition: right 0.45s cubic-bezier(0.32,0.72,0,1); overflow-y: auto; padding: 26px; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.08) transparent; }
+        .panel.open { right: 0; }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 99; opacity: 0; pointer-events: none; transition: opacity 0.35s ease; }
+        .overlay.active { opacity: 1; pointer-events: all; }
+
+        /* ─── MODAL ─── */
+        .modal { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; padding: 24px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .modal.open { opacity: 1; pointer-events: all; }
+        .modal-bg { position: absolute; inset: 0; background: rgba(0,0,0,0.72); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+        .modal-box { position: relative; z-index: 1; background: var(--bg-2); border: 1px solid var(--border-s); border-radius: var(--r-xl); padding: 30px; width: 100%; max-width: 540px; transform: translateY(20px); transition: transform 0.42s cubic-bezier(0.32,0.72,0,1); }
+        .modal.open .modal-box { transform: translateY(0); }
+
+        /* ─── FORM ─── */
+        .fg { margin-bottom: 16px; }
+        .fl { font-size: 11.5px; font-weight: 700; color: var(--text-2); letter-spacing: 0.05em; display: block; margin-bottom: 5px; text-transform: uppercase; }
+        .fi { width: 100%; height: 40px; padding: 0 14px; background: var(--card); border: 1px solid var(--border); border-radius: var(--r-sm); color: var(--text-1); font-family: inherit; font-size: 13.5px; outline: none; transition: var(--tx); }
+        .fi:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
+        .fi::placeholder { color: var(--text-3); }
+        textarea.fi { height: 76px; padding-top: 10px; resize: none; }
+        .fr2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        select.fi { cursor: pointer; appearance: none; }
+        select.fi option { background: #111119; }
+
+        /* ─── DIVIDER ─── */
+        .div { height: 1px; background: var(--border); margin: 18px 0; }
+
+        /* ─── TOAST ─── */
+        .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(72px); background: #1a1a22; border: 1px solid rgba(184,255,87,0.3); border-radius: 100px; padding: 11px 22px; font-size: 13px; font-weight: 500; color: var(--text-1); z-index: 999; transition: transform 0.42s cubic-bezier(0.32,0.72,0,1); display: flex; align-items: center; gap: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); pointer-events: none; }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        /* ─── BG ORBS ─── */
+        .orb { position: fixed; border-radius: 50%; filter: blur(100px); pointer-events: none; z-index: 0; }
+        .orb-1 { width: 700px; height: 700px; background: rgba(184,255,87,0.03); top: -300px; right: -150px; }
+        .orb-2 { width: 500px; height: 500px; background: rgba(96,165,250,0.03); bottom: -150px; left: 150px; }
+
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+
+        /* ─── UTILS ─── */
+        .flex { display: flex; } .items-c { align-items: center; } .jb { justify-content: space-between; }
+        .ml-a { margin-left: auto; } .gap-2 { gap: 8px; } .gap-3 { gap: 12px; }
+        .mb-4 { margin-bottom: 16px; } .mb-6 { margin-bottom: 24px; } .mb-2 { margin-bottom: 8px; }
+        .mt-4 { margin-top: 16px; }
+        .t2 { color: var(--text-2); } .t3 { color: var(--text-3); }
+        .fw6 { font-weight: 600; } .fw7 { font-weight: 700; }
+        .fs12 { font-size: 12px; } .fs13 { font-size: 13px; }
+    </style>
+</head>
+<body>
+
+<!-- BG ORBS -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay" onclick="closePanel()"></div>
+
+<!-- CAMPAIGN DETAIL PANEL -->
+<div class="panel" id="panel">
+    <div class="flex items-c jb mb-4">
+        <div class="eyebrow">Campaign Detail</div>
+        <button class="icon-btn" onclick="closePanel()">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l11 11M12 1L1 12"/></svg>
+        </button>
+    </div>
+    <div id="panelBody"></div>
+</div>
+
+<!-- RFP MODAL -->
+<div class="modal" id="rfpModal">
+    <div class="modal-bg" onclick="closeRfp()"></div>
+    <div class="modal-box">
+        <div class="flex items-c jb mb-6">
+            <div>
+                <div class="eyebrow">New Request</div>
+                <div style="font-size:20px;font-weight:800;letter-spacing:-0.8px;">Submit RFP</div>
+            </div>
+            <button class="icon-btn" onclick="closeRfp()">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l11 11M12 1L1 12"/></svg>
+            </button>
+        </div>
+        <div class="fr2">
+            <div class="fg"><label class="fl">Campaign Name</label><input class="fi" placeholder="e.g. Summer Launch NYC" type="text"></div>
+            <div class="fg"><label class="fl">Brand</label><input class="fi" placeholder="Brand name" type="text"></div>
+        </div>
+        <div class="fr2">
+            <div class="fg"><label class="fl">Start Date</label><input class="fi" type="date" style="color-scheme:dark;"></div>
+            <div class="fg"><label class="fl">End Date</label><input class="fi" type="date" style="color-scheme:dark;"></div>
+        </div>
+        <div class="fr2">
+            <div class="fg"><label class="fl">Market</label><input class="fi" placeholder="e.g. New York, London" type="text"></div>
+            <div class="fg"><label class="fl">Budget (USD)</label><input class="fi" placeholder="$0" type="text"></div>
+        </div>
+        <div class="fr2">
+            <div class="fg">
+                <label class="fl">Format</label>
+                <select class="fi">
+                    <option>Digital OOH (DOOH)</option><option>Billboard</option>
+                    <option>Transit</option><option>Airport</option>
+                    <option>Street Furniture</option><option>Cinema</option><option>Mixed</option>
+                </select>
+            </div>
+            <div class="fg">
+                <label class="fl">Programmatic?</label>
+                <select class="fi"><option>Standard Buy</option><option>Programmatic DOOH</option><option>Both</option></select>
+            </div>
+        </div>
+        <div class="fg"><label class="fl">Campaign Goals & Audience</label><textarea class="fi" placeholder="Describe objectives, target audience, KPIs..."></textarea></div>
+        <div class="flex gap-2" style="justify-content:flex-end;">
+            <button class="btn" onclick="closeRfp()">Cancel</button>
+            <button class="btn primary" onclick="submitRfp()">
+                Submit RFP
+                <span style="width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,0.15);display:inline-flex;align-items:center;justify-content:center;">
+                    <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4.5h7M4.5 1.5L7.5 4.5l-3 3"/></svg>
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#B8FF57" stroke-width="2"><path d="M2 7l3.5 3.5L12 3"/></svg>
+    <span id="toastMsg">Done</span>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <img src="https://cdn.prod.website-files.com/663e10d8888042221eaee4d9/6659914a1b6edfcaf7246e63_billups.svg"
+                 alt="billups"
+                 onerror="this.style.display='none';document.querySelector('.logo-fallback').style.display='block'">
+            <span class="logo-fallback">billups</span>
+        </div>
+
+        <div class="s-label">Overview</div>
+        <div class="nav-item active" onclick="nav('dashboard',this)">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="5.5" height="5.5" rx="1.5"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1.5"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1.5"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1.5"/></svg>
+            Dashboard
+        </div>
+        <div class="nav-item" onclick="nav('campaigns',this)">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h11M2 7.5h7.5M2 11h9"/></svg>
+            Campaigns
+            <span class="badge ba" style="margin-left:auto;font-size:10px;padding:1px 7px;">12</span>
+        </div>
+
+        <div class="s-label" style="margin-top:8px;">Products</div>
+        <div class="nav-item" onclick="nav('discovery',this)">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7.5" cy="7.5" r="6"/><path d="M9.5 5.5L8 9.5 4 7.5l5.5-2z"/></svg>
+            Discovery
+        </div>
+        <div class="nav-item" onclick="nav('analytics',this)">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 11l4-4 2.5 2.5 4-5.5 3 3"/></svg>
+            Analytics
+        </div>
+        <div class="nav-item" onclick="nav('programmatic',this)">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="5" width="4" height="8" rx="1"/><rect x="5.5" y="2" width="4" height="11" rx="1"/><rect x="10" y="7" width="4" height="6" rx="1"/></svg>
+            Programmatic
+        </div>
+
+        <div class="s-label" style="margin-top:8px;">Workspace</div>
+        <div class="nav-item" onclick="nav('reports',this)">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 1H4a1 1 0 00-1 1v11a1 1 0 001 1h7a1 1 0 001-1V4l-3-3z"/><path d="M9 1v3h3M5 7.5h5M5 10.5h3.5"/></svg>
+            Reports
+        </div>
+        <div class="nav-item" onclick="nav('suppliers',this)">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7.5 1l6 3.5v6L7.5 14l-6-3.5v-6L7.5 1z"/><path d="M7.5 1v13M1.5 4.5l6 3.5 6-3.5"/></svg>
+            Supplier Hub
+        </div>
+
+        <div class="sidebar-foot">
+            <div class="nav-item" style="margin-bottom:6px;" onclick="nav('settings',this)">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7.5" cy="7.5" r="2.5"/><path d="M7.5 1.5v1M7.5 12.5v1M13.5 7.5h-1M2.5 7.5h-1M11.7 3.3l-.7.7M4 11l-.7.7M11.7 11.7l-.7-.7M4 4l-.7-.7"/></svg>
+                Settings
+            </div>
+            <div class="user-row">
+                <div class="avatar">MK</div>
+                <div>
+                    <div class="u-name">Marcus Klein</div>
+                    <div class="u-role">Campaign Manager</div>
+                </div>
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-left:auto;color:var(--text-3)"><path d="M4 5l2.5 2.5L9 5"/></svg>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <span class="page-title" id="pageTitle">Dashboard</span>
+            <div class="tb-right">
+                <div class="search-wrap">
+                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--text-3)"><circle cx="5.5" cy="5.5" r="4"/><path d="M9 9l3 3"/></svg>
+                    <input class="search-input" placeholder="Search campaigns...">
+                </div>
+                <button class="icon-btn" title="Notifications">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 1.5A4 4 0 003 5.5c0 3-1.5 3.5-1.5 3.5h11S11 8.5 11 5.5A4 4 0 007 1.5zM5.5 9.5a1.5 1.5 0 003 0"/></svg>
+                    <div class="notif-dot"></div>
+                </button>
+                <button class="btn primary" onclick="openRfp()">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 1v10M1 6h10"/></svg>
+                    New Campaign
+                </button>
+            </div>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content">
+
+            <!-- ═══ DASHBOARD ═══ -->
+            <div class="view active" id="view-dashboard">
+                <div class="mb-6">
+                    <div class="eyebrow"><span style="width:6px;height:6px;background:var(--accent);border-radius:50%;display:inline-block;animation:pulse 2s infinite;"></span> Live · June 22, 2025</div>
+                    <h1 style="font-size:26px;font-weight:800;letter-spacing:-1.2px;margin-bottom:5px;">Good morning, Marcus 👋</h1>
+                    <p class="t2">You have <strong style="color:var(--text-1);">3 campaigns</strong> launching this week and <strong style="color:var(--text-1);">2 reports</strong> ready for review.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">
+                            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8l3-3 2 2 3-4 2 2"/></svg>
+                            Active Campaigns
+                        </div>
+                        <div class="stat-value">12</div>
+                        <div class="stat-delta up">
+                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8V2M2 5l3-3 3 3"/></svg>
+                            +3 this month
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">
+                            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5.5" cy="5.5" r="4.5"/></svg>
+                            Total Impressions
+                        </div>
+                        <div class="stat-value">847M</div>
+                        <div class="stat-delta up">
+                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8V2M2 5l3-3 3 3"/></svg>
+                            +18.4% vs last month
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">
+                            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5.5 1v9M2 3.5h2a2 2 0 010 4H2M9 3.5H7a2 2 0 000 4h2"/></svg>
+                            Total Spend
+                        </div>
+                        <div class="stat-value">$2.4M</div>
+                        <div class="stat-delta up">On budget · 71% paced</div>
+                    </div>
+                    <div class="stat-card" style="border-color:rgba(184,255,87,0.18);background:rgba(184,255,87,0.04);">
+                        <div class="stat-label" style="color:rgba(184,255,87,0.5);">
+                            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="#B8FF57" stroke-width="1.5"><path d="M5.5 1l1.3 2.8 3.2.5-2.3 2.2.5 3.2L5.5 8.5 3 9.7l.5-3.2L1.2 4.3l3.2-.5z"/></svg>
+                            Avg. Attention Score
+                        </div>
+                        <div class="stat-value" style="color:var(--accent);">72%</div>
+                        <div class="stat-delta up">Top quartile globally</div>
+                    </div>
+                </div>
+
+                <div class="bento">
+                    <!-- CHART -->
+                    <div class="card-outer b-lg" style="padding:5px;">
+                        <div class="card-inner">
+                            <div class="flex items-c jb mb-4">
+                                <div>
+                                    <div class="card-title">Impressions Over Time</div>
+                                    <div class="card-sub" style="margin-bottom:0;">Last 30 days · All active campaigns</div>
+                                </div>
+                                <div class="tabs" style="margin-bottom:0;">
+                                    <div class="tab active" style="padding:4px 12px;font-size:12px;">Daily</div>
+                                    <div class="tab" style="padding:4px 12px;font-size:12px;">Weekly</div>
+                                    <div class="tab" style="padding:4px 12px;font-size:12px;">Monthly</div>
+                                </div>
+                            </div>
+                            <div class="chart-wrap"><canvas id="chartImpr"></canvas></div>
+                        </div>
+                    </div>
+
+                    <!-- TOP MARKETS DONUT -->
+                    <div class="card b-md">
+                        <div class="flex items-c jb mb-4">
+                            <div class="card-title">Top Markets</div>
+                            <span class="badge ba" style="font-size:10px;">June 2025</span>
+                        </div>
+                        <div class="chart-wrap" style="height:160px;"><canvas id="chartMarkets"></canvas></div>
+                    </div>
+
+                    <!-- ACTIVE CAMPAIGNS TABLE -->
+                    <div class="card b-full">
+                        <div class="flex items-c jb mb-4">
+                            <div class="card-title">Active Campaigns</div>
+                            <button class="btn" style="font-size:12px;height:28px;" onclick="nav('campaigns',document.querySelector('.nav-item:nth-child(2)'))">View all →</button>
+                        </div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead><tr>
+                                    <th>Campaign</th><th>Market</th><th>Format</th>
+                                    <th>Budget</th><th>Pacing</th><th>Impressions</th><th>Attention</th><th>Status</th>
+                                </tr></thead>
+                                <tbody id="dashTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QUICK ACTIONS -->
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+                    <div class="card" style="cursor:pointer;border-style:dashed;border-color:rgba(184,255,87,0.25);" onclick="nav('discovery',null)" onmouseover="this.style.borderColor='rgba(184,255,87,0.5)'" onmouseout="this.style.borderColor='rgba(184,255,87,0.25)'">
+                        <div style="font-size:28px;margin-bottom:10px;">🔍</div>
+                        <div class="card-title" style="color:var(--accent);">Browse Inventory</div>
+                        <div style="font-size:12px;color:var(--text-2);">Explore 1M+ OOH units with billups Discovery</div>
+                    </div>
+                    <div class="card" style="cursor:pointer;" onclick="nav('analytics',null)">
+                        <div style="font-size:28px;margin-bottom:10px;">📊</div>
+                        <div class="card-title">View Analytics</div>
+                        <div style="font-size:12px;color:var(--text-2);">Attention, brand, visitation & web impact studies</div>
+                    </div>
+                    <div class="card" style="cursor:pointer;" onclick="openRfp()">
+                        <div style="font-size:28px;margin-bottom:10px;">📋</div>
+                        <div class="card-title">Submit RFP</div>
+                        <div style="font-size:12px;color:var(--text-2);">Request a proposal for a new OOH campaign</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ CAMPAIGNS ═══ -->
+            <div class="view" id="view-campaigns">
+                <div class="mb-6">
+                    <div class="eyebrow">Campaign Manager</div>
+                    <div class="sec-title">All Campaigns</div>
+                    <div class="sec-sub">Manage every OOH campaign across all global markets.</div>
+                </div>
+
+                <div class="tabs">
+                    <div class="tab active" onclick="filterC('all',this)">All (12)</div>
+                    <div class="tab" onclick="filterC('active',this)">Active (8)</div>
+                    <div class="tab" onclick="filterC('planning',this)">Planning (3)</div>
+                    <div class="tab" onclick="filterC('completed',this)">Completed (1)</div>
+                </div>
+
+                <div class="filter-row">
+                    <div class="search-wrap">
+                        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--text-3)"><circle cx="5.5" cy="5.5" r="4"/><path d="M9 9l3 3"/></svg>
+                        <input class="search-input" placeholder="Search..." oninput="searchC(this.value)">
+                    </div>
+                    <select class="fsel">
+                        <option>Market: All</option><option>New York, NY</option>
+                        <option>Los Angeles, CA</option><option>London, UK</option><option>Chicago, IL</option>
+                    </select>
+                    <select class="fsel">
+                        <option>Format: All</option><option>Billboard</option>
+                        <option>Digital OOH</option><option>Transit</option><option>Airport</option>
+                    </select>
+                    <select class="fsel">
+                        <option>Sort: Latest</option><option>Sort: Budget ↓</option>
+                        <option>Sort: Attention ↓</option><option>Sort: Impressions ↓</option>
+                    </select>
+                    <div class="ml-a">
+                        <button class="btn primary" onclick="openRfp()">
+                            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="2"><path d="M5.5 1v9M1 5.5h9"/></svg>
+                            New Campaign
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr>
+                            <th>Campaign Name</th><th>Brand</th><th>Market</th><th>Format</th>
+                            <th>Budget</th><th>Pacing</th><th>Impressions</th><th>Attention</th><th>Status</th><th></th>
+                        </tr></thead>
+                        <tbody id="campTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ═══ DISCOVERY ═══ -->
+            <div class="view" id="view-discovery">
+                <div class="mb-6">
+                    <div class="eyebrow">Inventory Browser</div>
+                    <div class="sec-title">billups Discovery</div>
+                    <div class="sec-sub">Browse over 1 million OOH units. Filter by market, audience, format and CPM.</div>
+                </div>
+
+                <div class="flex gap-3" style="align-items:flex-start;">
+                    <!-- FILTER PANEL -->
+                    <div style="width:210px;flex-shrink:0;">
+                        <div class="card" style="padding:18px;">
+                            <div style="font-size:13px;font-weight:700;color:var(--text-1);margin-bottom:14px;">Filters</div>
+
+                            <div class="fg">
+                                <div class="fl">Media Type</div>
+                                <div style="display:flex;flex-direction:column;gap:7px;margin-top:6px;">
+                                    <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-2);cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--accent);"> Billboard</label>
+                                    <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-2);cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--accent);"> Digital OOH</label>
+                                    <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-2);cursor:pointer;"><input type="checkbox" style="accent-color:var(--accent);"> Transit</label>
+                                    <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-2);cursor:pointer;"><input type="checkbox" style="accent-color:var(--accent);"> Airport</label>
+                                    <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-2);cursor:pointer;"><input type="checkbox" style="accent-color:var(--accent);"> Street Furniture</label>
+                                    <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-2);cursor:pointer;"><input type="checkbox" style="accent-color:var(--accent);"> Cinema</label>
+                                </div>
+                            </div>
+
+                            <div class="div"></div>
+
+                            <div class="fg">
+                                <div class="fl">Market / DMA</div>
+                                <select class="fi" style="margin-top:5px;height:34px;padding:0 12px;font-size:12.5px;">
+                                    <option>All Markets</option><option>New York, NY</option>
+                                    <option>Los Angeles, CA</option><option>Chicago, IL</option>
+                                    <option>London, UK</option><option>Singapore</option><option>Sydney, AU</option>
+                                </select>
+                            </div>
+
+                            <div class="fg">
+                                <div class="fl">Max CPM: <span id="cpmVal">$45</span></div>
+                                <input type="range" min="2" max="60" value="45" oninput="document.getElementById('cpmVal').textContent='$'+this.value" style="width:100%;margin-top:6px;accent-color:var(--accent);">
+                            </div>
+
+                            <div class="div"></div>
+
+                            <div class="fg">
+                                <div class="fl">Target Audience</div>
+                                <div style="display:flex;flex-direction:column;gap:7px;margin-top:6px;">
+                                    <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-2);cursor:pointer;"><input type="checkbox" style="accent-color:var(--accent);"> 18–34 Millennials</label>
+                                    <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-2);cursor:pointer;"><input type="checkbox" style="accent-color:var(--accent);"> HHI $75k+</label>
+                                    <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-2);cursor:pointer;"><input type="checkbox" style="accent-color:var(--accent);"> Urban Commuters</label>
+                                    <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-2);cursor:pointer;"><input type="checkbox" style="accent-color:var(--accent);"> Luxury Shoppers</label>
+                                </div>
+                            </div>
+
+                            <button class="btn primary" style="width:100%;justify-content:center;margin-top:4px;" onclick="showToast('Filters applied — showing 247 units')">Apply Filters</button>
+                        </div>
+                    </div>
+
+                    <!-- GRID -->
+                    <div style="flex:1;">
+                        <div class="filter-row" style="margin-bottom:14px;">
+                            <span class="fs13 t2">Showing <strong style="color:var(--text-1);">247 units</strong></span>
+                            <div class="ml-a flex gap-2">
+                                <button class="btn" style="font-size:12px;height:30px;" onclick="showToast('Map view — coming Q3 2025')">
+                                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="2" width="3" height="8"/><rect x="4.5" y="1" width="3" height="10"/><rect x="8" y="3" width="3" height="7"/></svg>
+                                    Map View
+                                </button>
+                                <select class="fsel" style="height:30px;font-size:12px;">
+                                    <option>Sort: Recommended</option>
+                                    <option>CPM Low → High</option>
+                                    <option>Impressions High → Low</option>
+                                    <option>Attention Score ↓</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="inv-grid" id="invGrid"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ ANALYTICS ═══ -->
+            <div class="view" id="view-analytics">
+                <div class="mb-6">
+                    <div class="eyebrow">Performance Intelligence</div>
+                    <div class="sec-title">billups Analytics™</div>
+                    <div class="sec-sub">Deep-dive campaign performance — attention, brand lift, visitation, and digital attribution.</div>
+                </div>
+
+                <div class="filter-row">
+                    <select class="fsel" id="campSel" style="min-width:240px;">
+                        <option>Nike — Air Jordan Summer Drop</option>
+                        <option>Heinz — Deadpool & Wolverine DOOH</option>
+                        <option>monday.com — Singapore B2B Launch</option>
+                        <option>TikTok — Black Friday Glass Bus</option>
+                        <option>Oatly — Taste Wins UK</option>
+                    </select>
+                    <select class="fsel"><option>Last 30 days</option><option>Last 7 days</option><option>Full campaign</option></select>
+                    <select class="fsel"><option>All Markets</option><option>New York</option><option>London</option><option>Singapore</option></select>
+                    <div class="ml-a">
+                        <button class="btn" onclick="showToast('Report exported — check your email')">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 1v7.5M3.5 6L6 8.5 8.5 6M1.5 10.5h9"/></svg>
+                            Export
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KPI BANNER -->
+                <div class="stats-grid" style="margin-bottom:18px;">
+                    <div class="stat-card" style="border-color:rgba(184,255,87,0.2);background:rgba(184,255,87,0.04);">
+                        <div class="stat-label" style="color:rgba(184,255,87,0.55);">Attention Score</div>
+                        <div class="att-score">84</div>
+                        <div class="stat-delta up">Top 8% of all campaigns</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Impressions Delivered</div>
+                        <div class="stat-value">142M</div>
+                        <div class="stat-delta up">+12% above forecast</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Foot Traffic Lift</div>
+                        <div class="stat-value">+34%</div>
+                        <div class="stat-delta up">vs. control group</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Web/App Conversions</div>
+                        <div class="stat-value">+22%</div>
+                        <div class="stat-delta up">OOH-driven digital uplift</div>
+                    </div>
+                </div>
+
+                <!-- ANALYTICS CHARTS 2x2 -->
+                <div class="ana-grid">
+                    <div class="card-outer" style="padding:5px;">
+                        <div class="card-inner">
+                            <div class="eyebrow" style="font-size:9px;">Attention Dashboard</div>
+                            <div class="card-title">Attention Score by Unit</div>
+                            <div class="card-sub">Top 10 performing placements</div>
+                            <div class="chart-wrap"><canvas id="chartAtt"></canvas></div>
+                        </div>
+                    </div>
+                    <div class="card-outer" style="padding:5px;">
+                        <div class="card-inner">
+                            <div class="eyebrow" style="font-size:9px;">Location Visitation Study</div>
+                            <div class="card-title">Foot Traffic Lift</div>
+                            <div class="card-sub">Exposed vs. Control Group</div>
+                            <div class="chart-wrap"><canvas id="chartVisit"></canvas></div>
+                        </div>
+                    </div>
+                    <div class="card-outer" style="padding:5px;">
+                        <div class="card-inner">
+                            <div class="eyebrow" style="font-size:9px;">Brand Study</div>
+                            <div class="card-title">Brand Lift Metrics</div>
+                            <div class="card-sub">Pre vs. post-campaign measurement</div>
+                            <div class="chart-wrap"><canvas id="chartBrand"></canvas></div>
+                        </div>
+                    </div>
+                    <div class="card-outer" style="padding:5px;">
+                        <div class="card-inner">
+                            <div class="eyebrow" style="font-size:9px;">Web / App Impact</div>
+                            <div class="card-title">Digital Attribution Funnel</div>
+                            <div class="card-sub">OOH exposure → online conversion</div>
+                            <div class="chart-wrap"><canvas id="chartWeb"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CREATIVE OPTIMIZATION -->
+                <div class="card-outer mt-4" style="padding:5px;">
+                    <div class="card-inner">
+                        <div class="flex items-c jb mb-4">
+                            <div>
+                                <div class="eyebrow" style="font-size:9px;">Creative Optimization</div>
+                                <div class="card-title">AI Creative Scoring</div>
+                                <div class="card-sub" style="margin-bottom:0;">Visual attention prediction across submitted creatives</div>
+                            </div>
+                            <button class="btn" style="font-size:12px;height:30px;" onclick="showToast('Upload creative — 1-2 business day turnaround')">+ Upload Creative</button>
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+                            <div style="background:var(--bg-3);border-radius:12px;overflow:hidden;cursor:pointer;border:1px solid rgba(184,255,87,0.2);" onclick="showToast('Creative A selected as top performer')">
+                                <div style="height:90px;background:linear-gradient(135deg,#1a1a2e,#0d3b6e);display:flex;align-items:center;justify-content:center;font-size:36px;">🎯</div>
+                                <div style="padding:12px;">
+                                    <div style="font-size:12px;font-weight:700;color:var(--text-1);margin-bottom:6px;">Creative A — Hero</div>
+                                    <div class="flex items-c jb"><span style="font-size:11px;color:var(--text-3);">Attention</span><span style="font-size:13px;font-weight:800;color:var(--accent);">89%</span></div>
+                                    <div class="prog" style="margin-top:5px;"><div class="prog-fill" style="width:89%;background:var(--accent);"></div></div>
+                                </div>
+                            </div>
+                            <div style="background:var(--bg-3);border-radius:12px;overflow:hidden;cursor:pointer;" onclick="showToast('Creative B detail loading...')">
+                                <div style="height:90px;background:linear-gradient(135deg,#0f3460,#16213e);display:flex;align-items:center;justify-content:center;font-size:36px;">🏆</div>
+                                <div style="padding:12px;">
+                                    <div style="font-size:12px;font-weight:700;color:var(--text-1);margin-bottom:6px;">Creative B — Product</div>
+                                    <div class="flex items-c jb"><span style="font-size:11px;color:var(--text-3);">Attention</span><span style="font-size:13px;font-weight:800;color:var(--green);">76%</span></div>
+                                    <div class="prog" style="margin-top:5px;"><div class="prog-fill" style="width:76%;background:var(--green);"></div></div>
+                                </div>
+                            </div>
+                            <div style="background:var(--bg-3);border-radius:12px;overflow:hidden;cursor:pointer;" onclick="showToast('Creative C — consider revising CTA placement')">
+                                <div style="height:90px;background:linear-gradient(135deg,#533483,#2d1b69);display:flex;align-items:center;justify-content:center;font-size:36px;">⚡</div>
+                                <div style="padding:12px;">
+                                    <div style="font-size:12px;font-weight:700;color:var(--text-1);margin-bottom:6px;">Creative C — Lifestyle</div>
+                                    <div class="flex items-c jb"><span style="font-size:11px;color:var(--text-3);">Attention</span><span style="font-size:13px;font-weight:800;color:var(--orange);">61%</span></div>
+                                    <div class="prog" style="margin-top:5px;"><div class="prog-fill" style="width:61%;background:var(--orange);"></div></div>
+                                </div>
+                            </div>
+                            <div style="background:var(--bg-3);border-radius:12px;overflow:hidden;cursor:pointer;" onclick="showToast('Creative D — logo visibility below threshold')">
+                                <div style="height:90px;background:linear-gradient(135deg,#1a472a,#0d2818);display:flex;align-items:center;justify-content:center;font-size:36px;">🌍</div>
+                                <div style="padding:12px;">
+                                    <div style="font-size:12px;font-weight:700;color:var(--text-1);margin-bottom:6px;">Creative D — Brand</div>
+                                    <div class="flex items-c jb"><span style="font-size:11px;color:var(--text-3);">Attention</span><span style="font-size:13px;font-weight:800;color:var(--red);">48%</span></div>
+                                    <div class="prog" style="margin-top:5px;"><div class="prog-fill" style="width:48%;background:var(--red);"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ PROGRAMMATIC ═══ -->
+            <div class="view" id="view-programmatic">
+                <div class="mb-6">
+                    <div class="eyebrow">Programmatic DOOH</div>
+                    <div class="sec-title">pDOOH Campaign Center</div>
+                    <div class="sec-sub">Real-time buying, targeting, and optimization of digital out-of-home inventory.</div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Active pDOOH Campaigns</div>
+                        <div class="stat-value">5</div>
+                        <div class="stat-delta up">Live right now</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Daily Spend</div>
+                        <div class="stat-value">$12.4K</div>
+                        <div class="stat-delta up">$0.52 under daily cap</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Today's Impressions</div>
+                        <div class="stat-value">8.2M</div>
+                        <div class="stat-delta up">+6.4% vs yesterday</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Avg. CPM</div>
+                        <div class="stat-value" style="color:var(--accent);">$18.60</div>
+                        <div class="stat-delta up">-4% vs benchmark</div>
+                    </div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;">
+                    <div class="card">
+                        <div class="card-title mb-4">Live Campaigns</div>
+                        <div style="display:flex;flex-direction:column;gap:10px;">
+                            <div style="padding:12px;background:var(--bg-3);border-radius:10px;border:1px solid rgba(74,222,128,0.2);">
+                                <div class="flex items-c jb">
+                                    <div>
+                                        <div style="font-size:13px;font-weight:700;">Nike — Air Jordan DOOH</div>
+                                        <div class="fs12 t3 mt-2">4 screens · NYC · $4.2K today</div>
+                                    </div>
+                                    <span class="badge bg"><span style="width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;display:inline-block;"></span> Live</span>
+                                </div>
+                                <div style="margin-top:10px;">
+                                    <div class="flex items-c jb fs12 t3 mb-2"><span>Daily budget pacing</span><span>78%</span></div>
+                                    <div class="tl"><div class="tl-fill" style="width:78%;"></div></div>
+                                </div>
+                            </div>
+                            <div style="padding:12px;background:var(--bg-3);border-radius:10px;border:1px solid rgba(74,222,128,0.2);">
+                                <div class="flex items-c jb">
+                                    <div>
+                                        <div style="font-size:13px;font-weight:700;">Heinz — Deadpool DOOH</div>
+                                        <div class="fs12 t3 mt-2">2 screens · LA · $1.8K today</div>
+                                    </div>
+                                    <span class="badge bg"><span style="width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;display:inline-block;"></span> Live</span>
+                                </div>
+                                <div style="margin-top:10px;">
+                                    <div class="flex items-c jb fs12 t3 mb-2"><span>Daily budget pacing</span><span>92%</span></div>
+                                    <div class="tl"><div class="tl-fill" style="width:92%;"></div></div>
+                                </div>
+                            </div>
+                            <div style="padding:12px;background:var(--bg-3);border-radius:10px;">
+                                <div class="flex items-c jb">
+                                    <div>
+                                        <div style="font-size:13px;font-weight:700;">Cognitiv — NYC Brand</div>
+                                        <div class="fs12 t3 mt-2">6 screens · NYC · $2.9K today</div>
+                                    </div>
+                                    <span class="badge bg"><span style="width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;display:inline-block;"></span> Live</span>
+                                </div>
+                                <div style="margin-top:10px;">
+                                    <div class="flex items-c jb fs12 t3 mb-2"><span>Daily budget pacing</span><span>61%</span></div>
+                                    <div class="tl"><div class="tl-fill" style="width:61%;"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title mb-4">Targeting Parameters</div>
+                        <div style="display:flex;flex-direction:column;gap:14px;">
+                            <div>
+                                <div class="fl">Active Rule: Time of Day</div>
+                                <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:8px;">
+                                    <div style="padding:4px;border-radius:4px;background:rgba(184,255,87,0.15);border:1px solid rgba(184,255,87,0.3);text-align:center;font-size:10px;color:var(--accent);">6am</div>
+                                    <div style="padding:4px;border-radius:4px;background:rgba(184,255,87,0.15);border:1px solid rgba(184,255,87,0.3);text-align:center;font-size:10px;color:var(--accent);">9am</div>
+                                    <div style="padding:4px;border-radius:4px;background:rgba(184,255,87,0.06);border:1px solid var(--border);text-align:center;font-size:10px;color:var(--text-3);">12pm</div>
+                                    <div style="padding:4px;border-radius:4px;background:rgba(184,255,87,0.06);border:1px solid var(--border);text-align:center;font-size:10px;color:var(--text-3);">3pm</div>
+                                    <div style="padding:4px;border-radius:4px;background:rgba(184,255,87,0.15);border:1px solid rgba(184,255,87,0.3);text-align:center;font-size:10px;color:var(--accent);">6pm</div>
+                                    <div style="padding:4px;border-radius:4px;background:rgba(184,255,87,0.15);border:1px solid rgba(184,255,87,0.3);text-align:center;font-size:10px;color:var(--accent);">9pm</div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="fl">Venue Types</div>
+                                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">
+                                    <span class="badge ba">Transit</span>
+                                    <span class="badge ba">Retail</span>
+                                    <span class="badge ba">Premium Outdoor</span>
+                                    <span class="badge bb">Entertainment</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="fl">Audience Target</div>
+                                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">
+                                    <span class="badge bg">18–34 Urban</span>
+                                    <span class="badge bg">HHI $75k+</span>
+                                    <span class="badge bp">Commuters</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="fl">Geography</div>
+                                <div style="font-size:13px;color:var(--text-1);margin-top:5px;">New York · Los Angeles · Chicago</div>
+                            </div>
+                            <button class="btn primary" style="width:100%;justify-content:center;" onclick="showToast('Targeting rules updated across all active pDOOH campaigns')">Update All Campaigns</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-outer" style="padding:5px;">
+                    <div class="card-inner">
+                        <div class="card-title mb-4">Impression Delivery · Today</div>
+                        <div class="chart-wrap" style="height:160px;"><canvas id="chartProg"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ REPORTS ═══ -->
+            <div class="view" id="view-reports">
+                <div class="mb-6">
+                    <div class="eyebrow">Reports Center</div>
+                    <div class="sec-title">Campaign Reports</div>
+                    <div class="sec-sub">Download, schedule and share performance reports with clients and stakeholders.</div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:2fr 1fr;gap:22px;">
+                    <div>
+                        <div class="tabs">
+                            <div class="tab active">Available (8)</div>
+                            <div class="tab">Scheduled (3)</div>
+                            <div class="tab">Shared</div>
+                        </div>
+                        <div id="repList"></div>
+                    </div>
+                    <div>
+                        <div class="card mb-4">
+                            <div class="card-title mb-4">Schedule a Report</div>
+                            <div class="fg">
+                                <div class="fl">Report Type</div>
+                                <select class="fi" style="margin-top:4px;height:36px;">
+                                    <option>Full Campaign Summary</option><option>Attention Dashboard</option>
+                                    <option>Brand Study</option><option>Location Visitation</option>
+                                    <option>Web/App Impact</option><option>Airport Dashboard</option>
+                                </select>
+                            </div>
+                            <div class="fg">
+                                <div class="fl">Frequency</div>
+                                <select class="fi" style="margin-top:4px;height:36px;">
+                                    <option>Weekly</option><option>Bi-weekly</option>
+                                    <option>Monthly</option><option>End of Campaign</option>
+                                </select>
+                            </div>
+                            <div class="fg">
+                                <div class="fl">Recipient Email</div>
+                                <input class="fi" placeholder="client@brand.com" type="email" style="margin-top:4px;">
+                            </div>
+                            <button class="btn primary" style="width:100%;justify-content:center;" onclick="showToast('Report scheduled — first delivery next Monday')">Schedule Report</button>
+                        </div>
+                        <div class="card">
+                            <div class="card-title mb-4">Report Stats</div>
+                            <div style="display:flex;flex-direction:column;gap:11px;">
+                                <div class="flex items-c jb"><span class="fs13 t2">Generated this month</span><span style="font-size:14px;font-weight:700;">47</span></div>
+                                <div class="flex items-c jb"><span class="fs13 t2">Client open rate</span><span style="font-size:14px;font-weight:700;color:var(--green);">94%</span></div>
+                                <div class="flex items-c jb"><span class="fs13 t2">Scheduled reports</span><span style="font-size:14px;font-weight:700;">3</span></div>
+                                <div class="flex items-c jb"><span class="fs13 t2">Last generated</span><span style="font-size:14px;font-weight:700;">Today</span></div>
+                                <div class="flex items-c jb"><span class="fs13 t2">Avg. report size</span><span style="font-size:14px;font-weight:700;">3.6 MB</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SUPPLIER HUB ═══ -->
+            <div class="view" id="view-suppliers">
+                <div class="mb-6">
+                    <div class="eyebrow">For Media Owners</div>
+                    <div class="sec-title">Supplier Hub</div>
+                    <div class="sec-sub">Submit inventory, manage RFPs, track performance and analyse revenue across your OOH network.</div>
+                </div>
+
+                <div class="stats-grid mb-6">
+                    <div class="stat-card">
+                        <div class="stat-label">Active Listings</div>
+                        <div class="stat-value">1,284</div>
+                        <div class="stat-delta up">+47 this month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Monthly Revenue</div>
+                        <div class="stat-value">$187K</div>
+                        <div class="stat-delta up">+12.3% YoY</div>
+                    </div>
+                    <div class="stat-card" style="border-color:rgba(184,255,87,0.18);background:rgba(184,255,87,0.04);">
+                        <div class="stat-label" style="color:rgba(184,255,87,0.5);">Avg. Fill Rate</div>
+                        <div class="stat-value" style="color:var(--accent);">78%</div>
+                        <div class="stat-delta up">Industry avg: 61%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Pending RFPs</div>
+                        <div class="stat-value" style="color:var(--orange);">6</div>
+                        <div class="stat-delta" style="color:var(--text-2);">Respond within 48h</div>
+                    </div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;">
+                    <div class="card">
+                        <div class="card-title mb-4">Submit New Unit</div>
+                        <div class="fg"><div class="fl">Unit Name / ID</div><input class="fi" placeholder="e.g. Times Square North Face" style="margin-top:4px;"></div>
+                        <div class="fr2">
+                            <div class="fg">
+                                <div class="fl">Media Type</div>
+                                <select class="fi" style="margin-top:4px;height:36px;font-size:12.5px;">
+                                    <option>Billboard (Static)</option><option>Digital Screen (DOOH)</option>
+                                    <option>Transit Shelter</option><option>Airport</option><option>Street Furniture</option>
+                                </select>
+                            </div>
+                            <div class="fg"><div class="fl">Market</div><input class="fi" placeholder="City, Country" style="margin-top:4px;"></div>
+                        </div>
+                        <div class="fr2">
+                            <div class="fg"><div class="fl">Size (WxH)</div><input class="fi" placeholder="48ft x 14ft" style="margin-top:4px;"></div>
+                            <div class="fg"><div class="fl">Base CPM (USD)</div><input class="fi" placeholder="$12.00" style="margin-top:4px;"></div>
+                        </div>
+                        <button class="btn primary" style="width:100%;justify-content:center;" onclick="showToast('Unit submitted — review within 2 business days')">Submit Unit</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="flex items-c jb mb-4">
+                            <div class="card-title">Incoming RFPs</div>
+                            <span class="badge bo">6 new</span>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:8px;">
+                            <div style="padding:12px;background:var(--bg-3);border-radius:10px;cursor:pointer;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='var(--bg-3)'">
+                                <div class="flex items-c jb">
+                                    <div>
+                                        <div style="font-size:13px;font-weight:700;">Nike — Summer OOH NYC</div>
+                                        <div class="fs12 t3" style="margin-top:2px;">4 units · $45K · Starts Jul 1</div>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button class="btn primary" style="font-size:11px;height:26px;padding:0 10px;" onclick="event.stopPropagation();showToast('Nike NYC RFP accepted ✓')">Accept</button>
+                                        <button class="btn" style="font-size:11px;height:26px;padding:0 10px;" onclick="event.stopPropagation();showToast('Nike NYC RFP declined')">Decline</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="padding:12px;background:var(--bg-3);border-radius:10px;cursor:pointer;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='var(--bg-3)'">
+                                <div class="flex items-c jb">
+                                    <div>
+                                        <div style="font-size:13px;font-weight:700;">Heinz — Deadpool DOOH LA</div>
+                                        <div class="fs12 t3" style="margin-top:2px;">2 units · $18K · Starts Jun 28</div>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button class="btn primary" style="font-size:11px;height:26px;padding:0 10px;" onclick="event.stopPropagation();showToast('Heinz DOOH RFP accepted ✓')">Accept</button>
+                                        <button class="btn" style="font-size:11px;height:26px;padding:0 10px;" onclick="event.stopPropagation()">Decline</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="padding:12px;background:var(--bg-3);border-radius:10px;cursor:pointer;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='var(--bg-3)'">
+                                <div class="flex items-c jb">
+                                    <div>
+                                        <div style="font-size:13px;font-weight:700;">TikTok — Q3 Global Push</div>
+                                        <div class="fs12 t3" style="margin-top:2px;">8 units · $92K · Starts Jul 15</div>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button class="btn primary" style="font-size:11px;height:26px;padding:0 10px;" onclick="event.stopPropagation();showToast('TikTok Q3 RFP accepted ✓')">Accept</button>
+                                        <button class="btn" style="font-size:11px;height:26px;padding:0 10px;" onclick="event.stopPropagation()">Decline</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn" style="width:100%;justify-content:center;font-size:12px;" onclick="showToast('Loading all 6 RFPs...')">View all 6 RFPs →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="flex items-c jb mb-4">
+                        <div class="card-title">Top Performing Units</div>
+                        <button class="btn" style="font-size:12px;height:28px;" onclick="showToast('Full inventory manager loading...')">View All Units</button>
+                    </div>
+                    <table>
+                        <thead><tr><th>Unit Name</th><th>Market</th><th>Type</th><th>Fill Rate</th><th>Monthly Revenue</th><th>CPM</th><th>Status</th></tr></thead>
+                        <tbody>
+                            <tr onclick="showToast('Times Square North — unit detail')">
+                                <td class="fw6">Times Square North Digital</td>
+                                <td class="t2">New York, NY</td>
+                                <td><span class="badge bb">DOOH</span></td>
+                                <td><div class="flex items-c gap-2"><span>96%</span><div class="prog" style="width:56px;"><div class="prog-fill" style="width:96%;background:var(--green);"></div></div></div></td>
+                                <td class="fw7">$28,400</td><td>$38.50</td>
+                                <td><span class="badge bg">● Active</span></td>
+                            </tr>
+                            <tr onclick="showToast('Sunset Blvd — unit detail')">
+                                <td class="fw6">Sunset Blvd Spectacular</td>
+                                <td class="t2">Los Angeles, CA</td>
+                                <td><span class="badge bp">Billboard</span></td>
+                                <td><div class="flex items-c gap-2"><span>88%</span><div class="prog" style="width:56px;"><div class="prog-fill" style="width:88%;background:var(--accent);"></div></div></div></td>
+                                <td class="fw7">$19,200</td><td>$24.00</td>
+                                <td><span class="badge bg">● Active</span></td>
+                            </tr>
+                            <tr onclick="showToast('Piccadilly Circus — unit detail')">
+                                <td class="fw6">Piccadilly Circus Digital</td>
+                                <td class="t2">London, UK</td>
+                                <td><span class="badge bb">DOOH</span></td>
+                                <td><div class="flex items-c gap-2"><span>72%</span><div class="prog" style="width:56px;"><div class="prog-fill" style="width:72%;background:var(--orange);"></div></div></div></td>
+                                <td class="fw7">$14,800</td><td>$31.20</td>
+                                <td><span class="badge bo">◕ Partial</span></td>
+                            </tr>
+                            <tr onclick="showToast('Chicago L Train — unit detail')">
+                                <td class="fw6">Chicago L Train Network</td>
+                                <td class="t2">Chicago, IL</td>
+                                <td><span class="badge ba">Transit</span></td>
+                                <td><div class="flex items-c gap-2"><span>91%</span><div class="prog" style="width:56px;"><div class="prog-fill" style="width:91%;background:var(--green);"></div></div></div></td>
+                                <td class="fw7">$11,600</td><td>$18.40</td>
+                                <td><span class="badge bg">● Active</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ═══ SETTINGS ═══ -->
+            <div class="view" id="view-settings">
+                <div class="mb-6">
+                    <div class="eyebrow">Account</div>
+                    <div class="sec-title">Settings</div>
+                    <div class="sec-sub">Manage your profile, notifications, and workspace preferences.</div>
+                </div>
+                <div style="display:grid;grid-template-columns:190px 1fr;gap:22px;">
+                    <div style="display:flex;flex-direction:column;gap:3px;">
+                        <div class="nav-item active" style="font-size:13px;justify-content:flex-start;">Profile</div>
+                        <div class="nav-item" style="font-size:13px;justify-content:flex-start;" onclick="showToast('Notifications panel')">Notifications</div>
+                        <div class="nav-item" style="font-size:13px;justify-content:flex-start;" onclick="showToast('Integrations: Salesforce, HubSpot, Slack')">Integrations</div>
+                        <div class="nav-item" style="font-size:13px;justify-content:flex-start;" onclick="showToast('Team management panel')">Team</div>
+                        <div class="nav-item" style="font-size:13px;justify-content:flex-start;" onclick="showToast('Billing & usage panel')">Billing</div>
+                    </div>
+                    <div>
+                        <div class="card mb-4">
+                            <div class="card-title mb-4">Profile Information</div>
+                            <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
+                                <div class="avatar" style="width:52px;height:52px;font-size:16px;">MK</div>
+                                <div>
+                                    <div style="font-size:14px;font-weight:700;">Marcus Klein</div>
+                                    <div class="fs12 t3 mb-2">Campaign Manager · billups EMEA</div>
+                                    <button class="btn" style="font-size:11px;height:26px;" onclick="showToast('Photo upload — drag & drop supported')">Change Photo</button>
+                                </div>
+                            </div>
+                            <div class="fr2">
+                                <div class="fg"><label class="fl">First Name</label><input class="fi" value="Marcus" style="margin-top:4px;"></div>
+                                <div class="fg"><label class="fl">Last Name</label><input class="fi" value="Klein" style="margin-top:4px;"></div>
+                            </div>
+                            <div class="fg"><label class="fl">Email</label><input class="fi" value="m.klein@billups.com" style="margin-top:4px;"></div>
+                            <div class="fr2">
+                                <div class="fg"><label class="fl">Role</label><input class="fi" value="Campaign Manager" style="margin-top:4px;"></div>
+                                <div class="fg">
+                                    <label class="fl">Region</label>
+                                    <select class="fi" style="margin-top:4px;height:40px;">
+                                        <option>EMEA</option><option>North America</option><option>APAC</option><option>Global</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="btn primary" onclick="showToast('Profile saved successfully ✓')">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /content -->
+    </main>
+</div><!-- /layout -->
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const CAMPAIGNS = [
+    {id:1, name:'Air Jordan Summer Drop', brand:'Nike', market:'New York, NY', format:'Digital OOH', budget:280000, spent:196000, impr:'142M', att:84, status:'active', start:'2025-05-01', end:'2025-07-31'},
+    {id:2, name:'Deadpool & Wolverine Tie-In', brand:'Heinz', market:'Los Angeles, CA', format:'Billboard', budget:95000, spent:82000, impr:'67M', att:79, status:'active', start:'2025-06-01', end:'2025-07-15'},
+    {id:3, name:'B2B Enterprise Launch Singapore', brand:'monday.com', market:'Singapore', format:'Airport', budget:120000, spent:48000, impr:'34M', att:71, status:'active', start:'2025-06-10', end:'2025-08-10'},
+    {id:4, name:'Black Friday Glass Bus', brand:'TikTok', market:'London, UK', format:'Street Furniture', budget:65000, spent:65000, impr:'89M', att:92, status:'completed', start:'2024-11-25', end:'2024-12-05'},
+    {id:5, name:'Taste Wins Blindly UK Tour', brand:'Oatly', market:'London, UK', format:'Billboard', budget:180000, spent:90000, impr:'112M', att:77, status:'active', start:'2025-05-15', end:'2025-08-31'},
+    {id:6, name:'Times Square Blockchain', brand:'Algorand', market:'New York, NY', format:'Digital OOH', budget:340000, spent:280000, impr:'198M', att:88, status:'active', start:'2025-04-01', end:'2025-07-01'},
+    {id:7, name:'Olympic Trials Airport Push', brand:'NULO', market:'Los Angeles, CA', format:'Airport', budget:55000, spent:12000, impr:'—', att:'—', status:'planning', start:'2025-07-01', end:'2025-07-20'},
+    {id:8, name:'Holiday Spirits OOH', brand:'Westward Whiskey', market:'Chicago, IL', format:'Billboard', budget:42000, spent:8000, impr:'—', att:'—', status:'planning', start:'2025-11-01', end:'2026-01-01'},
+    {id:9, name:'NYC Brand Presence Q3', brand:'Cognitiv', market:'New York, NY', format:'Digital OOH', budget:78000, spent:45000, impr:'55M', att:73, status:'active', start:'2025-06-01', end:'2025-09-30'},
+    {id:10, name:'Driving Away Competition', brand:'Oracle', market:'San Francisco, CA', format:'Billboard', budget:150000, spent:120000, impr:'78M', att:66, status:'active', start:'2025-05-01', end:'2025-07-31'},
+    {id:11, name:'Sidekicks Snacking OOH', brand:'Subway', market:'Chicago, IL', format:'Transit', budget:92000, spent:55000, impr:'145M', att:75, status:'active', start:'2025-04-15', end:'2025-07-15'},
+    {id:12, name:'Puerto Rico Tourism Drive', brand:'Discover PR', market:'New York, NY', format:'Digital OOH', budget:230000, spent:28000, impr:'—', att:'—', status:'planning', start:'2025-07-10', end:'2025-10-01'},
+];
+
+const INVENTORY = [
+    {name:'Times Square North Digital', loc:'New York, NY', type:'Digital OOH', cpm:38.50, wi:'18.2M weekly imps', att:91, emoji:'🗽', bg:'linear-gradient(135deg,#0d1b2a,#1b3a4b)'},
+    {name:'Sunset Blvd Spectacular', loc:'Los Angeles, CA', type:'Billboard', cpm:24.00, wi:'12.4M weekly imps', att:84, emoji:'🌴', bg:'linear-gradient(135deg,#2d1b69,#1a0a2e)'},
+    {name:'Piccadilly Circus Digital', loc:'London, UK', type:'Digital OOH', cpm:31.20, wi:'22.8M weekly imps', att:88, emoji:'🎡', bg:'linear-gradient(135deg,#1a2744,#0d1b36)'},
+    {name:'O\'Hare Airport Premium', loc:'Chicago, IL', type:'Airport', cpm:28.40, wi:'8.9M weekly imps', att:79, emoji:'✈️', bg:'linear-gradient(135deg,#1a3a1a,#0d2010)'},
+    {name:'Marina Bay Digital Network', loc:'Singapore', type:'Digital OOH', cpm:19.80, wi:'9.2M weekly imps', att:76, emoji:'🌏', bg:'linear-gradient(135deg,#1a1a3a,#0d0d28)'},
+    {name:'Embarcadero Transit Hub', loc:'San Francisco, CA', type:'Transit', cpm:16.20, wi:'7.6M weekly imps', att:72, emoji:'🚋', bg:'linear-gradient(135deg,#2a1a10,#180e08)'},
+    {name:'Westfield London Atrium', loc:'London, UK', type:'Street Furniture', cpm:22.60, wi:'11.1M weekly imps', att:82, emoji:'🏬', bg:'linear-gradient(135deg,#1a0d2a,#100820)'},
+    {name:'JFK Terminal 4 Lightboxes', loc:'New York, NY', type:'Airport', cpm:34.10, wi:'14.3M weekly imps', att:85, emoji:'🛫', bg:'linear-gradient(135deg,#0a2a1a,#061810)'},
+    {name:'Sydney Harbour Digital', loc:'Sydney, AU', type:'Digital OOH', cpm:17.90, wi:'6.8M weekly imps', att:69, emoji:'🌉', bg:'linear-gradient(135deg,#0d1a2d,#08101e)'},
+];
+
+const REPORTS = [
+    {name:'Nike Air Jordan — Full Campaign Report', type:'Campaign Summary', date:'Jun 20, 2025', size:'4.2 MB', emoji:'📊', col:'rgba(184,255,87,0.15)'},
+    {name:'Attention Dashboard — June 2025', type:'Attention Dashboard', date:'Jun 18, 2025', size:'1.8 MB', emoji:'👁', col:'rgba(96,165,250,0.15)'},
+    {name:'Oatly UK — Brand Study Results', type:'Brand Study', date:'Jun 15, 2025', size:'3.1 MB', emoji:'🏷', col:'rgba(167,139,250,0.15)'},
+    {name:'Subway Sidekicks — Location Visitation', type:'Location Visitation', date:'Jun 12, 2025', size:'2.4 MB', emoji:'📍', col:'rgba(74,222,128,0.15)'},
+    {name:'Cognitiv NYC — Web/App Impact Study', type:'Web/App Impact', date:'Jun 10, 2025', size:'1.6 MB', emoji:'📱', col:'rgba(251,146,60,0.15)'},
+    {name:'Q2 2025 — Global Market Intelligence', type:'Market Report', date:'Jun 1, 2025', size:'8.7 MB', emoji:'🌍', col:'rgba(248,113,113,0.15)'},
+    {name:'LAX Airport Dashboard — May Performance', type:'Airport Dashboard', date:'May 28, 2025', size:'2.2 MB', emoji:'✈️', col:'rgba(96,165,250,0.15)'},
+    {name:'Creative Optimization — Heinz Deadpool', type:'Creative Optimization', date:'May 22, 2025', size:'5.4 MB', emoji:'🎨', col:'rgba(251,146,60,0.15)'},
+];
+
+// ── NAV ───────────────────────────────────────────────────────────────────────
+let currentFilter = 'all';
+
+function nav(viewName, el) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('view-' + viewName).classList.add('active');
+    if (el) el.classList.add('active');
+    const titles = {dashboard:'Dashboard',campaigns:'Campaigns',discovery:'Discovery',analytics:'Analytics',programmatic:'Programmatic',reports:'Reports',suppliers:'Supplier Hub',settings:'Settings'};
+    document.getElementById('pageTitle').textContent = titles[viewName] || viewName;
+    if (viewName === 'analytics') setTimeout(initAnalytics, 50);
+    if (viewName === 'dashboard') setTimeout(initDash, 50);
+    if (viewName === 'programmatic') setTimeout(initProg, 50);
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function attColor(v) {
+    if (v === '—') return 'var(--text-3)';
+    if (v >= 85) return 'var(--accent)';
+    if (v >= 72) return 'var(--green)';
+    if (v >= 60) return 'var(--orange)';
+    return 'var(--red)';
+}
+
+function statusBadge(s) {
+    return {active:'<span class="badge bg">● Active</span>',planning:'<span class="badge bb">◌ Planning</span>',completed:'<span class="badge bp">✓ Done</span>'}[s]||s;
+}
+
+function pct(c) { return Math.round((c.spent / c.budget) * 100); }
+
+// ── DASHBOARD TABLE ───────────────────────────────────────────────────────────
+function buildDashTable() {
+    const rows = CAMPAIGNS.filter(c => c.status === 'active').slice(0, 5).map(c => `
+        <tr onclick="openPanel(${c.id})">
+            <td><div class="fw6">${c.name}</div><div class="fs12 t3">${c.brand}</div></td>
+            <td class="t2">${c.market}</td>
+            <td><span class="badge bb" style="font-size:10px;">${c.format}</span></td>
+            <td><div class="fw6">$${(c.budget/1000).toFixed(0)}K</div><div class="fs12 t3">${pct(c)}% spent</div></td>
+            <td><div class="tl" style="width:80px;"><div class="tl-fill" style="width:${pct(c)}%;"></div></div></td>
+            <td class="fw6">${c.impr}</td>
+            <td style="font-weight:700;color:${attColor(c.att)};">${c.att}${c.att!=='—'?'%':''}</td>
+            <td>${statusBadge(c.status)}</td>
+        </tr>`).join('');
+    document.getElementById('dashTable').innerHTML = rows;
+}
+
+// ── CAMPAIGNS TABLE ───────────────────────────────────────────────────────────
+function buildCampTable(data) {
+    document.getElementById('campTable').innerHTML = data.map(c => `
+        <tr onclick="openPanel(${c.id})">
+            <td><div class="fw6">${c.name}</div><div class="fs12 t3">${c.start} → ${c.end}</div></td>
+            <td class="t2">${c.brand}</td>
+            <td class="t2">${c.market}</td>
+            <td><span class="badge bb" style="font-size:10px;">${c.format}</span></td>
+            <td><div class="fw6">$${(c.budget/1000).toFixed(0)}K</div><div class="fs12 t3">${pct(c)}% spent</div></td>
+            <td><div class="tl" style="width:90px;"><div class="tl-fill" style="width:${pct(c)}%;"></div></div></td>
+            <td class="fw6">${c.impr}</td>
+            <td style="font-weight:700;color:${attColor(c.att)};">${c.att}${c.att!=='—'?'%':''}</td>
+            <td>${statusBadge(c.status)}</td>
+            <td>
+                <div class="flex gap-2">
+                    <button class="icon-btn" style="width:28px;height:28px;" title="Analytics" onclick="event.stopPropagation();nav('analytics',document.querySelectorAll('.nav-item')[4])">
+                        <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8l3-3 2 2 3-4 2 2"/></svg>
+                    </button>
+                    <button class="icon-btn" style="width:28px;height:28px;" title="Download" onclick="event.stopPropagation();showToast('Report downloading...')">
+                        <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5.5 1v7M3 6.5l2.5 2L8 6.5M1.5 10h8"/></svg>
+                    </button>
+                </div>
+            </td>
+        </tr>`).join('');
+}
+
+function filterC(f, el) {
+    currentFilter = f;
+    document.querySelectorAll('#view-campaigns .tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    const d = f === 'all' ? CAMPAIGNS : CAMPAIGNS.filter(c => c.status === f);
+    buildCampTable(d);
+}
+
+function searchC(q) {
+    const ql = q.toLowerCase();
+    let d = currentFilter === 'all' ? CAMPAIGNS : CAMPAIGNS.filter(c => c.status === currentFilter);
+    d = d.filter(c => c.name.toLowerCase().includes(ql) || c.brand.toLowerCase().includes(ql) || c.market.toLowerCase().includes(ql));
+    buildCampTable(d);
+}
+
+// ── PANEL ─────────────────────────────────────────────────────────────────────
+function openPanel(id) {
+    const c = CAMPAIGNS.find(x => x.id === id);
+    if (!c) return;
+    const p = pct(c);
+    document.getElementById('panelBody').innerHTML = `
+        <div style="margin-bottom:18px;">
+            <div style="font-size:19px;font-weight:800;letter-spacing:-0.8px;margin-bottom:4px;">${c.name}</div>
+            <div class="fs13 t2">${c.brand} · ${c.market}</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;">
+            <div class="stat-card" style="padding:14px;">
+                <div class="stat-label">Budget</div>
+                <div class="stat-value" style="font-size:20px;">$${(c.budget/1000).toFixed(0)}K</div>
+                <div class="stat-delta t2">${p}% spent</div>
+            </div>
+            <div class="stat-card" style="padding:14px;">
+                <div class="stat-label">Impressions</div>
+                <div class="stat-value" style="font-size:20px;">${c.impr}</div>
+                <div class="stat-delta up">${c.impr!=='—'?'Delivered':'Pending'}</div>
+            </div>
+            <div class="stat-card" style="padding:14px;">
+                <div class="stat-label">Attention Score</div>
+                <div class="stat-value" style="font-size:20px;color:${attColor(c.att)};">${c.att}${c.att!=='—'?'%':''}</div>
+            </div>
+            <div class="stat-card" style="padding:14px;">
+                <div class="stat-label">Status</div>
+                <div style="margin-top:10px;">${statusBadge(c.status)}</div>
+            </div>
+        </div>
+        <div class="mb-4">
+            <div class="fl mb-2">Budget Pacing</div>
+            <div class="tl" style="height:8px;"><div class="tl-fill" style="width:${p}%;"></div></div>
+            <div class="flex jb mt-4 fs12 t3"><span>$${(c.spent/1000).toFixed(0)}K spent</span><span>$${(c.budget/1000).toFixed(0)}K total</span></div>
+        </div>
+        <div class="div"></div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;margin-bottom:18px;">
+            <div class="flex jb"><span class="t2">Format</span><span class="fw6">${c.format}</span></div>
+            <div class="flex jb"><span class="t2">Market</span><span class="fw6">${c.market}</span></div>
+            <div class="flex jb"><span class="t2">Start</span><span>${c.start}</span></div>
+            <div class="flex jb"><span class="t2">End</span><span>${c.end}</span></div>
+        </div>
+        <div class="flex gap-2" style="flex-direction:column;">
+            <button class="btn primary" style="justify-content:center;" onclick="nav('analytics',document.querySelectorAll('.nav-item')[4]);closePanel()">View Full Analytics →</button>
+            <button class="btn" style="justify-content:center;" onclick="showToast('Report downloading for ${c.brand}...');closePanel()">Download Report</button>
+        </div>`;
+    document.getElementById('panel').classList.add('open');
+    document.getElementById('overlay').classList.add('active');
+}
+
+function closePanel() {
+    document.getElementById('panel').classList.remove('open');
+    document.getElementById('overlay').classList.remove('active');
+}
+
+// ── INVENTORY ─────────────────────────────────────────────────────────────────
+function buildInventory() {
+    document.getElementById('invGrid').innerHTML = INVENTORY.map(u => `
+        <div class="inv-card" onclick="showToast('${u.name} — add to RFP')">
+            <div class="inv-thumb" style="background:${u.bg};">
+                <span style="font-size:44px;position:relative;z-index:1;">${u.emoji}</span>
+            </div>
+            <div class="inv-body">
+                <div class="inv-name">${u.name}</div>
+                <div class="inv-loc">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5" cy="4" r="2"/><path d="M5 1a4 4 0 010 8c-2.2 0-4-1.8-4-4"/></svg>
+                    ${u.loc}
+                    <span class="badge bb" style="margin-left:auto;font-size:9.5px;padding:1px 7px;">${u.type}</span>
+                </div>
+                <div class="inv-meta">
+                    <div>
+                        <div class="cpm-val">$${u.cpm.toFixed(2)} <span style="font-size:12px;font-weight:500;color:var(--text-3);">CPM</span></div>
+                        <div class="cpm-sub">${u.wi}</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-size:14px;font-weight:800;color:${attColor(u.att)};">${u.att}%</div>
+                        <div style="font-size:10px;color:var(--text-3);">Attention</div>
+                    </div>
+                </div>
+                <div class="prog" style="margin:8px 0;"><div class="prog-fill" style="width:${u.att}%;background:${attColor(u.att)};"></div></div>
+                <button class="btn primary" style="width:100%;justify-content:center;height:30px;font-size:12px;margin-top:4px;" onclick="event.stopPropagation();showToast('${u.name} added to RFP ✓')">+ Add to RFP</button>
+            </div>
+        </div>`).join('');
+}
+
+// ── REPORTS ───────────────────────────────────────────────────────────────────
+function buildReports() {
+    document.getElementById('repList').innerHTML = REPORTS.map(r => `
+        <div class="rep-item" onclick="showToast('Downloading: ${r.name.substring(0,40)}...')">
+            <div class="rep-icon" style="background:${r.col};">${r.emoji}</div>
+            <div style="flex:1;">
+                <div class="rep-name">${r.name}</div>
+                <div class="rep-meta">${r.type} · ${r.date} · ${r.size}</div>
+            </div>
+            <button class="btn" style="font-size:12px;height:30px;flex-shrink:0;" onclick="event.stopPropagation();showToast('Downloading ${r.size}...')">
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5.5 1v7.5M3 7l2.5 2L8 7M1.5 10h8"/></svg>
+                Download
+            </button>
+        </div>`).join('');
+}
+
+// ── CHARTS ────────────────────────────────────────────────────────────────────
+Chart.defaults.color = 'rgba(240,237,232,0.4)';
+Chart.defaults.borderColor = 'rgba(255,255,255,0.05)';
+Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+Chart.defaults.font.size = 11;
+
+const CHARTS = {};
+
+function initDash() {
+    if (CHARTS.impr) return;
+
+    const labels = [];
+    for (let i = 29; i >= 0; i--) {
+        const d = new Date('2025-06-22');
+        d.setDate(d.getDate() - i);
+        labels.push(d.toLocaleDateString('en-US',{month:'short',day:'numeric'}));
+    }
+
+    const ctx1 = document.getElementById('chartImpr').getContext('2d');
+    const g1 = ctx1.createLinearGradient(0,0,0,190);
+    g1.addColorStop(0,'rgba(184,255,87,0.22)');
+    g1.addColorStop(1,'rgba(184,255,87,0)');
+
+    CHARTS.impr = new Chart(ctx1, {
+        type:'line',
+        data:{
+            labels,
+            datasets:[{
+                data: labels.map(()=>Math.floor(22+Math.random()*16)),
+                borderColor:'#B8FF57',backgroundColor:g1,
+                borderWidth:2,fill:true,tension:0.42,
+                pointRadius:0,pointHoverRadius:4,pointHoverBackgroundColor:'#B8FF57'
+            }]
+        },
+        options:{
+            responsive:true,maintainAspectRatio:false,
+            interaction:{mode:'index',intersect:false},
+            plugins:{legend:{display:false},tooltip:{backgroundColor:'#1a1a22',borderColor:'rgba(255,255,255,0.08)',borderWidth:1,padding:10,callbacks:{label:ctx=>` ${ctx.parsed.y}M impressions`}}},
+            scales:{
+                x:{grid:{display:false},ticks:{maxTicksLimit:6}},
+                y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>v+'M'}}
+            }
+        }
+    });
+
+    CHARTS.markets = new Chart(document.getElementById('chartMarkets'), {
+        type:'doughnut',
+        data:{
+            labels:['New York','Los Angeles','London','Chicago','Other'],
+            datasets:[{
+                data:[32,24,18,14,12],
+                backgroundColor:['#B8FF57','#60A5FA','#A78BFA','#4ADE80','rgba(255,255,255,0.08)'],
+                borderWidth:0,hoverOffset:6
+            }]
+        },
+        options:{
+            responsive:true,maintainAspectRatio:false,
+            plugins:{
+                legend:{position:'right',labels:{boxWidth:9,padding:11,font:{size:11}}},
+                tooltip:{backgroundColor:'#1a1a22',callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed}%`}}
+            },
+            cutout:'68%'
+        }
+    });
+}
+
+function initAnalytics() {
+    if (CHARTS.att) return;
+
+    CHARTS.att = new Chart(document.getElementById('chartAtt'), {
+        type:'bar', indexAxis:'y',
+        data:{
+            labels:['Times Sq N','JFK T4','Piccadilly','Sunset Blvd','Westfield','L Train','O\'Hare','Marina Bay','Embarcad.','Sydney Hbr'],
+            datasets:[{
+                data:[91,85,88,84,82,79,74,76,72,69],
+                backgroundColor:ctx => ctx.raw>=85?'#B8FF57':ctx.raw>=74?'rgba(74,222,128,0.7)':'rgba(255,255,255,0.15)',
+                borderRadius:5,borderSkipped:false
+            }]
+        },
+        options:{
+            responsive:true,maintainAspectRatio:false,
+            plugins:{legend:{display:false},tooltip:{backgroundColor:'#1a1a22',callbacks:{label:ctx=>` ${ctx.parsed.x}%`}}},
+            scales:{
+                x:{grid:{color:'rgba(255,255,255,0.04)'},max:100,ticks:{callback:v=>v+'%'}},
+                y:{grid:{display:false},ticks:{font:{size:10}}}
+            }
+        }
+    });
+
+    CHARTS.visit = new Chart(document.getElementById('chartVisit'), {
+        type:'line',
+        data:{
+            labels:['Wk 1','Wk 2','Wk 3','Wk 4','Wk 5','Wk 6'],
+            datasets:[
+                {label:'Exposed',data:[100,112,128,141,148,134],borderColor:'#B8FF57',backgroundColor:'transparent',borderWidth:2,tension:0.4,pointRadius:3,pointBackgroundColor:'#B8FF57'},
+                {label:'Control',data:[100,101,102,103,101,100],borderColor:'rgba(255,255,255,0.22)',backgroundColor:'transparent',borderWidth:1.5,borderDash:[4,4],tension:0.3,pointRadius:0}
+            ]
+        },
+        options:{
+            responsive:true,maintainAspectRatio:false,
+            plugins:{legend:{labels:{boxWidth:9}},tooltip:{backgroundColor:'#1a1a22'}},
+            scales:{
+                x:{grid:{display:false}},
+                y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>v+'%'}}
+            }
+        }
+    });
+
+    CHARTS.brand = new Chart(document.getElementById('chartBrand'), {
+        type:'radar',
+        data:{
+            labels:['Awareness','Consideration','Purchase Intent','Recall','Ad Recall','Favourability'],
+            datasets:[
+                {label:'Post-Campaign',data:[82,71,64,88,79,73],borderColor:'#B8FF57',backgroundColor:'rgba(184,255,87,0.1)',borderWidth:2,pointBackgroundColor:'#B8FF57',pointRadius:3},
+                {label:'Pre-Campaign',data:[58,50,45,60,54,55],borderColor:'rgba(255,255,255,0.2)',backgroundColor:'rgba(255,255,255,0.05)',borderWidth:1.5,borderDash:[4,4],pointRadius:0}
+            ]
+        },
+        options:{
+            responsive:true,maintainAspectRatio:false,
+            plugins:{legend:{labels:{boxWidth:9}},tooltip:{backgroundColor:'#1a1a22'}},
+            scales:{r:{grid:{color:'rgba(255,255,255,0.06)'},pointLabels:{font:{size:9.5},color:'rgba(240,237,232,0.45)'},ticks:{display:false},min:0,max:100}}
+        }
+    });
+
+    CHARTS.web = new Chart(document.getElementById('chartWeb'), {
+        type:'bar',
+        data:{
+            labels:['OOH Exposure','Brand Search','Site Visit','Product Page','Conversion'],
+            datasets:[{
+                data:[14200,4800,2900,1650,820],
+                backgroundColor:['rgba(184,255,87,0.8)','rgba(184,255,87,0.65)','rgba(184,255,87,0.5)','rgba(184,255,87,0.35)','rgba(184,255,87,0.2)'],
+                borderRadius:5,borderSkipped:false
+            }]
+        },
+        options:{
+            responsive:true,maintainAspectRatio:false,
+            plugins:{legend:{display:false},tooltip:{backgroundColor:'#1a1a22',callbacks:{label:ctx=>` ${ctx.parsed.y.toLocaleString()} users`}}},
+            scales:{
+                x:{grid:{display:false},ticks:{font:{size:9.5}}},
+                y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>(v/1000).toFixed(0)+'K'}}
+            }
+        }
+    });
+}
+
+function initProg() {
+    if (CHARTS.prog) return;
+    const hours = ['6am','7am','8am','9am','10am','11am','12pm','1pm','2pm','3pm','4pm','5pm','6pm','7pm','8pm'];
+    const ctx = document.getElementById('chartProg').getContext('2d');
+    const g = ctx.createLinearGradient(0,0,0,150);
+    g.addColorStop(0,'rgba(184,255,87,0.2)');
+    g.addColorStop(1,'rgba(184,255,87,0)');
+    CHARTS.prog = new Chart(ctx, {
+        type:'line',
+        data:{
+            labels:hours,
+            datasets:[{
+                label:'Impressions (K)',
+                data:[120,580,820,940,780,650,720,840,910,820,760,950,1100,880,640],
+                borderColor:'#B8FF57',backgroundColor:g,borderWidth:2,fill:true,tension:0.42,
+                pointRadius:0,pointHoverRadius:4,pointHoverBackgroundColor:'#B8FF57'
+            }]
+        },
+        options:{
+            responsive:true,maintainAspectRatio:false,
+            plugins:{legend:{display:false},tooltip:{backgroundColor:'#1a1a22',callbacks:{label:ctx=>` ${ctx.parsed.y}K impressions`}}},
+            scales:{
+                x:{grid:{display:false}},
+                y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>v+'K'}}
+            }
+        }
+    });
+}
+
+// ── RFP ───────────────────────────────────────────────────────────────────────
+function openRfp() { document.getElementById('rfpModal').classList.add('open'); }
+function closeRfp() { document.getElementById('rfpModal').classList.remove('open'); }
+function submitRfp() { closeRfp(); showToast('RFP submitted — our team responds within 24h ✓'); }
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+    clearTimeout(toastTimer);
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.classList.add('show');
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// ── TAB GENERIC ───────────────────────────────────────────────────────────────
+document.querySelectorAll('.tabs .tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+        const parent = this.closest('.tabs');
+        if (!parent || parent.querySelector('.tab[onclick]')) return;
+        parent.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+    });
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    buildDashTable();
+    buildCampTable(CAMPAIGNS);
+    buildInventory();
+    buildReports();
+    setTimeout(initDash, 150);
+});
+</script>
+</body>
+</html>
