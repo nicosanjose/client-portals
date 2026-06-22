@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snowden · Client Portals</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:#0c0c0f;color:#f0ede8;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px}
+.logo{font-size:13px;font-weight:700;letter-spacing:0.15em;color:rgba(240,237,232,0.4);text-transform:uppercase;margin-bottom:40px}
+h1{font-size:28px;font-weight:800;letter-spacing:-0.03em;margin-bottom:8px;text-align:center}
+p{font-size:14px;color:rgba(240,237,232,0.5);margin-bottom:40px;text-align:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;max-width:700px;width:100%}
+.card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:24px;text-decoration:none;color:inherit;transition:all 0.18s;display:flex;flex-direction:column;gap:8px}
+.card:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.14);transform:translateY(-2px)}
+.card-badge{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:20px;width:fit-content}
+.card-name{font-size:17px;font-weight:700}
+.card-desc{font-size:13px;color:rgba(240,237,232,0.5)}
+.card-link{font-size:12px;color:rgba(240,237,232,0.3);margin-top:4px}
+</style>
+</head>
+<body>
+  <div class="logo">Snowden Ventures</div>
+  <h1>Client Portals</h1>
+  <p>Demos interactivos para clientes</p>
+  <div class="grid">
+    <a class="card" href="nicolina-portal-operaciones.html">
+      <div class="card-badge" style="background:rgba(196,127,66,0.15);color:#e8a96a">Pastelería · Madrid</div>
+      <div class="card-name">Nicolina</div>
+      <div class="card-desc">Portal de operaciones interno — pedidos, obrador, tiendas, finanzas, equipo</div>
+      <div class="card-link">nicolina-portal-operaciones.html →</div>
+    </a>
+    <a class="card" href="portal-billups.html">
+      <div class="card-badge" style="background:rgba(37,99,235,0.15);color:#93c5fd">Portal cliente</div>
+      <div class="card-name">Billups</div>
+      <div class="card-desc">Portal de gestión de cliente</div>
+      <div class="card-link">portal-billups.html →</div>
+    </a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nicolina · Portal de Operaciones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --brand: #c47f42;
+  --brand-light: rgba(196,127,66,0.12);
+  --sidebar-bg: #0c0c0f;
+  --sidebar-border: rgba(255,255,255,0.06);
+  --sidebar-text: #a8a4a0;
+  --sidebar-active: #e8a96a;
+  --app-bg: #f5f3ef;
+  --card: #ffffff;
+  --card-border: rgba(0,0,0,0.07);
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 14px rgba(0,0,0,0.04);
+  --text: #1a1917;
+  --text-2: #6b6660;
+  --text-3: #9c9590;
+  --success: #16a34a; --success-bg: #f0fdf4;
+  --warn: #d97706;   --warn-bg: #fffbeb;
+  --danger: #dc2626; --danger-bg: #fef2f2;
+  --info: #2563eb;   --info-bg: #eff6ff;
+  --border: #e8e4de;
+  --border-2: #f0ece6;
+  --r: 10px; --rs: 6px; --rl: 16px;
+  --sidebar-w: 258px;
+  --header-h: 60px;
+  --sans: 'Outfit', system-ui, sans-serif;
+  --mono: 'DM Mono', monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;-webkit-font-smoothing:antialiased}
+body{font-family:var(--sans);background:var(--app-bg);color:var(--text);display:flex;height:100vh;overflow:hidden}
+
+/* ─── SIDEBAR ─── */
+.sidebar{width:var(--sidebar-w);min-width:var(--sidebar-w);background:var(--sidebar-bg);display:flex;flex-direction:column;height:100vh;overflow-y:auto;border-right:1px solid var(--sidebar-border);position:relative;z-index:10}
+.sidebar::-webkit-scrollbar{width:3px}.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:2px}
+.sb-logo{padding:22px 20px 18px;border-bottom:1px solid var(--sidebar-border);display:flex;align-items:center;gap:10px}
+.sb-logo img{height:28px;width:auto;object-fit:contain}
+.sb-logo-sub{font-size:10px;color:rgba(240,237,232,0.35);margin-top:2px;letter-spacing:0.05em}
+.sb-nav{flex:1;padding:10px 8px;display:flex;flex-direction:column;gap:1px}
+.sb-section{font-size:10px;font-weight:600;color:rgba(168,164,160,0.45);letter-spacing:0.1em;text-transform:uppercase;padding:12px 12px 5px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:var(--rs);cursor:pointer;transition:all 0.14s;color:var(--sidebar-text);user-select:none;position:relative}
+.nav-item:hover{background:rgba(255,255,255,0.05);color:#d4cfc9}
+.nav-item.active{background:rgba(196,127,66,0.14);color:var(--sidebar-active)}
+.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:58%;background:var(--brand);border-radius:0 2px 2px 0}
+.nav-icon{width:17px;height:17px;flex-shrink:0;opacity:0.72}
+.nav-item.active .nav-icon{opacity:1}
+.nav-label{font-size:13px;font-weight:500;flex:1}
+.nav-badge{background:var(--brand);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;font-family:var(--mono)}
+.nav-badge.red{background:var(--danger)}
+.sb-footer{padding:14px 8px;border-top:1px solid var(--sidebar-border)}
+.sb-user{display:flex;align-items:center;gap:10px;padding:9px 12px}
+.sb-avatar{width:31px;height:31px;border-radius:50%;background:linear-gradient(135deg,#c47f42,#e8a96a);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.sb-user-name{font-size:12px;font-weight:600;color:#f0ede8}
+.sb-user-role{font-size:11px;color:var(--sidebar-text)}
+
+/* ─── MAIN ─── */
+.main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.topbar{height:var(--header-h);min-height:var(--header-h);background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;padding:0 24px;z-index:5}
+.topbar-title{font-size:15px;font-weight:800;flex:1;letter-spacing:-0.02em}
+.topbar-meta{font-size:11px;color:var(--text-3);font-family:var(--mono)}
+.topbar-actions{display:flex;align-items:center;gap:7px}
+.icon-btn{width:34px;height:34px;border-radius:var(--rs);border:1px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.14s;position:relative;color:var(--text-2)}
+.icon-btn:hover{background:var(--app-bg)}
+.notif-dot{width:6px;height:6px;background:var(--danger);border-radius:50%;position:absolute;top:7px;right:7px;border:1.5px solid #fff}
+.topbar-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#c47f42,#e8a96a);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;cursor:pointer;margin-left:3px}
+
+/* ─── CONTENT ─── */
+.content{flex:1;overflow-y:auto;padding:22px 24px}
+.content::-webkit-scrollbar{width:5px}.content::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.view{display:none}.view.active{display:block}
+
+/* ─── CARDS ─── */
+.card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--r);box-shadow:var(--card-shadow)}
+.card-hd{padding:14px 20px 12px;border-bottom:1px solid var(--border-2);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:13px;font-weight:700;letter-spacing:-0.01em}
+.card-sub{font-size:12px;color:var(--text-3);margin-top:2px}
+.card-body{padding:14px 20px}
+.card-body-sm{padding:10px 16px}
+.mb4{margin-bottom:16px}.mb6{margin-bottom:24px}
+
+/* ─── PAGE HEADER ─── */
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px}
+.ph h1{font-size:21px;font-weight:800;letter-spacing:-0.03em}
+.ph p{font-size:12px;color:var(--text-3);margin-top:3px}
+.ph-actions{display:flex;gap:7px;align-items:center}
+
+/* ─── KPI GRID ─── */
+.kpi4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.kpi-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--r);padding:18px;box-shadow:var(--card-shadow)}
+.kpi-lbl{font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:9px}
+.kpi-val{font-size:26px;font-weight:800;font-family:var(--mono);letter-spacing:-0.03em;line-height:1;margin-bottom:7px}
+.kpi-ch{font-size:11px;font-weight:600;display:flex;align-items:center;gap:3px}
+.kpi-ch.up{color:var(--success)}.kpi-ch.dn{color:var(--danger)}.kpi-ch.n{color:var(--text-3)}
+.kpi-bar{height:3px;background:var(--border-2);border-radius:2px;margin-top:10px;overflow:hidden}
+.kpi-fill{height:100%;border-radius:2px;background:var(--brand);transition:width 0.6s}
+
+/* ─── GRIDS ─── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:22px}
+.g7030{display:grid;grid-template-columns:1fr 360px;gap:16px;margin-bottom:22px}
+.g6040{display:grid;grid-template-columns:3fr 2fr;gap:16px;margin-bottom:22px}
+
+/* ─── BADGES ─── */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.bd{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.b-ok{background:var(--success-bg);color:var(--success)}.b-ok .bd{background:var(--success)}
+.b-warn{background:var(--warn-bg);color:var(--warn)}.b-warn .bd{background:var(--warn)}
+.b-err{background:var(--danger-bg);color:var(--danger)}.b-err .bd{background:var(--danger)}
+.b-info{background:var(--info-bg);color:var(--info)}.b-info .bd{background:var(--info)}
+.b-neu{background:#f3f2f0;color:var(--text-2)}.b-neu .bd{background:var(--text-3)}
+.b-br{background:var(--brand-light);color:var(--brand)}.b-br .bd{background:var(--brand)}
+
+/* channel pills */
+.ch-on{background:#eff6ff;color:#1d4ed8;font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px}
+.ch-po{background:rgba(196,127,66,0.1);color:#a05c22;font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px}
+.ch-pe{background:#f3e8ff;color:#7c3aed;font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px}
+.ch-b2b{background:#f0fdf4;color:#166534;font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px}
+.ch-enc{background:#fff7ed;color:#c2410c;font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px}
+
+/* ─── TABLE ─── */
+.dt{width:100%;border-collapse:collapse}
+.dt th{font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.07em;padding:9px 16px;text-align:left;border-bottom:1px solid var(--border);background:#faf9f7}
+.dt th:first-child{padding-left:20px}.dt th:last-child{padding-right:20px}
+.dt td{padding:12px 16px;font-size:13px;border-bottom:1px solid var(--border-2);vertical-align:middle}
+.dt td:first-child{padding-left:20px}.dt td:last-child{padding-right:20px}
+.dt tr:last-child td{border-bottom:none}
+.dt tr:hover td{background:#faf9f7}
+.tm{font-family:var(--mono);font-size:12px}.tm-m{font-family:var(--mono);font-size:12px;color:var(--text-3)}
+
+/* ─── TABS ─── */
+.tabs{display:flex;gap:3px;padding:3px;background:#ede9e3;border-radius:var(--rs);margin-bottom:18px;width:fit-content}
+.tab{padding:6px 13px;border-radius:5px;font-size:12px;font-weight:600;color:var(--text-3);cursor:pointer;transition:all 0.13s;user-select:none}
+.tab:hover{color:var(--text)}
+.tab.active{background:var(--card);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,0.1)}
+
+/* ─── BUTTONS ─── */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;transition:all 0.13s;border:none;font-family:var(--sans);text-decoration:none}
+.btn:active{transform:scale(0.98)}
+.btn-pri{background:var(--text);color:#fff}.btn-pri:hover{background:#2d2b29}
+.btn-sec{background:transparent;color:var(--text-2);border:1px solid var(--border)}.btn-sec:hover{background:var(--app-bg);color:var(--text)}
+.btn-br{background:var(--brand);color:#fff}.btn-br:hover{background:#b8722f}
+.btn-sm{padding:5px 11px;font-size:12px}.btn-xs{padding:3px 8px;font-size:11px}
+
+/* ─── ALERTS ─── */
+.alert{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:var(--rs);margin-bottom:8px}
+.alert.aw{background:var(--warn-bg);border:1px solid rgba(217,119,6,0.2)}
+.alert.ae{background:var(--danger-bg);border:1px solid rgba(220,38,38,0.2)}
+.alert.ai{background:var(--info-bg);border:1px solid rgba(37,99,235,0.15)}
+.alert.as{background:var(--success-bg);border:1px solid rgba(22,163,74,0.2)}
+.alert-ico{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.aw .alert-ico{background:rgba(217,119,6,0.14);color:var(--warn)}
+.ae .alert-ico{background:rgba(220,38,38,0.14);color:var(--danger)}
+.ai .alert-ico{background:rgba(37,99,235,0.12);color:var(--info)}
+.as .alert-ico{background:rgba(22,163,74,0.14);color:var(--success)}
+.alert-title{font-size:12px;font-weight:700}.alert-desc{font-size:11px;color:var(--text-2);margin-top:1px}
+
+/* ─── KANBAN ─── */
+.kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.kcol{background:#ede9e3;border-radius:var(--r);padding:12px;min-height:380px}
+.kcol-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.kcol-title{font-size:11px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:0.06em}
+.kcol-cnt{background:rgba(0,0,0,0.09);color:var(--text-2);width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;font-family:var(--mono)}
+.kcard{background:var(--card);border-radius:var(--rs);padding:11px 13px;margin-bottom:7px;border:1px solid var(--card-border);cursor:pointer;transition:all 0.14s}
+.kcard:hover{box-shadow:0 4px 12px rgba(0,0,0,0.09);transform:translateY(-1px)}
+.kcard-name{font-size:13px;font-weight:600;margin-bottom:3px}
+.kcard-qty{font-size:11px;color:var(--text-3);font-family:var(--mono)}
+.kcard-meta{display:flex;align-items:center;justify-content:space-between;margin-top:7px}
+.kcard-who{font-size:11px;color:var(--text-2)}
+.kcard-dl{font-size:10px;font-family:var(--mono);color:var(--text-3);background:var(--app-bg);padding:2px 6px;border-radius:4px}
+.kcard-dl.u{color:var(--danger);background:var(--danger-bg)}
+
+/* ─── METRICS ─── */
+.mrow{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border-2)}
+.mrow:last-child{border-bottom:none}
+.mlbl{font-size:13px;color:var(--text-2)}.mval{font-size:14px;font-weight:700;font-family:var(--mono)}
+
+/* ─── PROGRESS ─── */
+.prog{margin-bottom:13px}
+.prog-hd{display:flex;justify-content:space-between;margin-bottom:5px}
+.prog-lbl{font-size:12px;color:var(--text-2)}.prog-val{font-size:12px;font-weight:600;font-family:var(--mono)}
+.prog-bar{height:6px;background:var(--border);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;border-radius:4px;transition:width 0.6s}
+
+/* ─── EMPLOYEE ROW ─── */
+.emp-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-2)}
+.emp-row:last-child{border-bottom:none}
+.emp-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.emp-name{font-size:13px;font-weight:600}.emp-role{font-size:11px;color:var(--text-3)}
+
+/* ─── ACTIVITY ─── */
+.act-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border-2)}
+.act-item:last-child{border-bottom:none}
+.act-dot{width:7px;height:7px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.act-txt{font-size:13px;line-height:1.5}.act-time{font-size:10px;color:var(--text-3);margin-top:1px;font-family:var(--mono)}
+
+/* ─── STORE CARD ─── */
+.store-hd{display:flex;align-items:center;gap:11px;padding:18px 20px;border-bottom:1px solid var(--border-2)}
+.store-dot{width:9px;height:9px;border-radius:50%;background:var(--success);box-shadow:0 0 0 3px rgba(22,163,74,0.18);flex-shrink:0}
+.store-dot.off{background:var(--danger);box-shadow:0 0 0 3px rgba(220,38,38,0.18)}
+.store-name{font-size:14px;font-weight:700}.store-addr{font-size:11px;color:var(--text-3);margin-top:1px}
+
+/* ─── CHAT ─── */
+.chat-msg{display:flex;gap:9px;margin-bottom:10px}
+.chat-bubble{background:var(--app-bg);border-radius:0 8px 8px 8px;padding:8px 11px;font-size:12px;flex:1}
+.chat-bubble.me{background:#1a1917;color:#fff;border-radius:8px 0 8px 8px}
+.chat-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+.chat-ts{font-size:10px;color:var(--text-3);margin-top:2px;font-family:var(--mono)}
+.chat-ts.me{color:rgba(255,255,255,0.4)}
+
+/* ─── CHANNEL MINI CARDS ─── */
+.ch-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+.ch-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--r);padding:15px;box-shadow:var(--card-shadow)}
+.ch-card-ico{width:34px;height:34px;border-radius:7px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.ch-card-lbl{font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:3px}
+.ch-card-val{font-size:19px;font-weight:800;font-family:var(--mono)}
+.ch-card-sub{font-size:11px;color:var(--text-3);margin-top:2px}
+.ch-card-trend{font-size:11px;font-weight:600;margin-top:7px}
+
+/* ─── SEARCH INPUT ─── */
+.search{display:flex;align-items:center;gap:7px;background:var(--app-bg);border:1px solid var(--border);border-radius:var(--rs);padding:6px 11px;font-size:13px;color:var(--text-3);cursor:text}
+
+/* ─── DIVIDER ─── */
+.divider{height:1px;background:var(--border);margin:14px 0}
+</style>
+</head>
+<body>
+
+<!-- ══════════ SIDEBAR ══════════ -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <img src="https://nicolina.es/cdn/shop/files/Logo-NICOLINA-linea_blanca_170x.png?v=1727857794" alt="Nicolina" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <div style="display:none;font-size:16px;font-weight:800;color:#f0ede8;letter-spacing:0.05em">NICOLINA</div>
+    <div>
+      <div class="sb-logo-sub">Portal de Operaciones</div>
+    </div>
+  </div>
+
+  <nav class="sb-nav">
+    <div class="sb-section">Principal</div>
+
+    <div class="nav-item active" onclick="showView('dashboard')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="8" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="15" width="7" height="6" rx="1"/></svg>
+      <span class="nav-label">Panel General</span>
+    </div>
+
+    <div class="nav-item" onclick="showView('pedidos')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12" y2="16"/></svg>
+      <span class="nav-label">Pedidos</span>
+      <span class="nav-badge">7</span>
+    </div>
+
+    <div class="nav-item" onclick="showView('obrador')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c0 0-4 4-4 8a4 4 0 008 0c0-4-4-8-4-8z"/><path d="M12 10c0 0-2 2-2 4a2 2 0 004 0c0-2-2-4-2-4z" fill="currentColor" stroke="none" opacity="0.3"/><path d="M5 20h14M7 20v-2a5 5 0 0110 0v2"/></svg>
+      <span class="nav-label">Obrador</span>
+      <span class="nav-badge">5</span>
+    </div>
+
+    <div class="nav-item" onclick="showView('inventario')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+      <span class="nav-label">Inventario</span>
+      <span class="nav-badge red">3</span>
+    </div>
+
+    <div class="sb-section">Operaciones</div>
+
+    <div class="nav-item" onclick="showView('tiendas')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span class="nav-label">Tiendas</span>
+    </div>
+
+    <div class="nav-item" onclick="showView('clientes')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      <span class="nav-label">Clientes & B2B</span>
+    </div>
+
+    <div class="nav-item" onclick="showView('reparto')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      <span class="nav-label">Reparto</span>
+      <span class="nav-badge">4</span>
+    </div>
+
+    <div class="sb-section">Gestión</div>
+
+    <div class="nav-item" onclick="showView('finanzas')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span class="nav-label">Finanzas</span>
+    </div>
+
+    <div class="nav-item" onclick="showView('web')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+      <span class="nav-label">Web & Shopify</span>
+    </div>
+
+    <div class="nav-item" onclick="showView('equipo')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      <span class="nav-label">Equipo</span>
+    </div>
+
+  </nav>
+
+  <div class="sb-footer">
+    <div class="nav-item" onclick="showView('config')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <span class="nav-label">Configuración</span>
+    </div>
+    <div class="sb-user">
+      <div class="sb-avatar">AG</div>
+      <div><div class="sb-user-name">Andrea García</div><div class="sb-user-role">Dirección general</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- ══════════ MAIN AREA ══════════ -->
+<div class="main">
+  <header class="topbar">
+    <span class="topbar-title" id="page-title">Panel General</span>
+    <span class="topbar-meta" id="clock">Domingo, 22 de junio 2025 · 11:47</span>
+    <div class="topbar-actions">
+      <div class="search" style="width:210px">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Buscar...
+      </div>
+      <button class="icon-btn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <span class="notif-dot"></span>
+      </button>
+      <div class="topbar-av">AG</div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- ══════════ VIEW: DASHBOARD ══════════ -->
+    <div class="view active" id="view-dashboard">
+      <div class="ph">
+        <div><h1>Panel General</h1><p>Resumen operacional · Domingo 22 de junio 2025</p></div>
+        <div class="ph-actions">
+          <button class="btn btn-sec btn-sm">Exportar resumen</button>
+          <button class="btn btn-br btn-sm">Actualizar</button>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpi4">
+        <div class="kpi-card">
+          <div class="kpi-lbl">Facturación hoy</div>
+          <div class="kpi-val">1.247€</div>
+          <div class="kpi-ch up"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>+14.3% vs ayer</div>
+          <div class="kpi-bar"><div class="kpi-fill" style="width:71%"></div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-lbl">Pedidos totales</div>
+          <div class="kpi-val">34</div>
+          <div class="kpi-ch up"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>+6 vs ayer</div>
+          <div class="kpi-bar"><div class="kpi-fill" style="width:62%;background:#2563eb"></div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-lbl">En producción</div>
+          <div class="kpi-val">8</div>
+          <div class="kpi-ch n">5 productos · 38 unidades</div>
+          <div class="kpi-bar"><div class="kpi-fill" style="width:53%;background:#d97706"></div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-lbl">Entregas en curso</div>
+          <div class="kpi-val">4</div>
+          <div class="kpi-ch n">Ventana 10:00 – 15:00</div>
+          <div class="kpi-bar"><div class="kpi-fill" style="width:33%;background:var(--success)"></div></div>
+        </div>
+      </div>
+
+      <!-- Channel cards -->
+      <div class="ch-cards">
+        <div class="ch-card">
+          <div class="ch-card-ico" style="background:#eff6ff"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
+          <div class="ch-card-lbl">Online · Shopify</div>
+          <div class="ch-card-val">483€</div>
+          <div class="ch-card-sub">14 pedidos · 38.8%</div>
+          <div class="ch-card-trend" style="color:var(--success)">+18.2% vs ayer</div>
+        </div>
+        <div class="ch-card">
+          <div class="ch-card-ico" style="background:rgba(196,127,66,0.1)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#c47f42" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div class="ch-card-lbl">Tienda Potosí</div>
+          <div class="ch-card-val">412€</div>
+          <div class="ch-card-sub">11 pedidos · 33.1%</div>
+          <div class="ch-card-trend" style="color:var(--success)">+9.4% vs ayer</div>
+        </div>
+        <div class="ch-card">
+          <div class="ch-card-ico" style="background:#f3e8ff"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div class="ch-card-lbl">Tienda Peñalver</div>
+          <div class="ch-card-val">241€</div>
+          <div class="ch-card-sub">7 pedidos · 19.3%</div>
+          <div class="ch-card-trend" style="color:var(--danger)">−4.1% vs ayer</div>
+        </div>
+        <div class="ch-card">
+          <div class="ch-card-ico" style="background:#f0fdf4"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+          <div class="ch-card-lbl">B2B Restaurantes</div>
+          <div class="ch-card-val">111€</div>
+          <div class="ch-card-sub">3 pedidos · 8.9%</div>
+          <div class="ch-card-trend" style="color:var(--text-3)">Estable</div>
+        </div>
+      </div>
+
+      <!-- Main content: chart + alerts -->
+      <div class="g7030">
+        <div>
+          <div class="card mb4">
+            <div class="card-hd">
+              <div><div class="card-title">Facturación — últimos 7 días</div><div class="card-sub">Todos los canales combinados</div></div>
+              <div style="display:flex;gap:6px"><button class="btn btn-sec btn-xs">Semana</button><button class="btn btn-sec btn-xs">Mes</button></div>
+            </div>
+            <div style="padding:14px 20px 18px;height:190px"><canvas id="chart-revenue"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><div class="card-title">Últimos pedidos</div><button class="btn btn-sec btn-xs" onclick="showView('pedidos')">Ver todos</button></div>
+            <table class="dt">
+              <thead><tr><th>Pedido</th><th>Cliente</th><th>Producto</th><th>Importe</th><th>Canal</th><th>Estado</th></tr></thead>
+              <tbody>
+                <tr><td class="tm-m">#2854</td><td><strong>Isabel Martínez</strong></td><td>Tarta de Zanahoria</td><td class="tm">38,00€</td><td><span class="ch-on">Online</span></td><td><span class="badge b-warn"><span class="bd"></span>Pendiente</span></td></tr>
+                <tr><td class="tm-m">#2853</td><td><strong>Rest. Maca*</strong></td><td>Volcán Chocolate ×3</td><td class="tm">110,70€</td><td><span class="ch-b2b">B2B</span></td><td><span class="badge b-info"><span class="bd"></span>En producción</span></td></tr>
+                <tr><td class="tm-m">#2852</td><td><strong>Carmen Rodríguez</strong></td><td>Tarta de Queso</td><td class="tm">34,90€</td><td><span class="ch-po">Potosí</span></td><td><span class="badge b-br"><span class="bd"></span>En reparto</span></td></tr>
+                <tr><td class="tm-m">#2851</td><td><strong>Elena Vega</strong></td><td>Tarta cumpleaños 12p</td><td class="tm">62,00€</td><td><span class="ch-on">Online</span></td><td><span class="badge b-ok"><span class="bd"></span>Entregado</span></td></tr>
+                <tr><td class="tm-m">#2850</td><td><strong>Sofía Castro</strong></td><td>Tarta Primera Comunión</td><td class="tm">90,00€</td><td><span class="ch-enc">Encargo</span></td><td><span class="badge b-info"><span class="bd"></span>En producción</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <div class="card mb4">
+            <div class="card-hd"><div class="card-title">Alertas activas</div><span class="badge b-err">3</span></div>
+            <div style="padding:12px 16px">
+              <div class="alert ae">
+                <div class="alert-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+                <div><div class="alert-title">Stock crítico: Mantequilla</div><div class="alert-desc">0.8 kg restantes · mínimo 2 kg · Pedir hoy</div></div>
+              </div>
+              <div class="alert aw">
+                <div class="alert-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                <div><div class="alert-title">Encargo urgente: Tarta de Bebé</div><div class="alert-desc">Entrega mañana 23 jun a las 10:00 — sin asignar</div></div>
+              </div>
+              <div class="alert aw">
+                <div class="alert-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+                <div><div class="alert-title">Entrega #2848 sin confirmar</div><div class="alert-desc">Hotel NH Madrid · sin respuesta desde las 11:30</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mb4">
+            <div class="card-hd"><div class="card-title">Pedidos por canal</div></div>
+            <div style="padding:10px 20px 18px;height:190px"><canvas id="chart-channels"></canvas></div>
+          </div>
+
+          <div class="card">
+            <div class="card-hd"><div class="card-title">Actividad reciente</div></div>
+            <div class="card-body-sm">
+              <div class="act-item"><div class="act-dot" style="background:var(--success)"></div><div><div class="act-txt"><strong>Elena Vega</strong> recibió su pedido · Tarta de cumpleaños</div><div class="act-time">11:43 · hace 4 min</div></div></div>
+              <div class="act-item"><div class="act-dot" style="background:var(--brand)"></div><div><div class="act-txt">Obrador completó <strong>Brownies decorados ×8</strong></div><div class="act-time">11:31 · hace 16 min</div></div></div>
+              <div class="act-item"><div class="act-dot" style="background:var(--info)"></div><div><div class="act-txt">Nuevo pedido online <strong>#2854</strong> · Isabel Martínez</div><div class="act-time">11:22 · hace 25 min</div></div></div>
+              <div class="act-item"><div class="act-dot" style="background:var(--warn)"></div><div><div class="act-txt"><strong>Stock bajo:</strong> Mantequilla por debajo del mínimo</div><div class="act-time">10:58 · hace 49 min</div></div></div>
+              <div class="act-item"><div class="act-dot" style="background:var(--brand)"></div><div><div class="act-txt">José salió a reparto con <strong>4 pedidos</strong> · Madrid centro</div><div class="act-time">10:32 · hace 1h 15min</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Obrador strip -->
+      <div class="card">
+        <div class="card-hd"><div class="card-title">Estado del Obrador · Hoy</div><button class="btn btn-sec btn-xs" onclick="showView('obrador')">Ver detalle</button></div>
+        <div class="card-body" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;padding-top:10px">
+          <div>
+            <div class="prog"><div class="prog-hd"><span class="prog-lbl">Tartas de encargo</span><span class="prog-val">2/3</span></div><div class="prog-bar"><div class="prog-fill" style="width:67%;background:var(--brand)"></div></div></div>
+            <div class="prog"><div class="prog-hd"><span class="prog-lbl">Tartas estándar</span><span class="prog-val">12/18</span></div><div class="prog-bar"><div class="prog-fill" style="width:67%;background:#2563eb"></div></div></div>
+          </div>
+          <div>
+            <div class="prog"><div class="prog-hd"><span class="prog-lbl">Postres individuales</span><span class="prog-val">24/30</span></div><div class="prog-bar"><div class="prog-fill" style="width:80%;background:var(--success)"></div></div></div>
+            <div class="prog"><div class="prog-hd"><span class="prog-lbl">Panadería & dulces</span><span class="prog-val">8/15</span></div><div class="prog-bar"><div class="prog-fill" style="width:53%;background:#d97706"></div></div></div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--text-3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em">Turno activo</div>
+            <div class="emp-row" style="border:none;padding:6px 0"><div class="emp-av" style="background:#c47f42">MG</div><div><div class="emp-name">María García</div><div class="emp-role">Maestre pastelera</div></div></div>
+            <div class="emp-row" style="border:none;padding:6px 0"><div class="emp-av" style="background:#6366f1">PS</div><div><div class="emp-name">Pablo Sánchez</div><div class="emp-role">Ayudante obrador</div></div></div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--text-3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em">Mensaje del obrador</div>
+            <div style="background:var(--app-bg);border-radius:var(--rs);padding:9px 11px;font-size:12px;color:var(--text-2);border:1px solid var(--border)">
+              "Volcán de chocolate para Maca listo a las 13h. Tarta Primera Comunión en horno — OK para 14:30."
+              <div style="font-size:10px;color:var(--text-3);margin-top:3px;font-family:var(--mono)">María · 11:18</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /dashboard -->
+
+
+    <!-- ══════════ VIEW: PEDIDOS ══════════ -->
+    <div class="view" id="view-pedidos">
+      <div class="ph">
+        <div><h1>Pedidos</h1><p>Gestión unificada de todos los canales · hoy</p></div>
+        <div class="ph-actions"><button class="btn btn-sec btn-sm">Exportar</button><button class="btn btn-br btn-sm">+ Nuevo encargo</button></div>
+      </div>
+
+      <div class="tabs" id="tabs-ped">
+        <div class="tab active" onclick="switchTab(this,'tabs-ped')">Todos (34)</div>
+        <div class="tab" onclick="switchTab(this,'tabs-ped')">Online (14)</div>
+        <div class="tab" onclick="switchTab(this,'tabs-ped')">Potosí (11)</div>
+        <div class="tab" onclick="switchTab(this,'tabs-ped')">Peñalver (7)</div>
+        <div class="tab" onclick="switchTab(this,'tabs-ped')">B2B (3)</div>
+        <div class="tab" onclick="switchTab(this,'tabs-ped')">Encargos (5)</div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <div class="search" style="width:260px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Buscar pedido, cliente...</div>
+        <button class="btn btn-sec btn-sm">Estado</button>
+        <button class="btn btn-sec btn-sm">Fecha</button>
+        <button class="btn btn-sec btn-sm">Canal</button>
+      </div>
+
+      <div class="card">
+        <table class="dt">
+          <thead><tr><th>Nº Pedido</th><th>Cliente</th><th>Productos</th><th>Importe</th><th>Canal</th><th>Hora</th><th>Estado</th><th></th></tr></thead>
+          <tbody>
+            <tr><td class="tm-m">#2854</td><td><div style="font-weight:600">Isabel Martínez</div><div class="tm-m">C/ Serrano 41, Madrid</div></td><td>Tarta de Zanahoria</td><td class="tm"><strong>38,00€</strong></td><td><span class="ch-on">Online</span></td><td class="tm-m">11:22</td><td><span class="badge b-warn"><span class="bd"></span>Pendiente</span></td><td><button class="btn btn-sec btn-xs">Gestionar</button></td></tr>
+            <tr><td class="tm-m">#2853</td><td><div style="font-weight:600">Restaurante Maca*</div><div class="tm-m">C/ Jorge Juan 49</div></td><td>Volcán Chocolate ×3</td><td class="tm"><strong>110,70€</strong></td><td><span class="ch-b2b">B2B</span></td><td class="tm-m">09:45</td><td><span class="badge b-info"><span class="bd"></span>En producción</span></td><td><button class="btn btn-sec btn-xs">Gestionar</button></td></tr>
+            <tr><td class="tm-m">#2852</td><td><div style="font-weight:600">Carmen Rodríguez</div><div class="tm-m">C/ Goya 73, Madrid</div></td><td>Tarta de Queso sin lactosa</td><td class="tm"><strong>34,90€</strong></td><td><span class="ch-po">Potosí</span></td><td class="tm-m">10:12</td><td><span class="badge b-br"><span class="bd"></span>En reparto</span></td><td><button class="btn btn-sec btn-xs">Gestionar</button></td></tr>
+            <tr><td class="tm-m">#2851</td><td><div style="font-weight:600">Elena Vega</div><div class="tm-m">C/ Velázquez 58, Madrid</div></td><td>Tarta cumpleaños 12 porciones</td><td class="tm"><strong>62,00€</strong></td><td><span class="ch-on">Online</span></td><td class="tm-m">08:34</td><td><span class="badge b-ok"><span class="bd"></span>Entregado</span></td><td><button class="btn btn-sec btn-xs">Ver</button></td></tr>
+            <tr><td class="tm-m">#2850</td><td><div style="font-weight:600">Sofía Castro</div><div class="tm-m">Encargo · recogida en tienda</div></td><td>Tarta Primera Comunión</td><td class="tm"><strong>90,00€</strong></td><td><span class="ch-enc">Encargo</span></td><td class="tm-m">Ayer 16:40</td><td><span class="badge b-info"><span class="bd"></span>En producción</span></td><td><button class="btn btn-sec btn-xs">Gestionar</button></td></tr>
+            <tr><td class="tm-m">#2849</td><td><div style="font-weight:600">Lucía Herrera</div><div class="tm-m">C/ Alcalá 203, Madrid</div></td><td>Tarta Arcoíris + Tarta Flor</td><td class="tm"><strong>71,99€</strong></td><td><span class="ch-on">Online</span></td><td class="tm-m">10:57</td><td><span class="badge b-warn"><span class="bd"></span>Pendiente</span></td><td><button class="btn btn-sec btn-xs">Gestionar</button></td></tr>
+            <tr style="background:#fef2f2"><td class="tm-m">#2848</td><td><div style="font-weight:600">Hotel NH Madrid</div><div class="tm-m">Avda. Manoteras 37</div></td><td>Cheesecake ×5 · Brownie ×10</td><td class="tm"><strong>224,50€</strong></td><td><span class="ch-b2b">B2B</span></td><td class="tm-m">08:00</td><td><span class="badge b-err"><span class="bd"></span>Incidencia</span></td><td><button class="btn btn-sec btn-xs" style="color:var(--danger);border-color:var(--danger)">Resolver</button></td></tr>
+            <tr><td class="tm-m">#2847</td><td><div style="font-weight:600">Martina Rubio</div><div class="tm-m">C/ Fuencarral 88, Madrid</div></td><td>Cookie XXL Ch.-Avellana ×2</td><td class="tm"><strong>48,00€</strong></td><td><span class="ch-pe">Peñalver</span></td><td class="tm-m">11:03</td><td><span class="badge b-ok"><span class="bd"></span>Entregado</span></td><td><button class="btn btn-sec btn-xs">Ver</button></td></tr>
+            <tr><td class="tm-m">#2846</td><td><div style="font-weight:600">Rodrigo Muñoz</div><div class="tm-m">C/ Núñez de Balboa 12</div></td><td>Volcán de Chocolate</td><td class="tm"><strong>36,90€</strong></td><td><span class="ch-on">Online</span></td><td class="tm-m">09:18</td><td><span class="badge b-ok"><span class="bd"></span>Entregado</span></td><td><button class="btn btn-sec btn-xs">Ver</button></td></tr>
+            <tr><td class="tm-m">#2845</td><td><div style="font-weight:600">Café Gijón</div><div class="tm-m">Paseo de Recoletos 21</div></td><td>Brownie con nueces ×4 · Tartaletas ×8</td><td class="tm"><strong>156,40€</strong></td><td><span class="ch-b2b">B2B</span></td><td class="tm-m">Ayer 14:00</td><td><span class="badge b-br"><span class="bd"></span>En reparto</span></td><td><button class="btn btn-sec btn-xs">Gestionar</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px">
+        <div style="font-size:12px;color:var(--text-3)">Mostrando 10 de 34 pedidos · hoy</div>
+        <div style="display:flex;gap:7px"><button class="btn btn-sec btn-sm">← Anterior</button><button class="btn btn-sec btn-sm">Siguiente →</button></div>
+      </div>
+    </div>
+    <!-- /pedidos -->
+
+
+    <!-- ══════════ VIEW: OBRADOR ══════════ -->
+    <div class="view" id="view-obrador">
+      <div class="ph">
+        <div><h1>Obrador</h1><p>Plan de producción · Domingo 22 junio · Turno 07:00 – 15:00</p></div>
+        <div class="ph-actions"><button class="btn btn-sec btn-sm">Historial</button><button class="btn btn-br btn-sm">+ Añadir tarea</button></div>
+      </div>
+
+      <div class="kpi4">
+        <div class="kpi-card"><div class="kpi-lbl">Tareas hoy</div><div class="kpi-val">16</div><div class="kpi-ch n">8 productos distintos</div></div>
+        <div class="kpi-card"><div class="kpi-lbl">Completadas</div><div class="kpi-val">7</div><div class="kpi-ch up">44% del plan</div><div class="kpi-bar"><div class="kpi-fill" style="width:44%;background:var(--success)"></div></div></div>
+        <div class="kpi-card"><div class="kpi-lbl">En preparación</div><div class="kpi-val">5</div><div class="kpi-ch n">31% del plan</div><div class="kpi-bar"><div class="kpi-fill" style="width:31%;background:#2563eb"></div></div></div>
+        <div class="kpi-card"><div class="kpi-lbl">Pendientes</div><div class="kpi-val">4</div><div class="kpi-ch dn">25% del plan</div><div class="kpi-bar"><div class="kpi-fill" style="width:25%;background:#d97706"></div></div></div>
+      </div>
+
+      <div class="kanban">
+        <!-- Por hacer -->
+        <div class="kcol">
+          <div class="kcol-hd"><span class="kcol-title">Por hacer</span><span class="kcol-cnt">4</span></div>
+          <div class="kcard"><div class="kcard-name">Tarta de Zanahoria</div><div class="kcard-qty">×4 unidades · estándar</div><div class="kcard-meta"><span class="kcard-who">Sin asignar</span><span class="kcard-dl">Para las 14:00</span></div></div>
+          <div class="kcard"><div class="kcard-name">Tarta de Bebé</div><div class="kcard-qty">×1 · encargo urgente</div><div class="kcard-meta"><span class="kcard-who">Sin asignar</span><span class="kcard-dl u">Entrega mañana 10:00</span></div></div>
+          <div class="kcard"><div class="kcard-name">Tarta de Maracuyá</div><div class="kcard-qty">×3 · reposición tiendas</div><div class="kcard-meta"><span class="kcard-who">Sin asignar</span><span class="kcard-dl">Para las 15:00</span></div></div>
+          <div class="kcard"><div class="kcard-name">Pan sin gluten</div><div class="kcard-qty">×15 · ambas tiendas</div><div class="kcard-meta"><span class="kcard-who">Sin asignar</span><span class="kcard-dl">Apertura mañana</span></div></div>
+        </div>
+        <!-- En preparación -->
+        <div class="kcol">
+          <div class="kcol-hd"><span class="kcol-title">En preparación</span><span class="kcol-cnt">5</span></div>
+          <div class="kcard"><div class="kcard-name">Volcán de Chocolate</div><div class="kcard-qty">×6 · incl. 3 para Rest. Maca</div><div class="kcard-meta"><span class="kcard-who">María G.</span><span class="kcard-dl">Listo a las 13:00</span></div></div>
+          <div class="kcard"><div class="kcard-name">Cookie XXL Ch.-Avellana</div><div class="kcard-qty">×12 unidades · tiendas</div><div class="kcard-meta"><span class="kcard-who">Pablo S.</span><span class="kcard-dl">Para las 12:30</span></div></div>
+          <div class="kcard"><div class="kcard-name">Tarta Primera Comunión</div><div class="kcard-qty">×1 · encargo Sofía Castro</div><div class="kcard-meta"><span class="kcard-who">María G.</span><span class="kcard-dl u">Hoy 14:30 · recogida</span></div></div>
+          <div class="kcard"><div class="kcard-name">Brownie con nueces</div><div class="kcard-qty">×6 unidades</div><div class="kcard-meta"><span class="kcard-who">Pablo S.</span><span class="kcard-dl">Para las 13:30</span></div></div>
+          <div class="kcard"><div class="kcard-name">Tarta de Limón</div><div class="kcard-qty">×4 unidades</div><div class="kcard-meta"><span class="kcard-who">María G.</span><span class="kcard-dl">Para las 14:00</span></div></div>
+        </div>
+        <!-- Listo · sin empacar -->
+        <div class="kcol">
+          <div class="kcol-hd"><span class="kcol-title" style="color:var(--brand)">Listo · sin empacar</span><span class="kcol-cnt">3</span></div>
+          <div class="kcard"><div class="kcard-name">Brownies decorados</div><div class="kcard-qty">×8 unidades · enfriando</div><div class="kcard-meta"><span class="kcard-who">María G.</span><span class="kcard-dl">Empacar 11:45</span></div></div>
+          <div class="kcard"><div class="kcard-name">Tarta de Queso</div><div class="kcard-qty">×5 unidades · en nevera</div><div class="kcard-meta"><span class="kcard-who">Pablo S.</span><span class="kcard-dl">Nevera OK</span></div></div>
+          <div class="kcard"><div class="kcard-name">Tarta Chocolate y nata</div><div class="kcard-qty">×3 · para Peñalver</div><div class="kcard-meta"><span class="kcard-who">Pablo S.</span><span class="kcard-dl">Recoger 12:00</span></div></div>
+        </div>
+        <!-- Enviado -->
+        <div class="kcol">
+          <div class="kcol-hd"><span class="kcol-title" style="color:var(--success)">Enviado / Recogido</span><span class="kcol-cnt">4</span></div>
+          <div class="kcard" style="opacity:0.72"><div class="kcard-name">Tarta de Zanahoria ×2</div><div class="kcard-qty">Para Potosí · 08:45</div><div class="kcard-meta"><span class="badge b-ok" style="font-size:10px">Entregado</span></div></div>
+          <div class="kcard" style="opacity:0.72"><div class="kcard-name">Tarta de Queso ×2</div><div class="kcard-qty">Reparto José Á. · 10:30</div><div class="kcard-meta"><span class="badge b-ok" style="font-size:10px">En ruta</span></div></div>
+          <div class="kcard" style="opacity:0.72"><div class="kcard-name">Dulces variados ×20</div><div class="kcard-qty">Ambas tiendas · apertura</div><div class="kcard-meta"><span class="badge b-ok" style="font-size:10px">Entregado</span></div></div>
+          <div class="kcard" style="opacity:0.72"><div class="kcard-name">Tartaletas ×15</div><div class="kcard-qty">Para Potosí y Peñalver</div><div class="kcard-meta"><span class="badge b-ok" style="font-size:10px">Entregado</span></div></div>
+        </div>
+      </div>
+
+      <!-- Chat obrador + notas -->
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><div class="card-title">Chat interno — Obrador</div><span class="badge b-ok">En línea</span></div>
+          <div style="padding:14px 18px;max-height:210px;overflow-y:auto;display:flex;flex-direction:column;gap:8px">
+            <div class="chat-msg"><div class="chat-av" style="background:#c47f42">MG</div><div class="chat-bubble">Volcán de chocolate para Maca estará antes de las 13h. Voy bien de tiempo.<div class="chat-ts">María · 11:18</div></div></div>
+            <div class="chat-msg" style="flex-direction:row-reverse"><div class="chat-av" style="background:linear-gradient(135deg,#c47f42,#e8a96a)">AG</div><div class="chat-bubble me">Perfecto. Que la Tarta de Bebé sea prioridad para esta tarde, entrega mañana 10h.<div class="chat-ts me">Andrea · 11:24</div></div></div>
+            <div class="chat-msg"><div class="chat-av" style="background:#6366f1">PS</div><div class="chat-bubble">Las cookies XXL entran al horno ahora. Brownies listos en nevera.<div class="chat-ts">Pablo · 11:31</div></div></div>
+          </div>
+          <div style="padding:10px 14px;border-top:1px solid var(--border-2);display:flex;gap:7px">
+            <input type="text" placeholder="Escribe al obrador..." style="flex:1;border:1px solid var(--border);border-radius:var(--rs);padding:6px 11px;font-size:13px;font-family:var(--sans);outline:none;background:var(--app-bg)">
+            <button class="btn btn-br btn-sm">Enviar</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><div class="card-title">Notas de producción</div><button class="btn btn-sec btn-xs">+ Nota</button></div>
+          <div class="card-body-sm">
+            <div class="alert ae"><div class="alert-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg></div><div><div class="alert-title">Mantequilla casi agotada</div><div class="alert-desc">Pedir urgente para producción de mañana lunes</div></div></div>
+            <div class="alert ai"><div class="alert-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div><div class="alert-title">Nota: Tarta Vegana esta semana</div><div class="alert-desc">Sustituir mantequilla por aceite de coco — validado</div></div></div>
+            <div class="alert as"><div class="alert-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="alert-title">Receta Tarta Arcoíris actualizada</div><div class="alert-desc">Nueva proporción de colorantes aprobada por María</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /obrador -->
+
+
+    <!-- ══════════ VIEW: INVENTARIO ══════════ -->
+    <div class="view" id="view-inventario">
+      <div class="ph">
+        <div><h1>Inventario</h1><p>Control de stock en obrador y puntos de venta</p></div>
+        <div class="ph-actions"><button class="btn btn-sec btn-sm">Exportar</button><button class="btn btn-br btn-sm">+ Registrar entrada</button></div>
+      </div>
+
+      <div class="card mb4">
+        <div class="card-hd"><div class="card-title">Alertas de stock</div><span class="badge b-err">3 críticos</span></div>
+        <div class="card-body" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding-top:10px">
+          <div class="alert ae" style="margin:0"><div class="alert-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg></div><div><div class="alert-title">Mantequilla</div><div class="alert-desc">0.8 kg · mín. 2 kg · Pedir YA</div></div></div>
+          <div class="alert aw" style="margin:0"><div class="alert-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="alert-title">Harina de almendra</div><div class="alert-desc">1.2 kg · mín. 2.5 kg · Bajo</div></div></div>
+          <div class="alert aw" style="margin:0"><div class="alert-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="alert-title">Cajas talla L</div><div class="alert-desc">12 ud · mín. 30 · Reabastecer</div></div></div>
+        </div>
+      </div>
+
+      <div class="tabs" id="tabs-inv">
+        <div class="tab active" onclick="switchTab(this,'tabs-inv')">Obrador</div>
+        <div class="tab" onclick="switchTab(this,'tabs-inv')">Tienda Potosí</div>
+        <div class="tab" onclick="switchTab(this,'tabs-inv')">Tienda Peñalver</div>
+      </div>
+
+      <div class="card">
+        <table class="dt">
+          <thead><tr><th>Ingrediente / Material</th><th>Stock actual</th><th>Stock mínimo</th><th>Estado</th><th>Proveedor</th><th>Última entrada</th><th>Próximo pedido</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Huevos camperos</strong></td><td class="tm">84 uds</td><td class="tm-m">36 uds</td><td><span class="badge b-ok"><span class="bd"></span>OK</span></td><td class="tm-m">Avícola Manchega</td><td class="tm-m">20 jun</td><td class="tm-m">25 jun</td></tr>
+            <tr style="background:#fef2f2"><td><strong style="color:var(--danger)">Mantequilla</strong></td><td class="tm" style="color:var(--danger)">0.8 kg</td><td class="tm-m">2 kg</td><td><span class="badge b-err"><span class="bd"></span>Crítico</span></td><td class="tm-m">Lácteas Covap</td><td class="tm-m">17 jun</td><td><button class="btn btn-xs" style="color:var(--danger);border:1px solid var(--danger);background:transparent;font-family:var(--sans);cursor:pointer">Pedir hoy</button></td></tr>
+            <tr><td><strong>Queso crema</strong></td><td class="tm">4.2 kg</td><td class="tm-m">3 kg</td><td><span class="badge b-ok"><span class="bd"></span>OK</span></td><td class="tm-m">Lácteas Covap</td><td class="tm-m">19 jun</td><td class="tm-m">26 jun</td></tr>
+            <tr style="background:#fffbeb"><td><strong>Harina de almendra</strong></td><td class="tm" style="color:var(--warn)">1.2 kg</td><td class="tm-m">2.5 kg</td><td><span class="badge b-warn"><span class="bd"></span>Bajo</span></td><td class="tm-m">Almendras Letur</td><td class="tm-m">14 jun</td><td class="tm-m">Hoy urgente</td></tr>
+            <tr><td><strong>Azúcar de abedul (xilitol)</strong></td><td class="tm">6.8 kg</td><td class="tm-m">4 kg</td><td><span class="badge b-ok"><span class="bd"></span>OK</span></td><td class="tm-m">NaturGreen</td><td class="tm-m">18 jun</td><td class="tm-m">02 jul</td></tr>
+            <tr><td><strong>Nata para montar 35%</strong></td><td class="tm">3.6 L</td><td class="tm-m">2 L</td><td><span class="badge b-ok"><span class="bd"></span>OK</span></td><td class="tm-m">Lácteas Covap</td><td class="tm-m">20 jun</td><td class="tm-m">24 jun</td></tr>
+            <tr><td><strong>Chocolate negro 72%</strong></td><td class="tm">2.1 kg</td><td class="tm-m">2 kg</td><td><span class="badge b-warn"><span class="bd"></span>Justo</span></td><td class="tm-m">Valrhona Madrid</td><td class="tm-m">18 jun</td><td class="tm-m">23 jun</td></tr>
+            <tr><td><strong>Zanahoria fresca</strong></td><td class="tm">3.4 kg</td><td class="tm-m">1.5 kg</td><td><span class="badge b-ok"><span class="bd"></span>OK</span></td><td class="tm-m">Frutería La Paloma</td><td class="tm-m">21 jun</td><td class="tm-m">24 jun</td></tr>
+            <tr style="background:#fffbeb"><td><strong>Cajas talla L</strong></td><td class="tm" style="color:var(--warn)">12 uds</td><td class="tm-m">30 uds</td><td><span class="badge b-warn"><span class="bd"></span>Bajo</span></td><td class="tm-m">PackingMad</td><td class="tm-m">10 jun</td><td class="tm-m">Hoy</td></tr>
+            <tr><td><strong>Cajas talla M</strong></td><td class="tm">47 uds</td><td class="tm-m">30 uds</td><td><span class="badge b-ok"><span class="bd"></span>OK</span></td><td class="tm-m">PackingMad</td><td class="tm-m">10 jun</td><td class="tm-m">01 jul</td></tr>
+            <tr><td><strong>Bolsas kraft con logo</strong></td><td class="tm">83 uds</td><td class="tm-m">50 uds</td><td><span class="badge b-ok"><span class="bd"></span>OK</span></td><td class="tm-m">PackingMad</td><td class="tm-m">10 jun</td><td class="tm-m">15 jul</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- /inventario -->
+
+
+    <!-- ══════════ VIEW: TIENDAS ══════════ -->
+    <div class="view" id="view-tiendas">
+      <div class="ph">
+        <div><h1>Tiendas</h1><p>Estado en tiempo real de los dos puntos de venta</p></div>
+        <div class="ph-actions"><button class="btn btn-br btn-sm">Mensaje a tiendas</button></div>
+      </div>
+
+      <div class="g2">
+        <!-- POTOSÍ -->
+        <div class="card">
+          <div class="store-hd">
+            <div class="store-dot"></div>
+            <div style="flex:1"><div class="store-name">Nicolina · Calle Potosí</div><div class="store-addr">C/ Potosí 4, Madrid · 611 34 20 73</div></div>
+            <span class="badge b-ok">Abierta</span>
+          </div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:18px;text-align:center">
+              <div><div style="font-size:21px;font-weight:800;font-family:var(--mono)">412€</div><div style="font-size:11px;color:var(--text-3)">Ventas hoy</div></div>
+              <div><div style="font-size:21px;font-weight:800;font-family:var(--mono)">11</div><div style="font-size:11px;color:var(--text-3)">Pedidos hoy</div></div>
+              <div><div style="font-size:21px;font-weight:800;font-family:var(--mono)">37,5€</div><div style="font-size:11px;color:var(--text-3)">Ticket medio</div></div>
+            </div>
+            <div class="divider" style="margin:10px 0"></div>
+            <div style="font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Horario hoy · Domingo</div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:16px"><span>Apertura</span><span class="tm" style="font-weight:600">10:00 → 20:00</span></div>
+            <div style="font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Personal activo</div>
+            <div class="emp-row"><div class="emp-av" style="background:#c47f42">LB</div><div style="flex:1"><div class="emp-name">Laura Blanco</div><div class="emp-role">Encargada · Turno mañana</div></div><span class="badge b-ok" style="font-size:10px">En tienda</span></div>
+            <div class="emp-row"><div class="emp-av" style="background:#6366f1">AJ</div><div style="flex:1"><div class="emp-name">Ana Jiménez</div><div class="emp-role">Dependienta · Turno mañana</div></div><span class="badge b-ok" style="font-size:10px">En tienda</span></div>
+            <div class="divider" style="margin:12px 0"></div>
+            <div style="font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Top ventas hoy</div>
+            <div class="mrow"><span class="mlbl">Tarta de Queso</span><span class="mval">×4</span></div>
+            <div class="mrow"><span class="mlbl">Cookie XXL Ch.-Avellana</span><span class="mval">×3</span></div>
+            <div class="mrow"><span class="mlbl">Brownie con nueces</span><span class="mval">×2</span></div>
+          </div>
+        </div>
+
+        <!-- PEÑALVER -->
+        <div class="card">
+          <div class="store-hd">
+            <div class="store-dot"></div>
+            <div style="flex:1"><div class="store-name">Nicolina · Conde de Peñalver</div><div class="store-addr">C/ Conde de Peñalver 18, Madrid · 683 259 206</div></div>
+            <span class="badge b-ok">Abierta</span>
+          </div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:18px;text-align:center">
+              <div><div style="font-size:21px;font-weight:800;font-family:var(--mono)">241€</div><div style="font-size:11px;color:var(--text-3)">Ventas hoy</div></div>
+              <div><div style="font-size:21px;font-weight:800;font-family:var(--mono)">7</div><div style="font-size:11px;color:var(--text-3)">Pedidos hoy</div></div>
+              <div><div style="font-size:21px;font-weight:800;font-family:var(--mono)">34,4€</div><div style="font-size:11px;color:var(--text-3)">Ticket medio</div></div>
+            </div>
+            <div class="divider" style="margin:10px 0"></div>
+            <div style="font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Horario hoy · Domingo</div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:16px"><span>Apertura</span><span class="tm" style="font-weight:600">09:30 → 20:00</span></div>
+            <div style="font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Personal activo</div>
+            <div class="emp-row"><div class="emp-av" style="background:#0f766e">RM</div><div style="flex:1"><div class="emp-name">Raúl Moreno</div><div class="emp-role">Encargado · Turno mañana</div></div><span class="badge b-ok" style="font-size:10px">En tienda</span></div>
+            <div class="emp-row"><div class="emp-av" style="background:#be185d">CL</div><div style="flex:1"><div class="emp-name">Cristina López</div><div class="emp-role">Dependienta · Turno mañana</div></div><span class="badge b-ok" style="font-size:10px">En tienda</span></div>
+            <div class="divider" style="margin:12px 0"></div>
+            <div style="font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Top ventas hoy</div>
+            <div class="mrow"><span class="mlbl">Cookie XXL Ch.-Avellana</span><span class="mval">×4</span></div>
+            <div class="mrow"><span class="mlbl">Tarta de Limón</span><span class="mval">×2</span></div>
+            <div class="mrow"><span class="mlbl">Volcán de Chocolate</span><span class="mval">×1</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comunicaciones tiendas -->
+      <div class="card">
+        <div class="card-hd"><div class="card-title">Comunicaciones de tiendas · hoy</div><button class="btn btn-sec btn-xs">+ Mensaje</button></div>
+        <div class="card-body-sm">
+          <div class="act-item"><div class="act-dot" style="background:#c47f42"></div><div><div class="act-txt"><strong>Potosí · Laura:</strong> "Quedan 2 Tartas de Queso en escaparate. ¿Viene reparto del obrador esta tarde?"</div><div class="act-time">11:15</div></div></div>
+          <div class="act-item"><div class="act-dot" style="background:#7c3aed"></div><div><div class="act-txt"><strong>Peñalver · Raúl:</strong> "Necesitamos más bolsas kraft S, nos quedamos sin stock antes de las 13h."</div><div class="act-time">10:48</div></div></div>
+          <div class="act-item"><div class="act-dot" style="background:var(--success)"></div><div><div class="act-txt"><strong>Central · Andrea:</strong> "El reparto de las 12:30 llevará 3 tartas a Potosí y 2 a Peñalver. Confirmado con Pablo."</div><div class="act-time">11:24</div></div></div>
+        </div>
+      </div>
+    </div>
+    <!-- /tiendas -->
+
+
+    <!-- ══════════ VIEW: CLIENTES ══════════ -->
+    <div class="view" id="view-clientes">
+      <div class="ph">
+        <div><h1>Clientes & B2B</h1><p>CRM simplificado y cuentas de restauración</p></div>
+        <div class="ph-actions"><button class="btn btn-sec btn-sm">Exportar CRM</button><button class="btn btn-br btn-sm">+ Nueva cuenta B2B</button></div>
+      </div>
+
+      <!-- B2B -->
+      <div class="card mb6">
+        <div class="card-hd"><div class="card-title">Cuentas B2B · Restauración activa</div><span class="badge b-br">4 activas</span></div>
+        <table class="dt">
+          <thead><tr><th>Restaurante</th><th>Contacto</th><th>Frecuencia</th><th>Último pedido</th><th>Facturación mes</th><th>Estado</th><th></th></tr></thead>
+          <tbody>
+            <tr><td><div style="font-weight:700">Restaurante Maca*</div><div class="tm-m">C/ Jorge Juan 49 · Salamanca</div></td><td><div>Chef Martínez</div><div class="tm-m">611 23 45 67</div></td><td><span class="badge b-br">Semanal</span></td><td class="tm-m">Hoy · 09:45</td><td class="tm"><strong>483€</strong></td><td><span class="badge b-ok"><span class="bd"></span>Activo</span></td><td><button class="btn btn-sec btn-xs">Historial</button></td></tr>
+            <tr style="background:#fef2f2"><td><div style="font-weight:700">Hotel NH Madrid Chamartín</div><div class="tm-m">Avda. Manoteras 37</div></td><td><div>Carmen M. · Compras</div><div class="tm-m">91 234 56 78</div></td><td><span class="badge b-neu">Quincenal</span></td><td class="tm-m">Hoy · 08:00</td><td class="tm"><strong>891€</strong></td><td><span class="badge b-err"><span class="bd"></span>Incidencia</span></td><td><button class="btn btn-sec btn-xs" style="color:var(--danger);border-color:var(--danger)">Resolver</button></td></tr>
+            <tr><td><div style="font-weight:700">Café Gijón</div><div class="tm-m">Paseo de Recoletos 21</div></td><td><div>Diego Fuentes · Manager</div><div class="tm-m">91 521 54 25</div></td><td><span class="badge b-br">Semanal</span></td><td class="tm-m">19 jun</td><td class="tm"><strong>347€</strong></td><td><span class="badge b-ok"><span class="bd"></span>Activo</span></td><td><button class="btn btn-sec btn-xs">Historial</button></td></tr>
+            <tr><td><div style="font-weight:700">DiverXO (NH Eurobuilding)</div><div class="tm-m">C/ Padre Damián 23</div></td><td><div>Equipo de compras</div><div class="tm-m">compras@diverxo.com</div></td><td><span class="badge b-neu">Ocasional</span></td><td class="tm-m">03 jun</td><td class="tm"><strong>230€</strong></td><td><span class="badge b-ok"><span class="bd"></span>Activo</span></td><td><button class="btn btn-sec btn-xs">Historial</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Clientes recurrentes -->
+      <div class="card">
+        <div class="card-hd">
+          <div class="card-title">Clientes recurrentes · últimos 30 días</div>
+          <div class="search" style="width:200px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Buscar...</div>
+        </div>
+        <table class="dt">
+          <thead><tr><th>Cliente</th><th>Canal habitual</th><th>Pedidos (30d)</th><th>Gasto total</th><th>Último pedido</th><th>Notas dietéticas</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:9px"><div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#f472b6,#ec4899);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff">IM</div><div><div style="font-weight:600">Isabel Martínez</div><div class="tm-m">isabel.m@gmail.com</div></div></div></td>
+              <td><span class="ch-on">Online</span></td><td class="tm">4</td><td class="tm"><strong>213,80€</strong></td><td class="tm-m">Hoy</td><td style="font-size:12px;color:var(--text-2)">Sin gluten · celiaca estricta</td>
+            </tr>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:9px"><div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#34d399,#10b981);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff">SC</div><div><div style="font-weight:600">Sofía Castro</div><div class="tm-m">sofia.castro@me.com</div></div></div></td>
+              <td><span class="ch-enc">Encargo</span></td><td class="tm">2</td><td class="tm"><strong>190,00€</strong></td><td class="tm-m">Hoy</td><td style="font-size:12px;color:var(--text-2)">Eventos familiares recurrentes</td>
+            </tr>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:9px"><div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff">MR</div><div><div style="font-weight:600">Martina Rubio</div><div class="tm-m">martinarubio@gmail.com</div></div></div></td>
+              <td><span class="ch-pe">Peñalver</span></td><td class="tm">6</td><td class="tm"><strong>287,40€</strong></td><td class="tm-m">Hoy</td><td style="font-size:12px;color:var(--text-2)">Diabética · xilitol exclusivo</td>
+            </tr>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:9px"><div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#d97706);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff">EV</div><div><div style="font-weight:600">Elena Vega</div><div class="tm-m">elena.vega@hotmail.com</div></div></div></td>
+              <td><span class="ch-on">Online</span></td><td class="tm">3</td><td class="tm"><strong>172,90€</strong></td><td class="tm-m">Hoy</td><td style="font-size:12px;color:var(--text-2)">Tartas cumpleaños · recurrente</td>
+            </tr>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:9px"><div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#6ee7b7,#059669);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff">LH</div><div><div style="font-weight:600">Lucía Herrera</div><div class="tm-m">luciaherrera@gmail.com</div></div></div></td>
+              <td><span class="ch-on">Online</span></td><td class="tm">3</td><td class="tm"><strong>144,87€</strong></td><td class="tm-m">Hoy</td><td style="font-size:12px;color:var(--text-2)">Sin lactosa · vegan options</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- /clientes -->
+
+
+    <!-- ══════════ VIEW: REPARTO ══════════ -->
+    <div class="view" id="view-reparto">
+      <div class="ph">
+        <div><h1>Reparto & Entregas</h1><p>Logística Madrid · Ventana 10:00 – 15:00 · + Envíos nacionales 48h</p></div>
+        <div class="ph-actions"><button class="btn btn-sec btn-sm">Ver ruta</button><button class="btn btn-br btn-sm">+ Añadir entrega</button></div>
+      </div>
+
+      <div class="kpi4">
+        <div class="kpi-card"><div class="kpi-lbl">Entregas hoy</div><div class="kpi-val">12</div><div class="kpi-ch n">Madrid M-50</div></div>
+        <div class="kpi-card"><div class="kpi-lbl">En ruta ahora</div><div class="kpi-val">4</div><div class="kpi-ch n">José Álvarez · Madrid centro</div><div class="kpi-bar"><div class="kpi-fill" style="width:33%;background:#2563eb"></div></div></div>
+        <div class="kpi-card"><div class="kpi-lbl">Entregados</div><div class="kpi-val">7</div><div class="kpi-ch up">58% completado</div><div class="kpi-bar"><div class="kpi-fill" style="width:58%;background:var(--success)"></div></div></div>
+        <div class="kpi-card"><div class="kpi-lbl">Incidencias</div><div class="kpi-val">1</div><div class="kpi-ch dn">Hotel NH · pendiente</div><div class="kpi-bar"><div class="kpi-fill" style="width:8%;background:var(--danger)"></div></div></div>
+      </div>
+
+      <div class="g6040">
+        <div class="card">
+          <div class="card-hd"><div class="card-title">Entregas de hoy · Madrid</div></div>
+          <table class="dt">
+            <thead><tr><th>Pedido</th><th>Cliente</th><th>Dirección</th><th>Ventana horaria</th><th>Estado</th></tr></thead>
+            <tbody>
+              <tr style="background:#eff6ff"><td class="tm-m">#2852</td><td><strong>Carmen Rodríguez</strong></td><td class="tm-m">C/ Goya 73 · Salamanca</td><td class="tm">10:00–12:00</td><td><span class="badge b-br"><span class="bd"></span>En ruta</span></td></tr>
+              <tr style="background:#eff6ff"><td class="tm-m">#2846</td><td><strong>Rodrigo Muñoz</strong></td><td class="tm-m">C/ Velázquez 92</td><td class="tm">10:00–12:00</td><td><span class="badge b-br"><span class="bd"></span>En ruta</span></td></tr>
+              <tr style="background:#eff6ff"><td class="tm-m">#2844</td><td><strong>Claudia Pérez</strong></td><td class="tm-m">C/ Serrano 122</td><td class="tm">11:00–13:00</td><td><span class="badge b-br"><span class="bd"></span>En ruta</span></td></tr>
+              <tr style="background:#fef2f2"><td class="tm-m">#2848</td><td><strong>Hotel NH Madrid</strong></td><td class="tm-m">Avda. Manoteras 37</td><td class="tm">10:00–11:00</td><td><span class="badge b-err"><span class="bd"></span>Incidencia</span></td></tr>
+              <tr><td class="tm-m">#2854</td><td><strong>Isabel Martínez</strong></td><td class="tm-m">C/ Serrano 41</td><td class="tm">12:00–14:00</td><td><span class="badge b-warn"><span class="bd"></span>Pendiente</span></td></tr>
+              <tr><td class="tm-m">#2849</td><td><strong>Lucía Herrera</strong></td><td class="tm-m">C/ Alcalá 203 · Retiro</td><td class="tm">12:00–15:00</td><td><span class="badge b-warn"><span class="bd"></span>Pendiente</span></td></tr>
+              <tr style="opacity:0.6"><td class="tm-m">#2851</td><td>Elena Vega</td><td class="tm-m">C/ Velázquez 58</td><td class="tm">09:00–11:00</td><td><span class="badge b-ok"><span class="bd"></span>Entregado</span></td></tr>
+              <tr style="opacity:0.6"><td class="tm-m">#2847</td><td>Martina Rubio</td><td class="tm-m">C/ Fuencarral 88</td><td class="tm">09:00–11:00</td><td><span class="badge b-ok"><span class="bd"></span>Entregado</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <div class="card mb4">
+            <div class="card-hd"><div class="card-title">Repartidor activo</div><span class="badge b-ok">En ruta</span></div>
+            <div class="card-body">
+              <div class="emp-row" style="padding-bottom:12px"><div class="emp-av" style="background:#0f766e">JA</div><div style="flex:1"><div class="emp-name">José Álvarez</div><div class="emp-role">Reparto Madrid</div></div><button class="btn btn-sec btn-xs">Llamar</button></div>
+              <div class="mrow"><span class="mlbl">Zonas hoy</span><span style="font-size:12px;font-weight:600">Salamanca · Norte · Retiro</span></div>
+              <div class="mrow"><span class="mlbl">Salida del obrador</span><span class="mval">10:32</span></div>
+              <div class="mrow"><span class="mlbl">Próxima entrega</span><span style="font-size:12px;font-weight:600">C/ Serrano 122</span></div>
+              <div class="mrow"><span class="mlbl">Paquetes en furgoneta</span><span class="mval">4</span></div>
+            </div>
+          </div>
+
+          <div class="card mb4">
+            <div class="card-hd"><div class="card-title">Incidencia activa</div><span class="badge b-err">Urgente</span></div>
+            <div class="card-body">
+              <div class="alert ae" style="margin-bottom:12px"><div class="alert-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg></div><div><div class="alert-title">#2848 · Hotel NH Madrid</div><div class="alert-desc">José entregó a las 10:48. Sin confirmación desde las 11:30.</div></div></div>
+              <div style="display:flex;gap:7px"><button class="btn btn-sec btn-sm" style="flex:1">Llamar al hotel</button><button class="btn btn-br btn-sm" style="flex:1">Marcar OK</button></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-hd"><div class="card-title">Envíos nacionales · en tránsito</div><span class="badge b-neu">3</span></div>
+            <div class="card-body" style="padding-top:8px">
+              <div class="mrow"><span class="mlbl"><strong>#2843</strong> · Barcelona</span><span class="badge b-br" style="font-size:10px">En tránsito</span></div>
+              <div class="mrow"><span class="mlbl"><strong>#2841</strong> · Valencia</span><span class="badge b-br" style="font-size:10px">En tránsito</span></div>
+              <div class="mrow"><span class="mlbl"><strong>#2839</strong> · Sevilla · hoy</span><span class="badge b-warn" style="font-size:10px">Entregando</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /reparto -->
+
+
+    <!-- ══════════ VIEW: FINANZAS ══════════ -->
+    <div class="view" id="view-finanzas">
+      <div class="ph">
+        <div><h1>Finanzas</h1><p>Ingresos, márgenes y evolución por canal</p></div>
+        <div class="ph-actions"><button class="btn btn-sec btn-sm">Descargar informe</button></div>
+      </div>
+
+      <div class="kpi4">
+        <div class="kpi-card"><div class="kpi-lbl">Ingresos junio</div><div class="kpi-val">31.247€</div><div class="kpi-ch up">+12.3% vs mayo</div><div class="kpi-bar"><div class="kpi-fill" style="width:78%"></div></div></div>
+        <div class="kpi-card"><div class="kpi-lbl">Gastos junio</div><div class="kpi-val">17.834€</div><div class="kpi-ch dn">+6.1% vs mayo</div><div class="kpi-bar"><div class="kpi-fill" style="width:45%;background:var(--danger)"></div></div></div>
+        <div class="kpi-card"><div class="kpi-lbl">Beneficio neto</div><div class="kpi-val">13.413€</div><div class="kpi-ch up">+18.7% vs mayo</div><div class="kpi-bar"><div class="kpi-fill" style="width:43%;background:var(--success)"></div></div></div>
+        <div class="kpi-card"><div class="kpi-lbl">Margen bruto</div><div class="kpi-val">42.9%</div><div class="kpi-ch up">+2.3pp vs mayo</div><div class="kpi-bar"><div class="kpi-fill" style="width:43%;background:#7c3aed"></div></div></div>
+      </div>
+
+      <div class="g2">
+        <div class="card"><div class="card-hd"><div class="card-title">Ingresos últimos 6 meses</div></div><div style="padding:12px 18px 18px;height:210px"><canvas id="chart-monthly"></canvas></div></div>
+        <div class="card"><div class="card-hd"><div class="card-title">Ingresos por canal · junio</div></div><div style="padding:12px 18px 18px;height:210px"><canvas id="chart-canal"></canvas></div></div>
+      </div>
+
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><div class="card-title">Top productos por facturación · junio</div></div>
+          <div class="card-body" style="padding-top:8px">
+            <div class="prog"><div class="prog-hd"><span class="prog-lbl">Tarta Primera Comunión</span><span class="prog-val">2.790€</span></div><div class="prog-bar"><div class="prog-fill" style="width:100%;background:var(--brand)"></div></div></div>
+            <div class="prog"><div class="prog-hd"><span class="prog-lbl">Tarta cumpleaños 20 porciones</span><span class="prog-val">2.640€</span></div><div class="prog-bar"><div class="prog-fill" style="width:94%;background:#2563eb"></div></div></div>
+            <div class="prog"><div class="prog-hd"><span class="prog-lbl">Tarta de Maracuyá</span><span class="prog-val">2.023€</span></div><div class="prog-bar"><div class="prog-fill" style="width:72%;background:#7c3aed"></div></div></div>
+            <div class="prog"><div class="prog-hd"><span class="prog-lbl">Tarta de Zanahoria</span><span class="prog-val">1.938€</span></div><div class="prog-bar"><div class="prog-fill" style="width:69%;background:#0f766e"></div></div></div>
+            <div class="prog"><div class="prog-hd"><span class="prog-lbl">Volcán de Chocolate</span><span class="prog-val">1.734€</span></div><div class="prog-bar"><div class="prog-fill" style="width:62%;background:#be185d"></div></div></div>
+            <div class="prog"><div class="prog-hd"><span class="prog-lbl">Cheesecake</span><span class="prog-val">1.483€</span></div><div class="prog-bar"><div class="prog-fill" style="width:53%;background:#d97706"></div></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><div class="card-title">Desglose de gastos · junio</div></div>
+          <div class="card-body" style="padding-top:8px">
+            <div class="mrow"><span class="mlbl">Materias primas</span><span class="mval">8.234€</span></div>
+            <div class="mrow"><span class="mlbl">Nóminas (8 personas)</span><span class="mval">6.100€</span></div>
+            <div class="mrow"><span class="mlbl">Alquileres (2 tiendas + obrador)</span><span class="mval">1.840€</span></div>
+            <div class="mrow"><span class="mlbl">Reparto & logística</span><span class="mval">892€</span></div>
+            <div class="mrow"><span class="mlbl">Marketing & Instagram</span><span class="mval">380€</span></div>
+            <div class="mrow"><span class="mlbl">Packaging con logo</span><span class="mval">243€</span></div>
+            <div class="mrow"><span class="mlbl">Otros gastos</span><span class="mval">145€</span></div>
+            <div class="divider"></div>
+            <div class="mrow"><span class="mlbl" style="font-weight:700">Total gastos</span><span class="mval" style="font-size:16px">17.834€</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /finanzas -->
+
+
+    <!-- ══════════ VIEW: WEB & SHOPIFY ══════════ -->
+    <div class="view" id="view-web">
+      <div class="ph">
+        <div><h1>Web & Shopify</h1><p>Métricas de la tienda online nicolina.es</p></div>
+        <div class="ph-actions"><button class="btn btn-sec btn-sm">Abrir Shopify Admin</button></div>
+      </div>
+
+      <div class="kpi4">
+        <div class="kpi-card"><div class="kpi-lbl">Visitas hoy</div><div class="kpi-val">847</div><div class="kpi-ch up">+23.1% vs ayer</div></div>
+        <div class="kpi-card"><div class="kpi-lbl">Tasa de conversión</div><div class="kpi-val">1.65%</div><div class="kpi-ch up">+0.3pp vs media</div></div>
+        <div class="kpi-card"><div class="kpi-lbl">Pedido medio online</div><div class="kpi-val">34,5€</div><div class="kpi-ch n">vs 31,2€ mes pasado</div></div>
+        <div class="kpi-card"><div class="kpi-lbl">Carritos abandonados</div><div class="kpi-val">67</div><div class="kpi-ch dn">7.9% recuperados</div></div>
+      </div>
+
+      <div class="g6040">
+        <div class="card"><div class="card-hd"><div class="card-title">Visitas por hora · hoy</div></div><div style="padding:12px 18px 18px;height:210px"><canvas id="chart-visits"></canvas></div></div>
+        <div class="card">
+          <div class="card-hd"><div class="card-title">Fuentes de tráfico</div></div>
+          <div class="card-body" style="padding-top:8px">
+            <div class="prog"><div class="prog-hd"><span class="prog-lbl">Instagram / Social</span><span class="prog-val">41.3%</span></div><div class="prog-bar"><div class="prog-fill" style="width:41%;background:#ec4899"></div></div></div>
+            <div class="prog"><div class="prog-hd"><span class="prog-lbl">Google / Orgánico</span><span class="prog-val">28.7%</span></div><div class="prog-bar"><div class="prog-fill" style="width:29%;background:#4ade80"></div></div></div>
+            <div class="prog"><div class="prog-hd"><span class="prog-lbl">Tráfico directo</span><span class="prog-val">18.4%</span></div><div class="prog-bar"><div class="prog-fill" style="width:18%;background:#60a5fa"></div></div></div>
+            <div class="prog"><div class="prog-hd"><span class="prog-lbl">Referral / Links</span><span class="prog-val">7.2%</span></div><div class="prog-bar"><div class="prog-fill" style="width:7%;background:#a78bfa"></div></div></div>
+            <div class="prog"><div class="prog-hd"><span class="prog-lbl">Email marketing</span><span class="prog-val">4.4%</span></div><div class="prog-bar"><div class="prog-fill" style="width:4%;background:#fb923c"></div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><div class="card-title">Productos más vistos hoy</div></div>
+          <table class="dt">
+            <thead><tr><th>Producto</th><th>Visitas</th><th>A carrito</th><th>Conversión</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Tarta de Zanahoria</strong></td><td class="tm">134</td><td class="tm">23</td><td><span class="badge b-ok">17.2%</span></td></tr>
+              <tr><td><strong>Tarta de Queso</strong></td><td class="tm">118</td><td class="tm">19</td><td><span class="badge b-ok">16.1%</span></td></tr>
+              <tr><td><strong>Cookie XXL Ch.-Avellana</strong></td><td class="tm">97</td><td class="tm">14</td><td><span class="badge b-warn">14.4%</span></td></tr>
+              <tr><td><strong>Volcán de Chocolate</strong></td><td class="tm">84</td><td class="tm">11</td><td><span class="badge b-warn">13.1%</span></td></tr>
+              <tr><td><strong>Tarta de Maracuyá</strong></td><td class="tm">76</td><td class="tm">9</td><td><span class="badge b-warn">11.8%</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-hd"><div class="card-title">Resumen pedidos online · 7 días</div></div>
+          <div class="card-body" style="padding-top:8px">
+            <div class="mrow"><span class="mlbl">Pedidos completados</span><span class="mval">78</span></div>
+            <div class="mrow"><span class="mlbl">En espera de producción</span><span class="mval">12</span></div>
+            <div class="mrow"><span class="mlbl">Cancelados</span><span class="mval">3</span></div>
+            <div class="mrow"><span class="mlbl">Envíos nacionales</span><span class="mval">34</span></div>
+            <div class="mrow"><span class="mlbl">Entregas Madrid</span><span class="mval">44</span></div>
+            <div class="divider"></div>
+            <div class="mrow"><span class="mlbl">Facturación online 7 días</span><span class="mval">2.413€</span></div>
+            <div class="mrow"><span class="mlbl">Ticket medio</span><span class="mval">30,9€</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /web -->
+
+
+    <!-- ══════════ VIEW: EQUIPO ══════════ -->
+    <div class="view" id="view-equipo">
+      <div class="ph">
+        <div><h1>Equipo</h1><p>Turnos, asignaciones y comunicación interna</p></div>
+        <div class="ph-actions"><button class="btn btn-sec btn-sm">Exportar horarios</button><button class="btn btn-br btn-sm">Gestionar turno</button></div>
+      </div>
+
+      <div class="kpi4">
+        <div class="kpi-card"><div class="kpi-lbl">Personal activo hoy</div><div class="kpi-val">7</div><div class="kpi-ch n">De 8 en plantilla</div></div>
+        <div class="kpi-card"><div class="kpi-lbl">Obrador</div><div class="kpi-val">2</div><div class="kpi-ch n">María G. · Pablo S.</div></div>
+        <div class="kpi-card"><div class="kpi-lbl">Tiendas</div><div class="kpi-val">4</div><div class="kpi-ch n">2 por tienda</div></div>
+        <div class="kpi-card"><div class="kpi-lbl">Reparto</div><div class="kpi-val">1</div><div class="kpi-ch n">José Á. · en ruta</div></div>
+      </div>
+
+      <div class="g6040">
+        <div class="card">
+          <div class="card-hd"><div class="card-title">Personal hoy · Domingo 22 junio</div></div>
+          <table class="dt">
+            <thead><tr><th>Empleado</th><th>Rol</th><th>Ubicación</th><th>Turno</th><th>Estado</th></tr></thead>
+            <tbody>
+              <tr><td><div style="display:flex;align-items:center;gap:9px"><div class="emp-av" style="background:#c47f42">MG</div><div><div style="font-weight:600">María García</div><div class="tm-m">maestre.garcia@nicolina.es</div></div></div></td><td>Maestre Pastelera</td><td><span class="badge b-br">Obrador</span></td><td class="tm">07:00–15:00</td><td><span class="badge b-ok"><span class="bd"></span>En turno</span></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:9px"><div class="emp-av" style="background:#6366f1">PS</div><div><div style="font-weight:600">Pablo Sánchez</div><div class="tm-m">pablo.s@nicolina.es</div></div></div></td><td>Ayudante Obrador</td><td><span class="badge b-br">Obrador</span></td><td class="tm">07:00–15:00</td><td><span class="badge b-ok"><span class="bd"></span>En turno</span></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:9px"><div class="emp-av" style="background:#c47f42">LB</div><div><div style="font-weight:600">Laura Blanco</div><div class="tm-m">laura.b@nicolina.es</div></div></div></td><td>Encargada Tienda</td><td><span class="ch-po">Potosí</span></td><td class="tm">09:30–16:30</td><td><span class="badge b-ok"><span class="bd"></span>En tienda</span></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:9px"><div class="emp-av" style="background:#6366f1">AJ</div><div><div style="font-weight:600">Ana Jiménez</div><div class="tm-m">ana.j@nicolina.es</div></div></div></td><td>Dependienta</td><td><span class="ch-po">Potosí</span></td><td class="tm">10:00–17:00</td><td><span class="badge b-ok"><span class="bd"></span>En tienda</span></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:9px"><div class="emp-av" style="background:#0f766e">RM</div><div><div style="font-weight:600">Raúl Moreno</div><div class="tm-m">raul.m@nicolina.es</div></div></div></td><td>Encargado Tienda</td><td><span class="ch-pe">Peñalver</span></td><td class="tm">09:00–16:00</td><td><span class="badge b-ok"><span class="bd"></span>En tienda</span></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:9px"><div class="emp-av" style="background:#be185d">CL</div><div><div style="font-weight:600">Cristina López</div><div class="tm-m">cristina.l@nicolina.es</div></div></div></td><td>Dependienta</td><td><span class="ch-pe">Peñalver</span></td><td class="tm">10:00–17:00</td><td><span class="badge b-ok"><span class="bd"></span>En tienda</span></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:9px"><div class="emp-av" style="background:#0f766e">JA</div><div><div style="font-weight:600">José Álvarez</div><div class="tm-m">jose.a@nicolina.es</div></div></div></td><td>Repartidor</td><td><span class="badge b-br">Ruta Madrid</span></td><td class="tm">08:00–16:00</td><td><span class="badge b-br"><span class="bd"></span>En ruta</span></td></tr>
+              <tr style="opacity:0.5"><td><div style="display:flex;align-items:center;gap:9px"><div class="emp-av" style="background:#6b7280">NM</div><div><div style="font-weight:600">Nuria Molina</div><div class="tm-m">nuria.m@nicolina.es</div></div></div></td><td>Dependienta</td><td class="tm-m">—</td><td class="tm-m">Descanso</td><td><span class="badge b-neu">Libre</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <div class="card mb4">
+            <div class="card-hd"><div class="card-title">Próximos turnos · semana</div></div>
+            <div class="card-body" style="padding-top:8px">
+              <div class="mrow"><span class="mlbl">Lun 23 jun</span><span style="font-size:12px;font-weight:600">7 personas activas</span></div>
+              <div class="mrow"><span class="mlbl">Mar 24 jun</span><span style="font-size:12px;font-weight:600">7 personas activas</span></div>
+              <div class="mrow"><span class="mlbl">Mié 25 jun</span><span style="font-size:12px;font-weight:600">6 personas <span style="color:var(--warn)">−1 libre</span></span></div>
+              <div class="mrow"><span class="mlbl">Jue 26 jun</span><span style="font-size:12px;font-weight:600">8 personas activas</span></div>
+              <div class="mrow"><span class="mlbl">Vie 27 jun</span><span style="font-size:12px;font-weight:600">8 personas activas</span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-hd"><div class="card-title">Comunicado al equipo</div><button class="btn btn-sec btn-xs">Enviar</button></div>
+            <div class="card-body">
+              <textarea placeholder="Escribe un mensaje para el equipo..." style="width:100%;border:1px solid var(--border);border-radius:var(--rs);padding:9px 11px;font-size:13px;font-family:var(--sans);min-height:80px;resize:vertical;background:var(--app-bg);outline:none;color:var(--text)"></textarea>
+              <div style="display:flex;gap:7px;margin-top:8px">
+                <button class="btn btn-sec btn-sm" style="flex:1">Solo obrador</button>
+                <button class="btn btn-sec btn-sm" style="flex:1">Solo tiendas</button>
+                <button class="btn btn-br btn-sm" style="flex:1">Todo el equipo</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /equipo -->
+
+
+    <!-- ══════════ VIEW: CONFIGURACIÓN ══════════ -->
+    <div class="view" id="view-config">
+      <div class="ph"><div><h1>Configuración</h1><p>Ajustes del portal y de la empresa</p></div></div>
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><div class="card-title">Datos de la empresa</div></div>
+          <div class="card-body" style="padding-top:8px">
+            <div class="mrow"><span class="mlbl">Empresa</span><span style="font-size:13px;font-weight:600">Nicolina SL</span></div>
+            <div class="mrow"><span class="mlbl">Email</span><span style="font-size:13px">info@nicolina.es</span></div>
+            <div class="mrow"><span class="mlbl">Instagram</span><span style="font-size:13px">@nicolinamadrid</span></div>
+            <div class="mrow"><span class="mlbl">Zona horaria</span><span style="font-size:13px">Europe/Madrid</span></div>
+            <div class="mrow"><span class="mlbl">Corte de pedidos</span><span class="mval">14:30</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><div class="card-title">Integraciones activas</div></div>
+          <div class="card-body" style="padding-top:8px">
+            <div class="mrow"><span class="mlbl">Shopify</span><span class="badge b-ok">Conectado</span></div>
+            <div class="mrow"><span class="mlbl">Instagram Business</span><span class="badge b-ok">Conectado</span></div>
+            <div class="mrow"><span class="mlbl">MRW / SEUR</span><span class="badge b-ok">Conectado</span></div>
+            <div class="mrow"><span class="mlbl">Email (info@nicolina.es)</span><span class="badge b-ok">Conectado</span></div>
+            <div class="mrow"><span class="mlbl">Software contabilidad</span><span class="badge b-warn">Pendiente</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /config -->
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+// ─── NAVIGATION ───
+const TITLES = {dashboard:'Panel General',pedidos:'Pedidos',obrador:'Obrador',inventario:'Inventario',tiendas:'Tiendas',clientes:'Clientes & B2B',reparto:'Reparto & Entregas',finanzas:'Finanzas',web:'Web & Shopify',equipo:'Equipo',config:'Configuración'};
+
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item[onclick]').forEach(n => n.classList.remove('active'));
+  const view = document.getElementById('view-' + id);
+  if (view) view.classList.add('active');
+  const nav = document.querySelector(`.nav-item[onclick="showView('${id}')"]`);
+  if (nav) nav.classList.add('active');
+  const t = document.getElementById('page-title');
+  if (t && TITLES[id]) t.textContent = TITLES[id];
+  // lazy chart init
+  if (id === 'dashboard' && !window._ci?.dash) initDash();
+  if (id === 'finanzas'  && !window._ci?.fin)  initFin();
+  if (id === 'web'       && !window._ci?.web)  initWeb();
+}
+
+function switchTab(el, groupId) {
+  const g = document.getElementById(groupId);
+  if (g) g.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ─── CHARTS ───
+window._ci = {};
+
+const CF = {
+  plugins: {
+    legend: { display: false },
+    tooltip: {
+      backgroundColor: '#1a1917',
+      titleFont: { family: 'Outfit', size: 11, weight: '600' },
+      bodyFont:  { family: 'DM Mono', size: 12 },
+      padding: 10, cornerRadius: 6, displayColors: false
+    }
+  }
+};
+
+function initDash() {
+  window._ci.dash = true;
+  const r = document.getElementById('chart-revenue');
+  if (r) new Chart(r, {
+    type: 'line',
+    data: {
+      labels: ['Lun 16','Mar 17','Mié 18','Jue 19','Vie 20','Sáb 21','Dom 22'],
+      datasets: [{ data: [834,1102,987,1243,891,1456,1247], borderColor:'#c47f42', backgroundColor:'rgba(196,127,66,0.07)', borderWidth:2, tension:0.42, fill:true, pointBackgroundColor:'#c47f42', pointRadius:4, pointHoverRadius:6 }]
+    },
+    options: { ...CF, responsive:true, maintainAspectRatio:false, scales: {
+      x: { grid:{display:false}, ticks:{font:{family:'DM Mono',size:11},color:'#9c9590'} },
+      y: { grid:{color:'#f0ece6'}, ticks:{font:{family:'DM Mono',size:11},color:'#9c9590',callback:v=>v+'€'}, beginAtZero:false }
+    }}
+  });
+  const c = document.getElementById('chart-channels');
+  if (c) new Chart(c, {
+    type: 'doughnut',
+    data: { labels:['Online','Potosí','Peñalver','B2B'], datasets:[{ data:[42,31,19,8], backgroundColor:['#2563eb','#c47f42','#7c3aed','#16a34a'], borderWidth:0, hoverOffset:4 }] },
+    options: { ...CF, responsive:true, maintainAspectRatio:false, cutout:'65%', plugins: { ...CF.plugins, legend:{ display:true, position:'bottom', labels:{font:{family:'Outfit',size:11,weight:'600'},boxWidth:9,boxHeight:9,padding:10,color:'#6b6660'} } } }
+  });
+}
+
+function initFin() {
+  window._ci.fin = true;
+  const m = document.getElementById('chart-monthly');
+  if (m) new Chart(m, {
+    type: 'bar',
+    data: { labels:['Ene','Feb','Mar','Abr','May','Jun'], datasets:[{ data:[18234,21456,19876,23456,27834,31247], backgroundColor:(ctx)=>ctx.dataIndex===5?'#c47f42':'#e8d5be', borderRadius:5, borderSkipped:false }] },
+    options: { ...CF, responsive:true, maintainAspectRatio:false, scales: {
+      x:{ grid:{display:false}, ticks:{font:{family:'DM Mono',size:11},color:'#9c9590'} },
+      y:{ grid:{color:'#f0ece6'}, ticks:{font:{family:'DM Mono',size:11},color:'#9c9590',callback:v=>(v/1000)+'k€'}, beginAtZero:true }
+    }}
+  });
+  const ca = document.getElementById('chart-canal');
+  if (ca) new Chart(ca, {
+    type: 'doughnut',
+    data: { labels:['Online','Potosí','Peñalver','B2B'], datasets:[{ data:[13247,9831,5743,2426], backgroundColor:['#2563eb','#c47f42','#7c3aed','#16a34a'], borderWidth:0, hoverOffset:4 }] },
+    options: { ...CF, responsive:true, maintainAspectRatio:false, cutout:'62%', plugins:{ ...CF.plugins, legend:{ display:true, position:'bottom', labels:{font:{family:'Outfit',size:11,weight:'600'},boxWidth:9,boxHeight:9,padding:10,color:'#6b6660'} } } }
+  });
+}
+
+function initWeb() {
+  window._ci.web = true;
+  const v = document.getElementById('chart-visits');
+  if (v) new Chart(v, {
+    type: 'bar',
+    data: { labels:['08h','09h','10h','11h','12h','13h','14h','15h','16h','17h','18h','19h'], datasets:[{ data:[23,47,89,124,134,118,97,86,72,64,54,39], backgroundColor:(ctx)=>ctx.dataIndex===4?'#2563eb':'#bfdbfe', borderRadius:4, borderSkipped:false }] },
+    options: { ...CF, responsive:true, maintainAspectRatio:false, scales: {
+      x:{grid:{display:false},ticks:{font:{family:'DM Mono',size:11},color:'#9c9590'}},
+      y:{grid:{color:'#f0ece6'},ticks:{font:{family:'DM Mono',size:11},color:'#9c9590'},beginAtZero:true}
+    }}
+  });
+}
+
+// ─── CLOCK ───
+function tick() {
+  const n = new Date();
+  const days = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const months = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const el = document.getElementById('clock');
+  if (el) el.textContent = `${days[n.getDay()]}, ${n.getDate()} de ${months[n.getMonth()]} ${n.getFullYear()} · ${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
+}
+
+document.addEventListener('DOMContentLoaded', () => { tick(); setInterval(tick, 30000); initDash(); });
+</script>
+</body>
+</html>
