@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grupo Luxoro · Portal de Gestión</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07100F;--bg2:#0C1C1B;--bg3:#122322;--bg4:#172C2B;
+  --sb:#050E0D;
+  --gold:#C9A84C;--gold-l:#E8CC80;--gold-d:rgba(201,168,76,0.22);--gold-b:rgba(201,168,76,0.18);
+  --teal:#1A5252;--teal-l:#267070;
+  --txt:#EDE8DC;--txt2:#7A9999;--txt3:#3A5555;
+  --green:#2EC982;--red:#E85040;--amber:#E8A020;--blue:#3BA8CC;
+  --brd:rgba(255,255,255,0.055);
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'Plus Jakarta Sans',system-ui,sans-serif;
+}
+body{background:var(--bg);color:var(--txt);font-family:var(--sans);font-size:14px;line-height:1.5;min-height:100vh;overflow-x:hidden}
+/* ── LOGIN ─────────────────────────────────────────── */
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 25% 35%,rgba(201,168,76,.07) 0%,transparent 55%),
+  radial-gradient(ellipse at 75% 70%,rgba(26,82,82,.12) 0%,transparent 55%),var(--bg)}
+.lcard{width:420px;background:var(--bg2);border:1px solid var(--gold-b);border-radius:22px;padding:52px 44px;
+  box-shadow:0 28px 80px rgba(0,0,0,.55),0 0 0 1px rgba(201,168,76,.08)}
+.llogo{display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.llogo img{height:48px;width:auto}
+.lsub{text-align:center;color:var(--txt2);font-size:11.5px;margin-bottom:36px;letter-spacing:.12em;text-transform:uppercase}
+.ll{display:block;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--txt2);margin-bottom:7px}
+.li{width:100%;background:var(--bg3);border:1px solid var(--brd);border-radius:10px;padding:11px 15px;color:var(--txt);
+  font-family:var(--sans);font-size:14px;outline:none;transition:border-color .2s;margin-bottom:14px}
+.li:focus{border-color:var(--gold-d)}
+.lbtn{width:100%;background:linear-gradient(135deg,#C9A84C,#9A7A28);color:#071515;border:none;border-radius:10px;
+  padding:14px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.04em;
+  transition:all .3s cubic-bezier(.32,.72,0,1);margin-top:6px}
+.lbtn:hover{opacity:.9;transform:translateY(-1px)}
+.lbtn:active{transform:scale(.98)}
+.lhint{margin-top:18px;padding:12px 15px;background:var(--bg3);border-radius:9px;font-size:12px;color:var(--txt2);line-height:1.9}
+.lhint strong{color:var(--gold)}
+/* ── APP ───────────────────────────────────────────── */
+#app{display:none;flex-direction:column;min-height:100vh}
+#app.on{display:flex}
+/* ── TOPBAR ─────────────────────────────────────────── */
+.tb{height:58px;background:var(--sb);border-bottom:1px solid var(--brd);display:flex;align-items:center;
+  padding:0 22px;gap:18px;position:sticky;top:0;z-index:200}
+.tb-logo img{height:30px;width:auto}
+.tb-tickers{display:flex;align-items:center;gap:12px}
+.tick{display:flex;align-items:center;gap:7px;padding:5px 13px;background:var(--bg3);border:1px solid var(--gold-b);
+  border-radius:20px;font-size:12px;font-weight:600}
+.tick-lbl{color:var(--txt2);font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+.tick-p{color:var(--gold)}
+.tick-up{color:var(--green);font-size:10.5px}
+.tick-dn{color:var(--red);font-size:10.5px}
+.tb-r{margin-left:auto;display:flex;align-items:center;gap:10px}
+.tb-ctr{display:flex;align-items:center;gap:7px;padding:5px 13px;background:var(--bg3);
+  border:1px solid var(--brd);border-radius:8px;cursor:pointer;font-size:12.5px;color:var(--txt);transition:border-color .2s}
+.tb-ctr:hover{border-color:var(--gold-b)}
+.tb-icon{width:34px;height:34px;border-radius:7px;border:1px solid var(--brd);background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--txt2);transition:all .2s;position:relative}
+.tb-icon:hover{border-color:var(--gold-b);color:var(--gold)}
+.nbadge{position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:var(--red);border-radius:50%;
+  font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;color:#fff;border:2px solid var(--sb)}
+.uchip{display:flex;align-items:center;gap:9px;padding:3px 13px 3px 3px;background:var(--bg3);
+  border:1px solid var(--brd);border-radius:20px;cursor:pointer;transition:border-color .2s}
+.uchip:hover{border-color:var(--gold-b)}
+.uav{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-l));
+  display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:#fff}
+/* ── LAYOUT ─────────────────────────────────────────── */
+.ml{display:flex;flex:1;min-height:calc(100vh - 58px)}
+/* ── SIDEBAR ─────────────────────────────────────────── */
+.sb{width:214px;background:var(--sb);border-right:1px solid var(--brd);padding:18px 10px;
+  flex-shrink:0;position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto}
+.slbl{font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--txt3);
+  padding:0 8px;margin:16px 0 5px}
+.sitem{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;
+  color:var(--txt2);font-size:12.5px;font-weight:500;transition:all .18s;position:relative}
+.sitem:hover{background:var(--bg3);color:var(--txt)}
+.sitem.on{background:var(--gold-d);color:var(--gold);font-weight:600}
+.sico{width:15px;text-align:center;flex-shrink:0;font-size:14px}
+.sbdg{margin-left:auto;background:var(--red);color:#fff;font-size:9.5px;font-weight:700;
+  padding:2px 5px;border-radius:9px;min-width:17px;text-align:center}
+/* ── CONTENT ─────────────────────────────────────────── */
+.cnt{flex:1;padding:26px 30px;overflow-y:auto;background:var(--bg)}
+/* ── PAGE HDR ─────────────────────────────────────────── */
+.phdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:26px}
+.ptitle{font-family:var(--serif);font-size:25px;font-weight:600;line-height:1.2}
+.psub{font-size:12.5px;color:var(--txt2);margin-top:3px}
+/* ── CARDS ─────────────────────────────────────────── */
+.card{background:var(--bg2);border:1px solid var(--brd);border-radius:13px;padding:18px}
+.card-g{border-color:var(--gold-b);background:linear-gradient(135deg,var(--bg2) 0%,rgba(201,168,76,.04) 100%)}
+/* ── KPI GRID ─────────────────────────────────────────── */
+.kgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.kcard{background:var(--bg2);border:1px solid var(--brd);border-radius:13px;padding:18px;position:relative;
+  overflow:hidden;transition:border-color .2s,transform .2s;cursor:default}
+.kcard:hover{border-color:var(--gold-b);transform:translateY(-1px)}
+.klbl{font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--txt2);margin-bottom:9px}
+.kval{font-family:var(--serif);font-size:27px;font-weight:700;color:var(--txt);line-height:1;margin-bottom:5px}
+.ksub{font-size:11.5px;color:var(--txt2)}
+.ktrend{font-size:11.5px;font-weight:600;margin-top:7px}
+.ktrend.up{color:var(--green)}.ktrend.dn{color:var(--red)}
+.kico{position:absolute;top:14px;right:14px;font-size:20px;opacity:.12}
+/* ── GRIDS ─────────────────────────────────────────── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+/* ── TABLE ─────────────────────────────────────────── */
+.tw{overflow-x:auto;border-radius:11px;border:1px solid var(--brd)}
+table{width:100%;border-collapse:collapse}
+thead th{background:var(--bg2);padding:11px 15px;text-align:left;font-size:10.5px;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--txt2);border-bottom:1px solid var(--brd);white-space:nowrap}
+tbody td{padding:11px 15px;font-size:12.5px;border-bottom:1px solid var(--brd);color:var(--txt)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr{background:var(--bg);transition:background .13s;cursor:pointer}
+tbody tr:hover{background:var(--bg2)}
+/* ── BADGES ─────────────────────────────────────────── */
+.b{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:10.5px;font-weight:600;white-space:nowrap}
+.bg{background:rgba(46,201,130,.14);color:var(--green)}
+.br{background:rgba(232,80,64,.14);color:var(--red)}
+.ba{background:rgba(232,160,32,.14);color:var(--amber)}
+.bb{background:rgba(59,168,204,.14);color:var(--blue)}
+.bo{background:rgba(201,168,76,.14);color:var(--gold)}
+.bm{background:rgba(255,255,255,.055);color:var(--txt2)}
+/* ── TABS ─────────────────────────────────────────── */
+.tabs{display:flex;gap:3px;margin-bottom:18px;border-bottom:1px solid var(--brd);padding-bottom:0}
+.tab{padding:7px 15px;cursor:pointer;font-size:12.5px;font-weight:500;color:var(--txt2);
+  border-bottom:2px solid transparent;transition:all .18s;margin-bottom:-1px;white-space:nowrap}
+.tab:hover{color:var(--txt)}.tab.on{color:var(--gold);border-bottom-color:var(--gold);font-weight:600}
+/* ── BUTTONS ─────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 17px;border-radius:8px;
+  font-family:var(--sans);font-size:12.5px;font-weight:600;cursor:pointer;border:none;
+  transition:all .2s cubic-bezier(.32,.72,0,1);white-space:nowrap}
+.bp{background:linear-gradient(135deg,#C9A84C,#9A7A28);color:#060F0E}
+.bp:hover{opacity:.9;transform:translateY(-1px)}.bp:active{transform:scale(.97)}
+.bs{background:var(--bg3);color:var(--txt);border:1px solid var(--brd)}
+.bs:hover{border-color:var(--gold-b)}
+.bd{background:rgba(232,80,64,.12);color:var(--red);border:1px solid rgba(232,80,64,.18)}
+.bsm{padding:5px 11px;font-size:11.5px}
+/* ── TOOLBAR ─────────────────────────────────────────── */
+.tbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.sw{position:relative}
+.si{background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:7px 13px 7px 34px;
+  color:var(--txt);font-family:var(--sans);font-size:12.5px;outline:none;transition:border-color .2s;min-width:190px}
+.si:focus{border-color:var(--gold-b)}
+.sico2{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--txt3);pointer-events:none;font-size:13px}
+.sf{background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:7px 13px;
+  color:var(--txt);font-family:var(--sans);font-size:12.5px;outline:none;cursor:pointer;transition:border-color .2s}
+.sf:hover,.sf:focus{border-color:var(--gold-b)}
+/* ── MODAL ─────────────────────────────────────────── */
+.mov{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(5px);z-index:1000;
+  display:flex;align-items:center;justify-content:center;padding:22px;animation:fadeIn .18s ease}
+.mo{background:var(--bg2);border:1px solid var(--gold-b);border-radius:18px;padding:30px;
+  max-width:580px;width:100%;max-height:88vh;overflow-y:auto;
+  box-shadow:0 32px 80px rgba(0,0,0,.5);animation:slideUp .22s cubic-bezier(.32,.72,0,1)}
+.mo-w{max-width:780px}
+.mhdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px}
+.mtitle{font-family:var(--serif);font-size:19px;font-weight:600}
+.mclose{width:30px;height:30px;border-radius:7px;border:1px solid var(--brd);background:var(--bg3);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--txt2);font-size:15px;
+  transition:all .18s;flex-shrink:0}
+.mclose:hover{border-color:var(--gold-b);color:var(--txt)}
+/* ── FORM ─────────────────────────────────────────── */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fgr{display:flex;flex-direction:column;gap:5px}
+.fgr.full{grid-column:1/-1}
+.flbl{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--txt2)}
+.finp,.fsel,.fta{background:var(--bg3);border:1px solid var(--brd);border-radius:7px;padding:9px 13px;
+  color:var(--txt);font-family:var(--sans);font-size:12.5px;outline:none;transition:border-color .2s;width:100%}
+.finp:focus,.fsel:focus,.fta:focus{border-color:var(--gold-b)}
+.fta{resize:vertical;min-height:72px}
+/* ── CHARTS ─────────────────────────────────────────── */
+.bar-wrap{display:flex;align-items:flex-end;gap:7px;height:88px}
+/* ── PROGRESS ─────────────────────────────────────────── */
+.pbar{height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-top:7px}
+.pfill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold-d),var(--gold));
+  transition:width .6s cubic-bezier(.32,.72,0,1)}
+/* ── MISC ─────────────────────────────────────────── */
+.div{height:1px;background:var(--brd);margin:14px 0}
+.live{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);
+  animation:pulse 2s infinite;margin-right:4px}
+.sec{animation:slideUp .28s cubic-bezier(.32,.72,0,1)}
+.cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.ccard{background:var(--bg2);border:1px solid var(--brd);border-radius:13px;padding:18px;
+  cursor:pointer;transition:all .2s}
+.ccard:hover{border-color:var(--gold-b);transform:translateY(-2px)}
+.cstat{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--brd);font-size:12.5px}
+.cstat:last-child{border-bottom:none}
+/* ── ALERT BOX ─────────────────────────────────────────── */
+.alrt{display:flex;align-items:flex-start;gap:11px;padding:13px 15px;border-radius:10px;margin-bottom:9px}
+.alrt-w{background:rgba(232,160,32,.09);border:1px solid rgba(232,160,32,.2)}
+.alrt-r{background:rgba(232,80,64,.09);border:1px solid rgba(232,80,64,.2)}
+.alrt-b{background:rgba(59,168,204,.09);border:1px solid rgba(59,168,204,.2)}
+/* ── KEYFRAMES ─────────────────────────────────────────── */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+/* ── SCROLLBAR ─────────────────────────────────────────── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--teal)}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ LOGIN ═══════════════ -->
+<div id="login">
+  <div class="lcard">
+    <div class="llogo"><img src="https://luxoro.es/wp-content/uploads/2024/03/Logo-Luxoro-.png" alt="Luxoro"></div>
+    <div class="lsub">Portal de Gestión · Grupo Luxoro</div>
+    <label class="ll">Usuario</label>
+    <input class="li" type="email" id="lemail" value="gerente@grupoluxoro.com" placeholder="usuario@grupoluxoro.com">
+    <label class="ll">Contraseña</label>
+    <input class="li" type="password" id="lpass" value="••••••••" placeholder="Contraseña">
+    <label class="ll">Acceso</label>
+    <select class="li" id="lcentro">
+      <option value="all">Grupo Luxoro — todos los centros</option>
+      <option>Luxoro Larios · Málaga</option>
+      <option>Luxoro La Rosaleda · Málaga</option>
+      <option>Luxoro La Vaguada · Madrid</option>
+      <option>Luxoro Plaza Norte 2 · San Sebastián de los Reyes</option>
+      <option>Luxoro Gran Plaza 2 · Majadahonda</option>
+      <option>Luxoro Parquesur · Leganés</option>
+    </select>
+    <button class="lbtn" id="lbtn" onclick="doLogin()">Acceder al Portal</button>
+    <div class="lhint">
+      <strong>Demo gerencia:</strong> gerente@grupoluxoro.com / 1234<br>
+      <strong>Demo centro:</strong> larios@luxoro.es / 1234<br>
+      <strong>Demo admin:</strong> admin@grupoluxoro.com / 1234
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ APP ═══════════════ -->
+<div id="app">
+  <!-- TOPBAR -->
+  <header class="tb">
+    <div class="tb-logo"><img src="https://luxoro.es/wp-content/uploads/2024/03/Logo-Luxoro-.png" alt="Luxoro"></div>
+    <div class="tb-tickers">
+      <div class="tick"><span class="live"></span><span class="tick-lbl">24K</span><span class="tick-p" id="p24">€92.40/g</span><span class="tick-up" id="ptrend">▲ +0.32%</span></div>
+      <div class="tick"><span class="tick-lbl">18K</span><span class="tick-p" id="p18">€69.30/g</span></div>
+      <div class="tick"><span class="tick-lbl">Plata</span><span class="tick-p" id="pag">€0.928/g</span></div>
+    </div>
+    <div class="tb-r">
+      <div class="tb-ctr" onclick="nav('centros')">
+        <span style="color:var(--txt2);font-size:11px">📍</span>
+        <span id="ctr-name" style="font-size:12.5px">Grupo Luxoro · Todos los centros</span>
+        <span style="color:var(--txt3);font-size:10px">▼</span>
+      </div>
+      <div class="tb-icon" onclick="showNotif()"><span>🔔</span><span class="nbadge">3</span></div>
+      <div class="uchip" onclick="showUser()">
+        <div class="uav">GR</div>
+        <span style="font-size:12.5px;font-weight:500">Gerencia</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="ml">
+    <!-- SIDEBAR -->
+    <nav class="sb">
+      <div class="slbl">Principal</div>
+      <div class="sitem on" id="n-dashboard" onclick="nav('dashboard')"><span class="sico">📊</span>Dashboard</div>
+      <div class="sitem" id="n-cotizacion" onclick="nav('cotizacion')"><span class="sico">💰</span>Cotización</div>
+      <div class="slbl">Operaciones</div>
+      <div class="sitem" id="n-tasaciones" onclick="nav('tasaciones')"><span class="sico">⚖️</span>Tasaciones<span class="sbdg" id="tas-bdg">8</span></div>
+      <div class="sitem" id="n-compras" onclick="nav('compras')"><span class="sico">🛒</span>Compras</div>
+      <div class="sitem" id="n-inventario" onclick="nav('inventario')"><span class="sico">📦</span>Inventario</div>
+      <div class="sitem" id="n-clientes" onclick="nav('clientes')"><span class="sico">👥</span>Clientes</div>
+      <div class="slbl">Empresa</div>
+      <div class="sitem" id="n-centros" onclick="nav('centros')"><span class="sico">🏪</span>Centros</div>
+      <div class="sitem" id="n-refineria" onclick="nav('refineria')"><span class="sico">🔥</span>Refinería</div>
+      <div class="sitem" id="n-cumplimiento" onclick="nav('cumplimiento')"><span class="sico">🛡️</span>Cumplimiento<span class="sbdg" id="aml-bdg">2</span></div>
+      <div class="sitem" id="n-informes" onclick="nav('informes')"><span class="sico">📈</span>Informes</div>
+      <div class="slbl">Sistema</div>
+      <div class="sitem" id="n-config" onclick="nav('config')"><span class="sico">⚙️</span>Configuración</div>
+    </nav>
+    <!-- CONTENT -->
+    <main class="cnt" id="cnt"></main>
+  </div>
+</div>
+<div id="mc"></div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════
+const GP={spot:92.40,'24K':{c:88.30,v:92.40,p:'999.9'},'22K':{c:80.90,v:84.70,p:'916.7'},'18K':{c:65.20,v:69.30,p:'750.0'},'14K':{c:50.60,v:54.05,p:'585.0'},'9K':{c:32.10,v:34.65,p:'375.0'},plata:{c:0.82,v:0.928,p:'925.0'}};
+
+const CENTROS=[
+  {id:1,n:'Luxoro Larios',c:'Málaga',cc:'CC Larios',r:'Ana García',t:'+34 952 234 100',emp:3,mes:41280,hoy:1840,g:20.8,tp:2},
+  {id:2,n:'Luxoro La Rosaleda',c:'Málaga',cc:'CC La Rosaleda',r:'Carlos Ruiz',t:'+34 952 234 200',emp:2,mes:28950,hoy:960,g:10.9,tp:1},
+  {id:3,n:'Luxoro La Vaguada',c:'Madrid',cc:'CC La Vaguada',r:'Laura Martínez',t:'+34 914 234 300',emp:3,mes:52400,hoy:2190,g:24.8,tp:2},
+  {id:4,n:'Luxoro Plaza Norte 2',c:'S.S. de los Reyes',cc:'CC Plaza Norte 2',r:'Miguel Fernández',t:'+34 916 234 400',emp:2,mes:47600,hoy:2840,g:32.1,tp:1},
+  {id:5,n:'Luxoro Gran Plaza 2',c:'Majadahonda',cc:'CC Gran Plaza 2',r:'Patricia López',t:'+34 916 234 500',emp:2,mes:33200,hoy:1420,g:16.0,tp:1},
+  {id:6,n:'Luxoro Parquesur',c:'Leganés',cc:'CC Parquesur',r:'Roberto Sánchez',t:'+34 916 234 600',emp:2,mes:18400,hoy:600,g:6.8,tp:1},
+];
+
+const TAS=[
+  {id:'TAS-2026-0489',cli:'María José Rodríguez',ctr:'Luxoro La Vaguada',tipo:'Oro 18K',desc:'Pulsera y 2 anillos',pest:'14.2g',vest:'€925',st:'pendiente',min:22,emp:'Laura M.'},
+  {id:'TAS-2026-0488',cli:'Juan Carlos Espinosa',ctr:'Luxoro Plaza Norte 2',tipo:'Reloj Omega',desc:'Seamaster De Ville',pest:'—',vest:'€1,200',st:'en_curso',min:8,emp:'Miguel F.'},
+  {id:'TAS-2026-0487',cli:'Carmen Vidal Torres',ctr:'Luxoro Larios',tipo:'Oro 22K',desc:'Cadena árabe 38g',pest:'38.1g',vest:'€3,083',st:'pendiente',min:35,emp:'Ana G.'},
+  {id:'TAS-2026-0486',cli:'Antonio Morales',ctr:'Luxoro Gran Plaza 2',tipo:'Plata',desc:'Cubertería 12 piezas',pest:'620g',vest:'€508',st:'pendiente',min:15,emp:'Patricia L.'},
+  {id:'TAS-2026-0485',cli:'Isabel García Núñez',ctr:'Luxoro La Vaguada',tipo:'Oro 18K + 14K',desc:'Lote joyas familiares',pest:'28.4g',vest:'€1,680',st:'en_curso',min:4,emp:'Raúl P.'},
+  {id:'TAS-2026-0484',cli:'Fernando Díaz Molina',ctr:'Luxoro La Rosaleda',tipo:'Monedas oro',desc:'4 monedas Centenario',pest:'120g',vest:'€9,870',st:'pendiente',min:45,emp:'Carlos R.'},
+  {id:'TAS-2026-0483',cli:'Lucía Fernández Pérez',ctr:'Luxoro Plaza Norte 2',tipo:'Reloj Rolex',desc:'Datejust 41mm',pest:'—',vest:'€8,500',st:'pendiente',min:60,emp:'Miguel F.'},
+  {id:'TAS-2026-0482',cli:'Pedro Alonso Blanco',ctr:'Luxoro Parquesur',tipo:'Oro 9K',desc:'Conjunto plaqué',pest:'22.1g',vest:'€710',st:'pendiente',min:12,emp:'Roberto S.'},
+];
+
+const COMPRAS=[
+  {id:'COM-2026-2341',f:'22/06 14:15',ctr:'Plaza Norte 2',cli:'Juan Pérez Ruiz',desc:'Anillo sello 18K',q:'18K',g:8.4,pg:65.20,tot:547.68,kyc:'ok'},
+  {id:'COM-2026-2340',f:'22/06 13:47',ctr:'La Vaguada',cli:'Rosa García Vidal',desc:'Cadena + colgante 18K',q:'18K',g:12.8,pg:65.20,tot:834.56,kyc:'ok'},
+  {id:'COM-2026-2339',f:'22/06 13:22',ctr:'Larios',cli:'Miguel Torres Sánchez',desc:'Pulsera esclava 14K',q:'14K',g:18.2,pg:50.60,tot:920.92,kyc:'ok'},
+  {id:'COM-2026-2338',f:'22/06 12:50',ctr:'Plaza Norte 2',cli:'Carmen López Sanz',desc:'Monedas centenario ×2',q:'22K',g:60.0,pg:80.90,tot:4854.00,kyc:'pendiente'},
+  {id:'COM-2026-2337',f:'22/06 12:30',ctr:'La Vaguada',cli:'Antonio Ruiz Mora',desc:'Cubiertos plata 925',q:'Plata',g:840.0,pg:0.82,tot:688.80,kyc:'ok'},
+  {id:'COM-2026-2336',f:'22/06 11:40',ctr:'Gran Plaza 2',cli:'Elena Martín Soto',desc:'Pendientes brillantes 18K',q:'18K',g:4.1,pg:65.20,tot:267.32,kyc:'ok'},
+  {id:'COM-2026-2335',f:'22/06 11:15',ctr:'Larios',cli:'Francisco Vega Ruiz',desc:'Cadena machete 22K',q:'22K',g:28.6,pg:80.90,tot:2313.74,kyc:'ok'},
+  {id:'COM-2026-2334',f:'22/06 10:40',ctr:'La Rosaleda',cli:'Pilar Navarro Cano',desc:'Anillo solitario 18K',q:'18K',g:6.8,pg:65.20,tot:443.36,kyc:'ok'},
+  {id:'COM-2026-2333',f:'22/06 10:10',ctr:'La Vaguada',cli:'Rafael Gómez Prieto',desc:'Lote joyería 9K mixta',q:'9K',g:42.3,pg:32.10,tot:1357.83,kyc:'ok'},
+  {id:'COM-2026-2332',f:'22/06 09:55',ctr:'Parquesur',cli:'Ana Blanco Ramos',desc:'Gargantilla 18K',q:'18K',g:9.2,pg:65.20,tot:599.84,kyc:'ok'},
+];
+
+const CLI=[
+  {id:1,n:'María José Rodríguez',dni:'28.432.198-X',tel:'+34 654 123 456',ops:3,tot:2840,ult:'22/06/26',kyc:'verificado',aml:false,ctr:'La Vaguada'},
+  {id:2,n:'Juan Carlos Espinosa',dni:'50.234.776-M',tel:'+34 623 456 789',ops:1,tot:1200,ult:'22/06/26',kyc:'verificado',aml:false,ctr:'Plaza Norte 2'},
+  {id:3,n:'Carmen López Sanz',dni:'Pendiente',tel:'+34 645 987 321',ops:1,tot:4854,ult:'22/06/26',kyc:'pendiente',aml:true,ctr:'Plaza Norte 2'},
+  {id:4,n:'Francisco Vega Ruiz',dni:'29.876.432-T',tel:'+34 612 234 567',ops:5,tot:8420,ult:'22/06/26',kyc:'verificado',aml:false,ctr:'Larios'},
+  {id:5,n:'Rosa García Vidal',dni:'50.123.456-K',tel:'+34 634 567 890',ops:2,tot:1670,ult:'22/06/26',kyc:'verificado',aml:false,ctr:'La Vaguada'},
+  {id:6,n:'Antonio Morales Pérez',dni:'29.345.678-R',tel:'+34 698 765 432',ops:4,tot:3280,ult:'20/06/26',kyc:'verificado',aml:false,ctr:'Gran Plaza 2'},
+  {id:7,n:'Isabel García Núñez',dni:'02.456.789-P',tel:'+34 676 543 210',ops:2,tot:2340,ult:'22/06/26',kyc:'verificado',aml:false,ctr:'La Vaguada'},
+  {id:8,n:'Fernando Díaz Molina',dni:'50.567.890-L',tel:'+34 622 345 678',ops:1,tot:9870,ult:'22/06/26',kyc:'verificado',aml:true,ctr:'La Rosaleda'},
+  {id:9,n:'Lucía Fernández Pérez',dni:'28.678.901-N',tel:'+34 645 678 901',ops:1,tot:8500,ult:'22/06/26',kyc:'verificado',aml:false,ctr:'Plaza Norte 2'},
+  {id:10,n:'Pedro Alonso Blanco',dni:'29.789.012-S',tel:'+34 612 890 123',ops:2,tot:980,ult:'22/06/26',kyc:'verificado',aml:false,ctr:'Parquesur'},
+];
+
+const INV={
+  1:{'24K':0,'22K':186.4,'18K':342.8,'14K':128.2,'9K':256.4,'Plata':1840},
+  2:{'24K':0,'22K':98.2,'18K':214.6,'14K':76.8,'9K':142.0,'Plata':980},
+  3:{'24K':0,'22K':234.0,'18K':486.2,'14K':198.4,'9K':364.6,'Plata':2640},
+  4:{'24K':120.0,'22K':296.8,'18K':528.4,'14K':216.0,'9K':402.8,'Plata':3200},
+  5:{'24K':0,'22K':148.6,'18K':298.4,'14K':112.0,'9K':218.4,'Plata':1420},
+  6:{'24K':0,'22K':68.4,'18K':124.8,'14K':48.2,'9K':96.4,'Plata':620},
+};
+
+const REF_ENVIOS=[
+  {id:'REF-2026-018',f:'15/06/26',kg:'2.847 kg',val:'€189,420',st:'en_transito',est:'25/06/26',ref:'Nadir Metal Rafineri'},
+  {id:'REF-2026-017',f:'01/06/26',kg:'3.124 kg',val:'€207,840',st:'liquidado',est:'11/06/26',ref:'Nadir Metal Rafineri',liq:'€204,180'},
+  {id:'REF-2026-016',f:'15/05/26',kg:'2.680 kg',val:'€172,650',st:'liquidado',est:'25/05/26',ref:'Nadir Metal Rafineri',liq:'€170,320'},
+];
+
+let AML=[
+  {id:1,niv:'danger',cli:'Carmen López Sanz',ctr:'Plaza Norte 2',op:'COM-2026-2338',imp:'€4,854',desc:'Operación ≥€1,000 sin KYC completado. Requiere verificación de identidad en 24h.',f:'22/06/26 12:50',tipo:'kyc'},
+  {id:2,niv:'warning',cli:'Fernando Díaz Molina',ctr:'La Rosaleda',op:'TAS-2026-0484',imp:'€9,870',desc:'Tasación próxima a umbral €10,000 — verificar declaración SEPBLAC si se cierra.',f:'22/06/26 11:20',tipo:'sepblac'},
+];
+
+const PH=[88.2,88.5,89.1,88.8,89.4,90.1,89.8,90.4,91.0,90.6,91.2,91.8,91.4,92.0,91.6,92.2,91.9,92.4,92.1,92.6,91.8,92.3,92.0,92.5,92.2,92.6,92.4,92.8,92.5,92.40];
+const MR=[{m:'Ene',v:187400},{m:'Feb',v:204200},{m:'Mar',v:221800},{m:'Abr',v:248600},{m:'May',v:265400},{m:'Jun',v:221830}];
+
+// ═══════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════
+let curSec='dashboard';let curTab={};let ticker=null;
+
+// ═══════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════
+const fe=n=>'€'+new Intl.NumberFormat('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n);
+const fi=n=>new Intl.NumberFormat('es-ES').format(n);
+function bst(s){const m={pendiente:`<span class="b ba">⏳ Pendiente</span>`,en_curso:`<span class="b bb">● En curso</span>`,completada:`<span class="b bg">✓ Completada</span>`,rechazada:`<span class="b br">✗ Rechazada</span>`,ok:`<span class="b bg">✓ OK</span>`,verificado:`<span class="b bg">✓ Verificado</span>`,pendiente2:`<span class="b ba">⚠ Pendiente</span>`,en_transito:`<span class="b bb">🚚 Tránsito</span>`,liquidado:`<span class="b bg">✓ Liquidado</span>`};return m[s]||`<span class="b bm">${s}</span>`}
+function ini(n){return n.split(' ').map(w=>w[0]).slice(0,2).join('')}
+function av(n,sz=32){return`<div style="width:${sz}px;height:${sz}px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-l));display:flex;align-items:center;justify-content:center;font-size:${sz*0.35}px;font-weight:700;color:#fff;flex-shrink:0">${ini(n)}</div>`}
+function tabsH(sec,tabs,def){const act=curTab[sec]||def||tabs[0].id;return`<div class="tabs" data-sec="${sec}">${tabs.map(t=>`<div class="tab ${t.id===act?'on':''}" data-tab="${t.id}" onclick="stab('${sec}','${t.id}')">${t.l}</div>`).join('')}</div><div id="tc-${sec}">${tabC(sec,act)}</div>`}
+function tabC(sec,tab){const m={tasaciones:tTab,refineria:rTab,cumplimiento:cTab,inventario:iTab,informes:inTab};return m[sec]?m[sec](tab):''}
+function stab(sec,tab){curTab[sec]=tab;document.querySelectorAll(`[data-sec="${sec}"] .tab`).forEach(t=>t.classList.toggle('on',t.dataset.tab===tab));const tc=document.getElementById('tc-'+sec);if(tc)tc.innerHTML=tabC(sec,tab)}
+function calcKarats(){const ks=['24K','22K','18K','14K','9K'];return ks.map(k=>Object.values(INV).reduce((s,c)=>s+(c[k]||0),0)).reduce((a,b)=>a+b,0)}
+
+// ═══════════════════════════════════════════════════
+// LOGIN
+// ═══════════════════════════════════════════════════
+function doLogin(){
+  const b=document.getElementById('lbtn');b.textContent='Verificando…';b.disabled=true;
+  setTimeout(()=>{
+    document.getElementById('login').style.display='none';
+    const app=document.getElementById('app');app.classList.add('on');
+    nav('dashboard');startTicker();
+  },900);
+}
+
+// ═══════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════
+function nav(s){
+  curSec=s;
+  document.querySelectorAll('.sitem').forEach(e=>e.classList.remove('on'));
+  const ni=document.getElementById('n-'+s);if(ni)ni.classList.add('on');
+  const cnt=document.getElementById('cnt');cnt.innerHTML='';
+  const map={dashboard:rDash,cotizacion:rCot,tasaciones:rTas,compras:rComp,inventario:rInv,clientes:rCli,centros:rCentros,refineria:rRef,cumplimiento:rCump,informes:rInf,config:rConf};
+  if(map[s]){cnt.innerHTML=`<div class="sec">${map[s]()}</div>`;afterRender(s);}
+}
+
+function afterRender(s){
+  if(s==='cotizacion')setTimeout(calcConv,80);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM()},{once:true});
+}
+
+// ═══════════════════════════════════════════════════
+// PRICE TICKER
+// ═══════════════════════════════════════════════════
+function startTicker(){
+  if(ticker)return;let p=92.40;
+  ticker=setInterval(()=>{
+    const d=(Math.random()-.48)*.12;p=Math.max(90,Math.min(95,p+d));
+    const pct=((p-92.40)/92.40*100).toFixed(2);const up=p>=92.40;
+    const e1=document.getElementById('p24'),e2=document.getElementById('ptrend'),e3=document.getElementById('p18');
+    if(e1){e1.textContent=`€${p.toFixed(2)}/g`;e1.style.color=up?'var(--gold)':'var(--txt2)'}
+    if(e2){e2.textContent=`${up?'▲':'▼'} ${up?'+':''}${pct}%`;e2.className=up?'tick-up':'tick-dn'}
+    if(e3)e3.textContent=`€${(p*.750).toFixed(2)}/g`;
+  },4000);
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION: DASHBOARD
+// ═══════════════════════════════════════════════════
+function rDash(){
+  const totH=CENTROS.reduce((s,c)=>s+c.hoy,0);const totG=CENTROS.reduce((s,c)=>s+c.g,0);
+  const totTP=CENTROS.reduce((s,c)=>s+c.tp,0);const totM=CENTROS.reduce((s,c)=>s+c.mes,0);
+  const totInvG=calcKarats();
+  const wd=[8420,9840,7650,10280,9120,11340,totH];const wMax=Math.max(...wd);
+  const sp=PH.slice(-14);const spMin=Math.min(...sp);const spMax=Math.max(...sp);
+  const pts=sp.map((v,i)=>`${(i/(sp.length-1))*220},${40-((v-spMin)/(spMax-spMin))*36}`).join(' ');
+  return`
+  <div class="phdr">
+    <div><div class="ptitle">Dashboard</div><div class="psub"><span class="live"></span>Datos en tiempo real · Grupo Luxoro · 22 de junio de 2026</div></div>
+    <button class="btn bp" onclick="openM('nueva-compra')">+ Nueva Compra</button>
+  </div>
+  <div class="kgrid">
+    <div class="kcard card-g"><div class="kico">💰</div><div class="klbl">Compras hoy</div><div class="kval">${fe(totH)}</div><div class="ksub">${totG.toFixed(1)}g · 6 centros activos</div><div class="ktrend up">▲ +12.4% vs ayer</div></div>
+    <div class="kcard"><div class="kico">⚖️</div><div class="klbl">Tasaciones pendientes</div><div class="kval">${totTP}</div><div class="ksub">Cola actual · Espera media: 28 min</div><div class="ktrend dn">▼ 2 más que ayer</div></div>
+    <div class="kcard card-g"><div class="kico">📈</div><div class="klbl">Precio oro 24K</div><div class="kval" style="color:var(--gold)">€92.40</div><div class="ksub">por gramo · Spot LME</div><div class="ktrend up">▲ +0.32% hoy</div></div>
+    <div class="kcard"><div class="kico">📦</div><div class="klbl">Inventario total (oro)</div><div class="kval">${fi(totInvG.toFixed(0))}g</div><div class="ksub">Valor est. ${fe(totInvG*65.20*.85)}</div><div class="ktrend up">▲ +2.8% esta semana</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div style="font-weight:600;font-size:14.5px">Rendimiento por centro · Hoy</div>
+        <span class="b bm">22 jun 2026</span>
+      </div>
+      <div class="tw"><table>
+        <thead><tr><th>Centro</th><th style="text-align:right">Gramos</th><th style="text-align:right">Compras</th><th style="text-align:right">Tas.</th></tr></thead>
+        <tbody>
+          ${CENTROS.map(c=>`<tr onclick="nav('centros')">
+            <td><div style="font-weight:500">${c.n.replace('Luxoro ','')}</div><div style="font-size:11px;color:var(--txt2)">${c.c}</div></td>
+            <td style="text-align:right;font-variant-numeric:tabular-nums">${c.g.toFixed(1)}g</td>
+            <td style="text-align:right;font-weight:700;color:var(--gold)">${fe(c.hoy)}</td>
+            <td style="text-align:right">${c.tp>0?`<span class="b ba">${c.tp}</span>`:'<span class="b bg">0</span>'}</td>
+          </tr>`).join('')}
+          <tr style="background:var(--bg2)"><td style="font-weight:700">TOTAL</td><td style="text-align:right;font-weight:700">${totG.toFixed(1)}g</td><td style="text-align:right;font-weight:700;color:var(--gold)">${fe(totH)}</td><td style="text-align:right"><span class="b ba">${totTP}</span></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <div style="font-weight:600;font-size:14.5px">Compras últimos 7 días</div>
+          <span class="b bo">${fe(wd.reduce((a,b)=>a+b,0))}</span>
+        </div>
+        <div style="font-size:11.5px;color:var(--txt2);margin-bottom:13px">Evolución diaria · Todos los centros</div>
+        <div class="bar-wrap">
+          ${['L','M','X','J','V','S','D'].map((d,i)=>{const h=Math.round((wd[i]/wMax)*100);const isT=i===6;return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="height:${h}%;min-height:4px;width:100%;background:${isT?'linear-gradient(to top,var(--gold),var(--gold-l))':'var(--bg4)'};border-radius:3px 3px 0 0" title="${fe(wd[i])}"></div><span style="font-size:10px;color:${isT?'var(--gold)':'var(--txt3)'};font-weight:${isT?700:400}">${d}</span></div>`}).join('')}
+        </div>
+      </div>
+      <div class="card card-g">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <div style="font-weight:600;font-size:14.5px">Precio oro 24K · 30 días</div>
+          <span style="color:var(--green);font-size:11.5px;font-weight:600">▲ +4.77%</span>
+        </div>
+        <div style="font-size:11.5px;color:var(--txt2);margin-bottom:11px">€88.20 → €92.40 / gramo</div>
+        <svg width="100%" height="48" viewBox="0 0 220 44" preserveAspectRatio="none">
+          <defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C9A84C" stop-opacity="0.28"/><stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/></linearGradient></defs>
+          <polyline points="${pts}" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <polygon points="0,44 ${pts} 220,44" fill="url(#sg)"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div style="font-weight:600;font-size:14.5px">Tasaciones recientes</div>
+        <button class="btn bs bsm" onclick="nav('tasaciones')">Ver todas</button>
+      </div>
+      ${TAS.slice(0,5).map(t=>`<div style="display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--brd);cursor:pointer" onclick="showTD('${t.id}')">
+        <div style="width:34px;height:34px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">${t.tipo.includes('Reloj')?'⌚':t.tipo.includes('Plata')?'🥈':t.tipo.includes('Mone')?'🪙':'💍'}</div>
+        <div style="flex:1;min-width:0"><div style="font-weight:500;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.cli}</div><div style="font-size:11px;color:var(--txt2)">${t.tipo} · ${t.ctr.replace('Luxoro ','')}</div></div>
+        <div style="text-align:right;flex-shrink:0"><div style="font-weight:600;font-size:12.5px;color:var(--gold)">${t.vest}</div>${bst(t.st)}</div>
+      </div>`).join('')}
+      <div style="margin-top:11px;text-align:center"><button class="btn bs bsm" onclick="nav('tasaciones')">Ver todas las tasaciones →</button></div>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div style="font-weight:600;font-size:14.5px">Alertas y avisos</div>
+        <button class="btn bs bsm" onclick="nav('cumplimiento')">Cumplimiento</button>
+      </div>
+      ${AML.map(a=>`<div class="alrt ${a.niv==='danger'?'alrt-r':'alrt-w'}" style="margin-bottom:10px">
+        <div style="font-size:20px">${a.niv==='danger'?'🚨':'⚠️'}</div>
+        <div><div style="font-weight:600;font-size:12.5px;margin-bottom:2px">${a.cli} · ${a.imp}</div><div style="font-size:11.5px;color:var(--txt2)">${a.desc.substring(0,60)}…</div>
+        <div style="margin-top:7px;display:flex;gap:7px"><button class="btn bs bsm" onclick="nav('cumplimiento')">Gestionar</button></div></div>
+      </div>`).join('')}
+      <div class="alrt alrt-b">
+        <div style="font-size:20px">ℹ️</div>
+        <div><div style="font-weight:600;font-size:12.5px">REF-2026-018 en tránsito</div><div style="font-size:11.5px;color:var(--txt2)">2.847 kg · Liquidación estimada 25/06/26 · Nadir</div></div>
+      </div>
+      <div style="margin-top:14px;padding:13px;background:var(--bg3);border-radius:10px">
+        <div style="font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--txt2);margin-bottom:9px">Revenue mensual · Junio 2026</div>
+        <div style="font-family:var(--serif);font-size:26px;font-weight:700">${fe(221830)}</div>
+        <div style="font-size:11.5px;color:var(--txt2);margin-bottom:7px">Parcial · 22 días de 30</div>
+        <div class="pbar"><div class="pfill" style="width:73%"></div></div>
+        <div style="font-size:11px;color:var(--txt2);margin-top:5px">73% del objetivo mensual (€304,000)</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION: COTIZACIÓN
+// ═══════════════════════════════════════════════════
+function rCot(){
+  const ph=PH;const mn=Math.min(...ph),mx=Math.max(...ph);
+  const pts=ph.map((v,i)=>`${(i/(ph.length-1))*300},${56-((v-mn)/(mx-mn))*52}`).join(' ');
+  return`
+  <div class="phdr">
+    <div><div class="ptitle">Cotización del Oro</div><div class="psub"><span class="live"></span>Actualizado: 14:32 · Fuente: London Metal Exchange (LME)</div></div>
+    <div style="display:flex;gap:9px"><button class="btn bs" onclick="this.textContent='Actualizando…';setTimeout(()=>this.textContent='🔄 Actualizar',1200)">🔄 Actualizar</button><button class="btn bp" onclick="openM('calculadora')">🧮 Calculadora</button></div>
+  </div>
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:22px">
+    <div class="card card-g" style="display:flex;align-items:center;gap:28px;padding:24px">
+      <div>
+        <div class="klbl">Oro 24K · Precio spot</div>
+        <div style="font-family:var(--serif);font-size:46px;font-weight:700;color:var(--gold);line-height:1">€92.40</div>
+        <div style="font-size:12.5px;color:var(--txt2);margin-top:4px">por gramo · <span style="color:var(--green)">▲ +0.32% hoy</span></div>
+      </div>
+      <div style="flex:1">
+        <svg width="100%" height="64" viewBox="0 0 300 60" preserveAspectRatio="none">
+          <polyline points="${pts}" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--txt3);margin-top:3px"><span>€88.20 · hace 30 días</span><span>€92.40 · hoy</span></div>
+      </div>
+    </div>
+    <div class="card" style="display:flex;flex-direction:column;gap:11px">
+      <div class="klbl">Plata 925</div>
+      <div style="font-family:var(--serif);font-size:30px;font-weight:700;color:var(--txt2)">€0.928</div>
+      <div style="font-size:12px;color:var(--txt2)">por gramo · LME spot</div>
+      <div class="div"></div>
+      <div style="font-size:12.5px"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:var(--txt2)">Precio compra</span><span style="font-weight:600">€0.820/g</span></div><div style="display:flex;justify-content:space-between"><span style="color:var(--txt2)">Precio venta ref.</span><span style="font-weight:600">€0.928/g</span></div></div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:22px">
+    <div style="font-weight:600;font-size:14.5px;margin-bottom:14px">Tabla de precios por quilate · Vigente hoy · 22/06/2026</div>
+    <div class="tw"><table>
+      <thead><tr><th>Quilate</th><th>Pureza</th><th style="text-align:right">Spot (€/g)</th><th style="text-align:right">Precio compra</th><th style="text-align:right">Ref. venta</th><th style="text-align:right">Margen</th></tr></thead>
+      <tbody>
+        ${Object.entries(GP).filter(([k])=>k!=='spot'&&k!=='plata').map(([k,v])=>{
+          const spot=(GP.spot*parseFloat(v.p)/999.9);const marg=((v.v-v.c)/v.v*100).toFixed(1);
+          const cols={'24K':'#F0E040','22K':'#E8C040','18K':'#D4A830','14K':'#C49020','9K':'#A87020'};
+          return`<tr><td><div style="display:flex;align-items:center;gap:7px"><div style="width:8px;height:8px;border-radius:50%;background:${cols[k]}"></div><strong>${k}</strong></div></td><td style="color:var(--txt2)">${v.p}‰</td><td style="text-align:right">${fe(spot)}</td><td style="text-align:right;font-weight:700;color:var(--gold)">${fe(v.c)}</td><td style="text-align:right">${fe(v.v)}</td><td style="text-align:right"><span class="b bg">${marg}%</span></td></tr>`;
+        }).join('')}
+        <tr><td><div style="display:flex;align-items:center;gap:7px"><div style="width:8px;height:8px;border-radius:50%;background:#C0C0C0"></div><strong>Plata 925</strong></div></td><td style="color:var(--txt2)">925‰</td><td style="text-align:right">${fe(GP.plata.v)}</td><td style="text-align:right;font-weight:700;color:var(--gold)">${fe(GP.plata.c)}</td><td style="text-align:right">${fe(GP.plata.v)}</td><td style="text-align:right"><span class="b bg">11.6%</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="card">
+    <div style="font-weight:600;font-size:14.5px;margin-bottom:14px">Conversor rápido</div>
+    <div style="display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap">
+      <div class="fgr"><label class="flbl">Quilate</label>
+        <select class="fsel" id="cv-k" onchange="calcConv()" style="min-width:130px">
+          ${Object.entries(GP).filter(([k])=>k!=='spot'&&k!=='plata').map(([k,v])=>`<option value="${v.c}"${k==='18K'?' selected':''}>${k} (${v.p}‰)</option>`).join('')}
+          <option value="0.82">Plata 925</option>
+        </select>
+      </div>
+      <div class="fgr"><label class="flbl">Peso (g)</label><input class="finp" type="number" id="cv-p" value="10" min="0.1" step="0.1" oninput="calcConv()" style="min-width:110px"></div>
+      <div class="fgr"><label class="flbl">Resultado (precio compra)</label>
+        <div style="background:var(--bg3);border:1px solid var(--gold-b);border-radius:8px;padding:9px 15px;min-width:160px">
+          <div id="cv-r" style="font-family:var(--serif);font-size:22px;font-weight:700;color:var(--gold)">€652.00</div>
+          <div id="cv-d" style="font-size:11px;color:var(--txt2)">10g × €65.20/g</div>
+        </div>
+      </div>
+      <button class="btn bp" onclick="this.textContent='✓ Copiado';setTimeout(()=>this.textContent='Copiar precio',1600)">Copiar precio</button>
+    </div>
+  </div>`;
+}
+function calcConv(){const k=parseFloat(document.getElementById('cv-k')?.value||65.2);const p=parseFloat(document.getElementById('cv-p')?.value||0);const r=document.getElementById('cv-r');const d=document.getElementById('cv-d');if(r)r.textContent=`€${(k*p).toFixed(2)}`;if(d)d.textContent=`${p}g × €${k}/g`}
+
+// ═══════════════════════════════════════════════════
+// SECTION: TASACIONES
+// ═══════════════════════════════════════════════════
+function rTas(){
+  const pend=TAS.filter(t=>t.st==='pendiente').length;const ec=TAS.filter(t=>t.st==='en_curso').length;
+  return`<div class="phdr"><div><div class="ptitle">Tasaciones</div><div class="psub">${pend} pendientes · ${ec} en curso · Actualizado al instante</div></div><button class="btn bp" onclick="openM('nueva-tasacion')">+ Nueva Tasación</button></div>
+  ${tabsH('tasaciones',[{id:'pend',l:`⏳ Pendientes (${pend})`},{id:'ec',l:`● En curso (${ec})`},{id:'comp',l:'✓ Completadas'},{id:'all',l:'Todas'}],'pend')}`;
+}
+function tTab(tab){
+  let items=TAS;
+  if(tab==='pend')items=TAS.filter(t=>t.st==='pendiente');
+  else if(tab==='ec')items=TAS.filter(t=>t.st==='en_curso');
+  else if(tab==='comp')items=[{id:'TAS-2026-0481',cli:'Marta Sáenz López',ctr:'Luxoro Larios',tipo:'Oro 18K',desc:'Anillo y alianza',pest:'9.4g',vest:'€612',st:'completada',min:0,emp:'Ana G.'},{id:'TAS-2026-0480',cli:'Roberto Caso Gil',ctr:'Luxoro La Vaguada',tipo:'Plata',desc:'Bandeja plata',pest:'340g',vest:'€279',st:'completada',min:0,emp:'Raúl P.'}];
+  if(!items.length)return`<div style="text-align:center;padding:60px;color:var(--txt2)"><div style="font-size:36px;opacity:.3;margin-bottom:12px">✅</div><div style="font-size:15px;font-weight:600;color:var(--txt)">Sin tasaciones en esta categoría</div></div>`;
+  return`<div class="tbar">
+    <div class="sw"><span class="sico2">🔍</span><input class="si" placeholder="Buscar cliente, tipo…" oninput="filterT(this.value)"></div>
+    <select class="sf"><option>Todos los centros</option>${CENTROS.map(c=>`<option>${c.n}</option>`).join('')}</select>
+  </div>
+  <div class="tw"><table id="ttas">
+    <thead><tr><th>ID</th><th>Cliente</th><th>Centro</th><th>Tipo</th><th>Descripción</th><th style="text-align:right">Peso</th><th style="text-align:right">Valor</th><th>Empleado</th><th>Estado</th><th>Espera</th><th>Acciones</th></tr></thead>
+    <tbody>${items.map(t=>`<tr onclick="showTD('${t.id}')">
+      <td style="font-family:monospace;font-size:11.5px;color:var(--txt2)">${t.id}</td>
+      <td style="font-weight:500">${t.cli}</td>
+      <td style="font-size:11.5px">${t.ctr.replace('Luxoro ','')}</td>
+      <td><span class="b bo">${t.tipo}</span></td>
+      <td style="color:var(--txt2);font-size:11.5px">${t.desc}</td>
+      <td style="text-align:right">${t.pest}</td>
+      <td style="text-align:right;font-weight:700;color:var(--gold)">${t.vest}</td>
+      <td style="color:var(--txt2);font-size:11.5px">${t.emp}</td>
+      <td>${bst(t.st)}</td>
+      <td>${t.st==='completada'?'<span style="color:var(--txt3)">—</span>':`<span style="color:${t.min>30?'var(--red)':t.min>15?'var(--amber)':'var(--txt2)'};font-size:11.5px">${t.min} min</span>`}</td>
+      <td onclick="event.stopPropagation()"><div style="display:flex;gap:5px"><button class="btn bs bsm" onclick="showTD('${t.id}')">Ver</button>${t.st==='pendiente'?`<button class="btn bp bsm" onclick="iniciarT('${t.id}')">Iniciar</button>`:''}</div></td>
+    </tr>`).join('')}</tbody>
+  </table></div>`;
+}
+function filterT(q){document.querySelectorAll('#ttas tbody tr').forEach(r=>r.style.display=r.textContent.toLowerCase().includes(q.toLowerCase())?'':'')}
+
+// ═══════════════════════════════════════════════════
+// SECTION: COMPRAS
+// ═══════════════════════════════════════════════════
+function rComp(){
+  const tot=COMPRAS.reduce((s,c)=>s+c.tot,0);
+  return`<div class="phdr"><div><div class="ptitle">Compras</div><div class="psub">${COMPRAS.length} operaciones hoy · ${fe(tot)} · Todos los centros</div></div><button class="btn bp" onclick="openM('nueva-compra')">+ Registrar Compra</button></div>
+  <div class="tbar">
+    <div class="sw"><span class="sico2">🔍</span><input class="si" placeholder="Cliente, descripción, ID…"></div>
+    <select class="sf"><option>Todos los centros</option>${CENTROS.map(c=>`<option>${c.n.replace('Luxoro ','')}</option>`).join('')}</select>
+    <select class="sf"><option>Todo tipo</option><option>Oro</option><option>Plata</option><option>Relojes</option></select>
+    <select class="sf"><option>Hoy</option><option>Esta semana</option><option>Este mes</option></select>
+    <button class="btn bs bsm" onclick="expD(this)">⬇ Exportar</button>
+  </div>
+  <div class="tw"><table>
+    <thead><tr><th>ID</th><th>Hora</th><th>Centro</th><th>Cliente</th><th>Descripción</th><th>Q.</th><th style="text-align:right">Peso</th><th style="text-align:right">€/g</th><th style="text-align:right">Total</th><th>KYC</th></tr></thead>
+    <tbody>${COMPRAS.map(c=>`<tr onclick="showCD('${c.id}')">
+      <td style="font-family:monospace;font-size:11px;color:var(--txt2)">${c.id}</td>
+      <td style="font-size:11.5px;color:var(--txt2)">${c.f}</td>
+      <td style="font-size:11.5px">${c.ctr}</td>
+      <td style="font-weight:500">${c.cli}</td>
+      <td style="color:var(--txt2);font-size:11.5px">${c.desc}</td>
+      <td><span class="b bo">${c.q}</span></td>
+      <td style="text-align:right;font-variant-numeric:tabular-nums">${c.g.toFixed(1)}g</td>
+      <td style="text-align:right;font-size:11.5px;color:var(--txt2)">${fe(c.pg)}</td>
+      <td style="text-align:right;font-weight:700;color:var(--gold)">${fe(c.tot)}</td>
+      <td>${c.kyc==='ok'?'<span class="b bg">✓ KYC</span>':'<span class="b ba">⚠ Pdte.</span>'}</td>
+    </tr>`).join('')}</tbody>
+  </table></div>
+  <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center;color:var(--txt2);font-size:12.5px">
+    <span>${COMPRAS.length} operaciones · Total hoy: <strong style="color:var(--gold)">${fe(tot)}</strong></span>
+    <div style="display:flex;gap:7px"><button class="btn bs bsm">← Anterior</button><button class="btn bs bsm">Siguiente →</button></div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION: INVENTARIO
+// ═══════════════════════════════════════════════════
+function rInv(){
+  return`<div class="phdr"><div><div class="ptitle">Inventario</div><div class="psub">Stock por centro y quilate · Actualizado en tiempo real</div></div>
+  <div style="display:flex;gap:9px"><button class="btn bs" onclick="openM('transferir')">↔ Transferir stock</button><button class="btn bp" onclick="openM('envio-ref')">🚚 Preparar envío</button></div></div>
+  ${tabsH('inventario',[{id:'gen',l:'Vista general'},{id:'ctr',l:'Por centro'},{id:'q',l:'Por quilate'}],'gen')}`;
+}
+function iTab(tab){
+  const ks=['24K','22K','18K','14K','9K','Plata'];
+  const pr={'24K':88.30,'22K':80.90,'18K':65.20,'14K':50.60,'9K':32.10,'Plata':0.82};
+  if(tab==='gen'){
+    const tots={};ks.forEach(k=>{tots[k]=Object.values(INV).reduce((s,c)=>s+(c[k]||0),0)});
+    const totV=Object.entries(tots).reduce((s,[k,g])=>s+g*pr[k],0);
+    return`<div class="tw" style="margin-bottom:14px"><table>
+      <thead><tr><th>Centro</th>${ks.map(k=>`<th style="text-align:right">${k}</th>`).join('')}<th style="text-align:right">Valor est.</th></tr></thead>
+      <tbody>
+        ${CENTROS.map(c=>{const inv=INV[c.id];const val=ks.reduce((s,k)=>s+(inv[k]||0)*pr[k],0);return`<tr>
+          <td><div style="font-weight:500">${c.n.replace('Luxoro ','')}</div><div style="font-size:11px;color:var(--txt2)">${c.c}</div></td>
+          ${ks.map(k=>`<td style="text-align:right;font-size:12.5px;font-variant-numeric:tabular-nums">${inv[k]?inv[k].toFixed(1)+'g':'<span style="color:var(--txt3)">—</span>'}</td>`).join('')}
+          <td style="text-align:right;font-weight:700;color:var(--gold)">${fe(val)}</td>
+        </tr>`;}).join('')}
+        <tr style="background:var(--bg2);font-weight:700;border-top:1px solid var(--gold-b)"><td>TOTAL</td>${ks.map(k=>`<td style="text-align:right;color:var(--gold);font-variant-numeric:tabular-nums">${tots[k].toFixed(1)}g</td>`).join('')}<td style="text-align:right;color:var(--gold)">${fe(totV)}</td></tr>
+      </tbody>
+    </table></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">${ks.map(k=>{const g=tots[k];return`<div class="card" style="flex:1;min-width:100px;text-align:center;padding:14px"><div style="font-size:10.5px;color:var(--txt2);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px">${k}</div><div style="font-family:var(--serif);font-size:20px;font-weight:700">${g.toFixed(0)}g</div><div style="font-size:11.5px;color:var(--gold);margin-top:3px">${fe(g*pr[k])}</div></div>`;}).join('')}</div>`;
+  }
+  if(tab==='ctr'){
+    return CENTROS.map(c=>{const inv=INV[c.id];const val=ks.reduce((s,k)=>s+(inv[k]||0)*pr[k],0);return`<div class="card" style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px">
+        <div><div style="font-weight:600">${c.n}</div><div style="font-size:11.5px;color:var(--txt2)">${c.cc} · ${c.c}</div></div>
+        <div style="text-align:right"><div style="font-weight:700;color:var(--gold)">${fe(val)}</div><div style="font-size:11px;color:var(--txt2)">Valor total</div></div>
+      </div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap">${ks.filter(k=>inv[k]>0).map(k=>`<div style="flex:1;min-width:72px;background:var(--bg3);border-radius:8px;padding:9px;text-align:center"><div style="font-size:10.5px;color:var(--txt2)">${k}</div><div style="font-weight:700;margin-top:2px">${inv[k].toFixed(1)}g</div><div style="font-size:11px;color:var(--gold)">${fe(inv[k]*pr[k])}</div></div>`).join('')}</div>
+    </div>`;}).join('');
+  }
+  return ks.map(k=>{const totK=Object.values(INV).reduce((s,c)=>s+(c[k]||0),0);return`<div class="card" style="margin-bottom:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px"><div style="font-weight:600;font-size:15px">${k==='Plata'?'Plata 925':`Oro ${k}`}</div><div style="font-weight:700;color:var(--gold)">${totK.toFixed(1)}g · ${fe(totK*pr[k])}</div></div>
+    ${CENTROS.map(c=>{const g=INV[c.id][k]||0;const pct=totK>0?(g/totK*100):0;return`<div style="display:flex;align-items:center;gap:11px;margin-bottom:7px"><div style="width:130px;font-size:11.5px;color:var(--txt2)">${c.n.replace('Luxoro ','')}</div><div style="flex:1;background:var(--bg3);border-radius:3px;height:5px;overflow:hidden"><div style="width:${pct}%;height:100%;background:linear-gradient(90deg,var(--gold-d),var(--gold));border-radius:3px"></div></div><div style="width:60px;text-align:right;font-size:11.5px;font-weight:500">${g.toFixed(1)}g</div></div>`;}).join('')}
+  </div>`;}).join('');
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION: CLIENTES
+// ═══════════════════════════════════════════════════
+function rCli(){
+  return`<div class="phdr"><div><div class="ptitle">Clientes</div><div class="psub">${CLI.length} registrados · ${CLI.filter(c=>c.aml).length} alertas AML activas</div></div><button class="btn bp" onclick="openM('nuevo-cli')">+ Nuevo cliente</button></div>
+  <div class="tbar">
+    <div class="sw"><span class="sico2">🔍</span><input class="si" placeholder="Nombre, DNI, teléfono…"></div>
+    <select class="sf"><option>Todos los centros</option>${CENTROS.map(c=>`<option>${c.n.replace('Luxoro ','')}</option>`).join('')}</select>
+    <select class="sf"><option>Todo KYC</option><option>Verificado</option><option>Pendiente</option></select>
+    <select class="sf"><option>Sin filtro AML</option><option>Con alerta AML</option></select>
+  </div>
+  <div class="tw"><table>
+    <thead><tr><th>Cliente</th><th>DNI</th><th>Teléfono</th><th>Centro</th><th style="text-align:right">Ops.</th><th style="text-align:right">Total</th><th>Última visita</th><th>KYC</th><th>AML</th></tr></thead>
+    <tbody>${CLI.map(c=>`<tr onclick="showCliD(${c.id})">
+      <td><div style="display:flex;align-items:center;gap:9px">${av(c.n)}<div style="font-weight:500">${c.n}</div></div></td>
+      <td style="font-family:monospace;font-size:11.5px;color:var(--txt2)">${c.dni}</td>
+      <td style="font-size:11.5px;color:var(--txt2)">${c.tel}</td>
+      <td style="font-size:11.5px">${c.ctr}</td>
+      <td style="text-align:right">${c.ops}</td>
+      <td style="text-align:right;font-weight:700;color:var(--gold)">${fe(c.tot)}</td>
+      <td style="font-size:11.5px;color:var(--txt2)">${c.ult}</td>
+      <td>${c.kyc==='verificado'?'<span class="b bg">✓</span>':'<span class="b ba">⚠ Pdte.</span>'}</td>
+      <td>${c.aml?'<span class="b br">🚨 Alerta</span>':'<span class="b bm">OK</span>'}</td>
+    </tr>`).join('')}</tbody>
+  </table></div>`;
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION: CENTROS
+// ═══════════════════════════════════════════════════
+function rCentros(){
+  const totM=CENTROS.reduce((s,c)=>s+c.mes,0);
+  return`<div class="phdr"><div><div class="ptitle">Centros Luxoro</div><div class="psub">6 puntos de venta activos · Madrid y Málaga · Horario 10:00–22:00</div></div><button class="btn bp" onclick="openM('nuevo-ctr')">+ Nuevo centro</button></div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px">
+    <div class="card" style="text-align:center;padding:15px"><div style="font-size:26px;font-weight:700;font-family:var(--serif)">6</div><div style="font-size:11.5px;color:var(--txt2);margin-top:3px">Centros activos</div></div>
+    <div class="card" style="text-align:center;padding:15px"><div style="font-size:26px;font-weight:700;font-family:var(--serif)">14</div><div style="font-size:11.5px;color:var(--txt2);margin-top:3px">Empleados</div></div>
+    <div class="card" style="text-align:center;padding:15px"><div style="font-size:26px;font-weight:700;font-family:var(--serif);color:var(--gold)">${fe(221830).replace('€','€')}</div><div style="font-size:11.5px;color:var(--txt2);margin-top:3px">Revenue jun. 2026</div></div>
+    <div class="card" style="text-align:center;padding:15px"><div style="font-size:26px;font-weight:700;font-family:var(--serif)">2</div><div style="font-size:11.5px;color:var(--txt2);margin-top:3px">Ciudades</div></div>
+  </div>
+  <div class="cgrid">${CENTROS.map(c=>`<div class="ccard" onclick="showCtrD(${c.id})">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:13px">
+      <div><div style="font-weight:600;font-size:13.5px">${c.n}</div><div style="font-size:11.5px;color:var(--txt2);margin-top:2px">📍 ${c.cc} · ${c.c}</div></div>
+      <span class="b bg" style="font-size:10px">● Abierto</span>
+    </div>
+    <div class="cstat"><span style="color:var(--txt2)">Responsable</span><span style="font-weight:500">${c.r}</span></div>
+    <div class="cstat"><span style="color:var(--txt2)">Empleados</span><span style="font-weight:500">${c.emp}</span></div>
+    <div class="cstat"><span style="color:var(--txt2)">Compras mes</span><span style="font-weight:700;color:var(--gold)">${fe(c.mes)}</span></div>
+    <div class="cstat"><span style="color:var(--txt2)">Compras hoy</span><span style="font-weight:500">${fe(c.hoy)}</span></div>
+    <div class="cstat"><span style="color:var(--txt2)">Tas. pendientes</span><span>${c.tp>0?`<span class="b ba">${c.tp}</span>`:'<span class="b bg">0</span>'}</span></div>
+    <div class="div"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="font-size:11px;color:var(--txt2)">${((c.mes/totM)*100).toFixed(1)}% del grupo</div>
+      <div style="flex:1;max-width:80px;margin-left:10px"><div class="pbar"><div class="pfill" style="width:${(c.mes/totM*100).toFixed(0)}%"></div></div></div>
+    </div>
+  </div>`).join('')}</div>`;
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION: REFINERÍA
+// ═══════════════════════════════════════════════════
+function rRef(){
+  const invOro=calcKarats();
+  return`<div class="phdr"><div><div class="ptitle">Refinería</div><div class="psub">Gestión de envíos y liquidaciones · Nadir Metal Rafineri</div></div><button class="btn bp" onclick="openM('envio-ref')">+ Preparar envío</button></div>
+  <div class="g3" style="margin-bottom:22px">
+    <div class="kcard card-g"><div class="klbl">En tránsito</div><div class="kval">2.847 kg</div><div class="ksub">Liquidación est. 25/06/26</div><div class="ktrend up">Valor est. €189,420</div></div>
+    <div class="kcard"><div class="klbl">Liquidado en junio</div><div class="kval">€204,180</div><div class="ksub">De 3.124 kg enviados</div><div class="ktrend up">Rendimiento 97.8%</div></div>
+    <div class="kcard"><div class="klbl">Disponible para envío</div><div class="kval" style="font-size:22px">${invOro.toFixed(0)}g</div><div class="ksub">Stock acumulado (sin plata)</div><button class="btn bp bsm" style="margin-top:10px" onclick="openM('envio-ref')">Preparar →</button></div>
+  </div>
+  ${tabsH('refineria',[{id:'tran',l:'🚚 En tránsito'},{id:'hist',l:'📋 Historial'}],'tran')}`;
+}
+function rTab(tab){
+  if(tab==='tran'){
+    const et=REF_ENVIOS.filter(e=>e.st==='en_transito');
+    return et.map(e=>`<div class="card card-g" style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px">
+        <div><div style="font-size:11px;color:var(--txt2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Envío en tránsito</div><div style="font-family:var(--serif);font-size:20px;font-weight:600">${e.id}</div><div style="font-size:11.5px;color:var(--txt2);margin-top:3px">Enviado: ${e.f} · ${e.ref}</div></div>
+        ${bst(e.st)}
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px">
+        <div><div style="font-size:10.5px;color:var(--txt2)">Peso</div><div style="font-weight:700;font-size:17px;color:var(--gold)">${e.kg}</div></div>
+        <div><div style="font-size:10.5px;color:var(--txt2)">Valor estimado</div><div style="font-weight:700;font-size:17px">${e.val}</div></div>
+        <div><div style="font-size:10.5px;color:var(--txt2)">Liquidación est.</div><div style="font-weight:700;font-size:17px">${e.est}</div></div>
+      </div>
+      <div style="background:var(--bg3);border-radius:8px;padding:13px">
+        <div style="font-size:11.5px;color:var(--txt2);margin-bottom:7px">Progreso</div>
+        <div class="pbar" style="height:7px"><div class="pfill" style="width:60%"></div></div>
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--txt3);margin-top:5px"><span>Enviado ${e.f}</span><span>Liquidación est. ${e.est}</span></div>
+      </div>
+    </div>`).join('');
+  }
+  return`<div class="tw"><table>
+    <thead><tr><th>ID Envío</th><th>Fecha</th><th style="text-align:right">Peso</th><th style="text-align:right">Valor est.</th><th style="text-align:right">Liquidado</th><th>Refinería</th><th>Estado</th></tr></thead>
+    <tbody>${REF_ENVIOS.map(e=>`<tr><td style="font-family:monospace;font-size:11.5px;color:var(--txt2)">${e.id}</td><td style="font-size:11.5px;color:var(--txt2)">${e.f}</td><td style="text-align:right;font-weight:600">${e.kg}</td><td style="text-align:right">${e.val}</td><td style="text-align:right;font-weight:700;color:var(--gold)">${e.liq||'—'}</td><td style="font-size:11.5px">${e.ref}</td><td>${bst(e.st)}</td></tr>`).join('')}</tbody>
+  </table></div>`;
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION: CUMPLIMIENTO
+// ═══════════════════════════════════════════════════
+function rCump(){
+  return`<div class="phdr"><div><div class="ptitle">Cumplimiento · PBC/FT</div><div class="psub">Prevención de Blanqueo de Capitales y Financiación del Terrorismo · Ley 10/2010</div></div><button class="btn bs" onclick="openM('decl')">📋 Nueva declaración</button></div>
+  ${tabsH('cumplimiento',[{id:'alrt',l:`🚨 Alertas (${AML.length})`},{id:'ops',l:'📋 Operaciones sujetas'},{id:'norm',l:'📚 Normativa'}],'alrt')}`;
+}
+function cTab(tab){
+  if(tab==='alrt')return`<div>${AML.map(a=>`<div class="card" style="margin-bottom:14px;border-color:${a.niv==='danger'?'rgba(232,80,64,.28)':'rgba(232,160,32,.28)'};background:${a.niv==='danger'?'rgba(232,80,64,.05)':'rgba(232,160,32,.04)'}">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+      <div style="display:flex;gap:11px;align-items:flex-start">
+        <div style="font-size:26px">${a.niv==='danger'?'🚨':'⚠️'}</div>
+        <div><div style="font-weight:600;font-size:14px;margin-bottom:2px">${a.cli}</div><div style="font-size:11.5px;color:var(--txt2)">${a.op} · ${a.f} · ${a.ctr}</div></div>
+      </div>
+      <span class="b ${a.niv==='danger'?'br':'ba'}" style="font-size:13px;padding:5px 13px">${a.imp}</span>
+    </div>
+    <div style="padding:11px 14px;background:var(--bg3);border-radius:8px;margin-bottom:13px">
+      <div style="font-size:12.5px;font-weight:500;margin-bottom:3px">${a.desc}</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn bp bsm" onclick="resolveAML(${a.id},this)">✓ Marcar resuelto</button>
+      <button class="btn bs bsm" onclick="showCliD(${CLI.find(c=>c.n===a.cli)?.id||1})">Ver cliente</button>
+      ${a.tipo==='kyc'?`<button class="btn bs bsm" onclick="openM('kyc')">📋 Completar KYC</button>`:`<button class="btn bs bsm" onclick="openM('decl')">📋 Declaración SEPBLAC</button>`}
+    </div>
+  </div>`).join('')}
+  <div class="card" style="background:rgba(59,168,204,.05);border-color:rgba(59,168,204,.2)">
+    <div style="display:flex;gap:11px;align-items:flex-start"><div style="font-size:22px">ℹ️</div><div>
+      <div style="font-weight:600;margin-bottom:4px">Estado general de cumplimiento</div>
+      <div style="font-size:12.5px;color:var(--txt2)">${AML.length} alertas activas · 48 operaciones este mes · KYC completo en 97.8% de operaciones</div>
+      <div style="margin-top:9px;display:flex;gap:7px;flex-wrap:wrap"><span class="b bg">✓ Ley 10/2010</span><span class="b bg">✓ Reglamento UE 2015/847</span><span class="b ba">⚠ ${AML.length} KYC pendientes</span></div>
+    </div></div>
+  </div></div>`;
+  if(tab==='ops'){const sujetas=COMPRAS.filter(c=>c.tot>=1000);return`<div class="alrt alrt-b" style="margin-bottom:14px"><div style="font-size:18px">ℹ️</div><div><div style="font-weight:600;font-size:12.5px">Operaciones ≥€1,000 · Identificación obligatoria</div><div style="font-size:11.5px;color:var(--txt2)">Ley 10/2010, Art. 3 — Compraventa de metales preciosos</div></div></div><div class="tw"><table><thead><tr><th>ID</th><th>Fecha</th><th>Cliente</th><th>Centro</th><th style="text-align:right">Importe</th><th>KYC</th></tr></thead><tbody>${sujetas.map(c=>`<tr><td style="font-family:monospace;font-size:11px;color:var(--txt2)">${c.id}</td><td style="font-size:11.5px;color:var(--txt2)">${c.f}</td><td style="font-weight:500">${c.cli}</td><td style="font-size:11.5px">${c.ctr}</td><td style="text-align:right;font-weight:700;color:${c.tot>=10000?'var(--red)':'var(--gold)'}">${fe(c.tot)}</td><td>${c.kyc==='ok'?'<span class="b bg">✓</span>':'<span class="b ba">⚠ Pdte.</span>'}</td></tr>`).join('')}</tbody></table></div>`;}
+  return`<div style="display:grid;gap:12px">${[{t:'Ley 10/2010, de 28 de abril',s:'Prevención del blanqueo de capitales y financiación del terrorismo',d:'Umbral identificación: €1,000 | Umbral declaración especial: €10,000 | Conservar documentos: 10 años'},{t:'Real Decreto 304/2014',s:'Reglamento de la Ley 10/2010',d:'Medidas de diligencia debida · KYC obligatorio · Beneficiario efectivo · Conservación de registros'},{t:'Reglamento (UE) 2015/847',s:'Información que acompaña a transferencias de fondos',d:'Trazabilidad de transferencias · Datos del ordenante y beneficiario'},{t:'SEPBLAC',s:'Servicio Ejecutivo de la Comisión de PBC',d:'Declaraciones obligatorias >€10,000 | Teléfono OCI: +34 91 338 65 00'}].map(n=>`<div class="card"><div style="font-weight:600;margin-bottom:3px">${n.t}</div><div style="font-size:11.5px;color:var(--txt2);margin-bottom:8px">${n.s}</div><div style="font-size:12.5px;padding:9px 13px;background:var(--bg3);border-radius:7px">${n.d}</div></div>`).join('')}</div>`;
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION: INFORMES
+// ═══════════════════════════════════════════════════
+function rInf(){
+  return`<div class="phdr"><div><div class="ptitle">Informes y Analytics</div><div class="psub">Rendimiento operativo · Grupo Luxoro</div></div>
+  <div style="display:flex;gap:9px"><button class="btn bs" onclick="expD(this)">⬇ Excel</button><button class="btn bs" onclick="expD(this)">📄 PDF</button></div></div>
+  ${tabsH('informes',[{id:'mes',l:'📅 Mensual'},{id:'ctrs',l:'🏪 Por centros'},{id:'prod',l:'💍 Por producto'}],'mes')}`;
+}
+function inTab(tab){
+  if(tab==='mes'){
+    const mx=Math.max(...MR.map(m=>m.v));
+    return`<div class="g2" style="margin-bottom:20px">
+      <div class="card">
+        <div style="font-weight:600;margin-bottom:3px">Revenue mensual · 2026</div>
+        <div style="font-size:11.5px;color:var(--txt2);margin-bottom:14px">Compras totales por mes (€)</div>
+        <div class="bar-wrap" style="height:110px;margin-bottom:7px">${MR.map((m,i)=>{const h=Math.round((m.v/mx)*100);const isL=i===MR.length-1;return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px"><div style="font-size:10px;color:var(--txt3)">€${Math.round(m.v/1000)}K</div><div style="height:${h}%;min-height:4px;width:100%;background:${isL?'linear-gradient(to top,var(--gold),var(--gold-l))':'var(--bg4)'};border-radius:4px 4px 0 0" title="${fe(m.v)}"></div><div style="font-size:10.5px;color:${isL?'var(--gold)':'var(--txt3)'};font-weight:${isL?700:400}">${m.m}</div></div>`;}).join('')}</div>
+      </div>
+      <div class="card">
+        <div style="font-weight:600;margin-bottom:14px">KPIs · Junio 2026</div>
+        ${[['Revenue total (parcial)','€221,830','var(--gold)'],['Operaciones registradas','284',''],['Kg de oro comprado','2.41 kg',''],['Ticket medio','€781',''],['Tasa KYC completado','97.8%','var(--green)'],['Envíos a refinería','1 (activo)',''],['Revenue/empleado/mes','€15,845','var(--gold)']].map(([l,v,col])=>`<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--brd);font-size:12.5px"><span style="color:var(--txt2)">${l}</span><span style="font-weight:700;color:${col||'var(--txt)'}">${v}</span></div>`).join('')}
+      </div>
+    </div>`;
+  }
+  if(tab==='ctrs'){
+    const totM=CENTROS.reduce((s,c)=>s+c.mes,0);
+    return`<div class="tw"><table>
+      <thead><tr><th>Centro</th><th style="text-align:right">Revenue mes</th><th style="text-align:right">% grupo</th><th style="text-align:right">€/empleado</th><th>Participación</th></tr></thead>
+      <tbody>${[...CENTROS].sort((a,b)=>b.mes-a.mes).map(c=>{const pct=(c.mes/totM*100).toFixed(1);return`<tr onclick="showCtrD(${c.id})"><td><div style="font-weight:500">${c.n.replace('Luxoro ','')}</div><div style="font-size:11px;color:var(--txt2)">${c.c}</div></td><td style="text-align:right;font-weight:700;color:var(--gold)">${fe(c.mes)}</td><td style="text-align:right">${pct}%</td><td style="text-align:right">${fe(Math.round(c.mes/c.emp))}</td><td><div style="display:flex;align-items:center;gap:7px"><div style="flex:1;background:var(--bg3);border-radius:3px;height:5px"><div style="width:${pct}%;height:100%;background:linear-gradient(90deg,var(--gold-d),var(--gold));border-radius:3px"></div></div><span style="font-size:11px;color:var(--txt2);width:34px">${pct}%</span></div></td></tr>`;}).join('')}
+      <tr style="background:var(--bg2);font-weight:700;border-top:1px solid var(--gold-b)"><td>TOTAL GRUPO</td><td style="text-align:right;color:var(--gold)">${fe(totM)}</td><td style="text-align:right">100%</td><td style="text-align:right">${fe(Math.round(totM/14))}</td><td></td></tr>
+      </tbody>
+    </table></div>`;
+  }
+  const ps=[{t:'Oro 18K',ops:124,p:'842g',r:54897,pct:40},{t:'Oro 22K',ops:68,p:'640g',r:51776,pct:23},{t:'Oro 9K',ops:52,p:'1,204g',r:38641,pct:17},{t:'Oro 14K',ops:24,p:'312g',r:15787,pct:8},{t:'Relojes lujo',ops:12,p:'—',r:19200,pct:7},{t:'Plata',ops:36,p:'12.4kg',r:10168,pct:4},{t:'Oro 24K',ops:8,p:'120g',r:10596,pct:1}];
+  return`<div class="tw"><table><thead><tr><th>Tipo</th><th style="text-align:right">Operaciones</th><th style="text-align:right">Peso</th><th style="text-align:right">Revenue</th><th>Mix</th></tr></thead><tbody>${ps.map(p=>`<tr><td><span class="b bo">${p.t}</span></td><td style="text-align:right">${p.ops}</td><td style="text-align:right;font-size:11.5px">${p.p}</td><td style="text-align:right;font-weight:700;color:var(--gold)">${fe(p.r)}</td><td><div style="display:flex;align-items:center;gap:7px"><div style="flex:1;background:var(--bg3);border-radius:3px;height:5px"><div style="width:${p.pct*2.5}%;height:100%;background:linear-gradient(90deg,var(--gold-d),var(--gold));border-radius:3px"></div></div><span style="font-size:11px;color:var(--txt2);width:30px">${p.pct}%</span></div></td></tr>`).join('')}</tbody></table></div>`;
+}
+
+// ═══════════════════════════════════════════════════
+// SECTION: CONFIGURACIÓN
+// ═══════════════════════════════════════════════════
+function rConf(){
+  return`<div class="phdr"><div><div class="ptitle">Configuración</div><div class="psub">Ajustes del sistema · Grupo Luxoro</div></div></div>
+  <div class="g2">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="card">
+        <div style="font-weight:600;margin-bottom:14px">Empresa</div>
+        <div class="fg">
+          <div class="fgr"><label class="flbl">Nombre</label><input class="finp" value="Grupo Luxoro"></div>
+          <div class="fgr"><label class="flbl">CIF</label><input class="finp" value="B-XXXXXXXX"></div>
+          <div class="fgr full"><label class="flbl">Razón social</label><input class="finp" value="Grupo Luxoro, S.L."></div>
+          <div class="fgr full"><label class="flbl">Refinería habitual</label><input class="finp" value="Nadir Metal Rafineri"></div>
+        </div>
+        <button class="btn bp" style="margin-top:12px" onclick="saveConf(this)">Guardar cambios</button>
+      </div>
+      <div class="card">
+        <div style="font-weight:600;margin-bottom:14px">Precios de compra por quilate</div>
+        ${Object.entries(GP).filter(([k])=>k!=='spot'&&k!=='plata').map(([k,v])=>`<div style="display:flex;align-items:center;gap:11px;margin-bottom:9px">
+          <span style="width:42px;font-weight:600;color:var(--gold)">${k}</span>
+          <div class="fgr" style="flex:1;gap:3px"><label class="flbl">€/g compra</label><input class="finp" value="${v.c}" type="number" step="0.1" style="padding:7px 11px"></div>
+          <div style="font-size:11.5px;color:var(--txt2);margin-top:14px">Spot: ${fe(GP.spot*parseFloat(v.p)/999.9)}</div>
+        </div>`).join('')}
+        <button class="btn bp" style="margin-top:8px" onclick="saveConf(this)">Actualizar márgenes</button>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="card">
+        <div style="font-weight:600;margin-bottom:14px">Usuarios del portal</div>
+        ${[{n:'Gerencia General',e:'gerente@grupoluxoro.com',r:'Admin'},{n:'Ana García',e:'larios@luxoro.es',r:'Centro'},{n:'Carlos Ruiz',e:'rosaleda@luxoro.es',r:'Centro'},{n:'Laura Martínez',e:'vaguada@luxoro.es',r:'Centro'},{n:'Miguel Fernández',e:'plazanorte@luxoro.es',r:'Centro'},{n:'Patricia López',e:'granplaza@luxoro.es',r:'Centro'},{n:'Roberto Sánchez',e:'parquesur@luxoro.es',r:'Centro'}].map(u=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--brd)">
+          <div style="display:flex;align-items:center;gap:9px">${av(u.n,28)}<div><div style="font-size:12.5px;font-weight:500">${u.n}</div><div style="font-size:10.5px;color:var(--txt2)">${u.e}</div></div></div>
+          <div style="display:flex;align-items:center;gap:7px"><span class="b ${u.r==='Admin'?'bo':'bb'}">${u.r}</span><button class="btn bs bsm">Editar</button></div>
+        </div>`).join('')}
+        <button class="btn bp bsm" style="margin-top:11px">+ Añadir usuario</button>
+      </div>
+      <div class="card">
+        <div style="font-weight:600;margin-bottom:14px">Notificaciones</div>
+        ${[['Alertas AML por email',true],['Resumen diario por WhatsApp',true],['Aviso tasaciones >30 min',true],['Liquidaciones refinería',true],['KPI semanal automático',false]].map(([l,on])=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--brd)">
+          <span style="font-size:12.5px">${l}</span>
+          <div onclick="toggleNotif(this)" data-on="${on?1:0}" style="width:40px;height:22px;border-radius:11px;background:${on?'var(--gold)':'var(--bg4)'};cursor:pointer;position:relative;transition:background .2s;flex-shrink:0">
+            <div style="width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:2px;left:0;transform:translateX(${on?'20':'2'}px);transition:transform .2s"></div>
+          </div>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+function toggleNotif(el){const on=el.dataset.on==='1'?0:1;el.dataset.on=on;el.style.background=on?'var(--gold)':'var(--bg4)';el.firstElementChild.style.transform=`translateX(${on?20:2}px)`}
+
+// ═══════════════════════════════════════════════════
+// MODALS
+// ═══════════════════════════════════════════════════
+function openM(type){
+  const defs={
+    'nueva-compra':{t:'Registrar Nueva Compra',w:true,b:`<div class="fg">
+      <div class="fgr"><label class="flbl">Centro</label><select class="fsel">${CENTROS.map(c=>`<option>${c.n}</option>`).join('')}</select></div>
+      <div class="fgr"><label class="flbl">Empleado</label><input class="finp" placeholder="Nombre del tasador"></div>
+      <div class="fgr full"><label class="flbl">Nombre del cliente</label><input class="finp" placeholder="Nombre completo"></div>
+      <div class="fgr"><label class="flbl">DNI / NIE</label><input class="finp" placeholder="12.345.678-X"></div>
+      <div class="fgr"><label class="flbl">Teléfono</label><input class="finp" placeholder="+34 600 000 000" type="tel"></div>
+      <div class="fgr full" style="grid-column:1/-1"><div class="div"></div></div>
+      <div class="fgr"><label class="flbl">Tipo de metal</label><select class="fsel" id="m-tipo" onchange="updMp()"><option value="65.20">Oro 18K</option><option value="80.90">Oro 22K</option><option value="88.30">Oro 24K</option><option value="50.60">Oro 14K</option><option value="32.10">Oro 9K</option><option value="0.82">Plata 925</option></select></div>
+      <div class="fgr"><label class="flbl">Descripción</label><input class="finp" placeholder="Ej: Cadena de oro 18K, 12g"></div>
+      <div class="fgr"><label class="flbl">Peso (gramos)</label><input class="finp" type="number" step="0.01" id="m-peso" oninput="updMp()" placeholder="0.00"></div>
+      <div class="fgr"><label class="flbl">Precio compra (€/g)</label><input class="finp" id="m-prec" value="65.20" type="number" step="0.01" oninput="updMp()"></div>
+      <div class="fgr full"><div style="background:var(--bg3);border:1px solid var(--gold-b);border-radius:9px;padding:15px;display:flex;justify-content:space-between;align-items:center"><span style="color:var(--txt2)">Total a pagar al cliente:</span><span id="m-tot" style="font-family:var(--serif);font-size:26px;font-weight:700;color:var(--gold)">€0.00</span></div></div>
+    </div><div style="display:flex;gap:9px;justify-content:flex-end;margin-top:18px"><button class="btn bs" onclick="closeM()">Cancelar</button><button class="btn bp" onclick="regComp(this)">✓ Confirmar y generar recibo</button></div>`},
+    'nueva-tasacion':{t:'Nueva Tasación',b:`<div class="fg">
+      <div class="fgr"><label class="flbl">Centro</label><select class="fsel">${CENTROS.map(c=>`<option>${c.n}</option>`).join('')}</select></div>
+      <div class="fgr"><label class="flbl">Empleado</label><input class="finp" placeholder="Nombre del tasador"></div>
+      <div class="fgr full"><label class="flbl">Cliente</label><input class="finp" placeholder="Nombre completo del cliente"></div>
+      <div class="fgr"><label class="flbl">Tipo</label><select class="fsel"><option>Oro</option><option>Plata</option><option>Joyería</option><option>Reloj de lujo</option><option>Monedas</option></select></div>
+      <div class="fgr"><label class="flbl">Descripción de la pieza</label><input class="finp" placeholder="Describe la pieza brevemente"></div>
+      <div class="fgr full"><label class="flbl">Notas</label><textarea class="fta" placeholder="Condición, marcas, características especiales…"></textarea></div>
+    </div><div style="display:flex;gap:9px;justify-content:flex-end;margin-top:18px"><button class="btn bs" onclick="closeM()">Cancelar</button><button class="btn bp" onclick="crearT(this)">Crear tasación</button></div>`},
+    'calculadora':{t:'🧮 Calculadora de precios',b:`<div class="fg">
+      <div class="fgr"><label class="flbl">Quilate</label><select class="fsel" id="calc-k" onchange="calcM()"><option value="88.30">Oro 24K (999.9‰)</option><option value="80.90">Oro 22K (916.7‰)</option><option value="65.20" selected>Oro 18K (750‰)</option><option value="50.60">Oro 14K (585‰)</option><option value="32.10">Oro 9K (375‰)</option><option value="0.82">Plata 925</option></select></div>
+      <div class="fgr"><label class="flbl">Peso (gramos)</label><input class="finp" type="number" step="0.01" id="calc-p" oninput="calcM()" value="10"></div>
+    </div>
+    <div style="margin-top:18px;background:var(--bg3);border:1px solid var(--gold-b);border-radius:12px;padding:20px;text-align:center">
+      <div style="font-size:11.5px;color:var(--txt2);margin-bottom:4px">Precio de compra estimado</div>
+      <div id="calc-r" style="font-family:var(--serif);font-size:40px;font-weight:700;color:var(--gold)">€652.00</div>
+      <div id="calc-d" style="font-size:11.5px;color:var(--txt2);margin-top:4px">10g × €65.20/g</div>
+    </div>
+    <div style="display:flex;gap:9px;justify-content:flex-end;margin-top:18px"><button class="btn bs" onclick="closeM()">Cerrar</button><button class="btn bp" onclick="this.textContent='✓ Copiado';setTimeout(()=>this.textContent='Usar en nueva compra',1600)">Usar en nueva compra</button></div>`},
+    'envio-ref':{t:'🚚 Preparar envío a refinería',w:true,b:`<div style="margin-bottom:14px">
+      <div style="font-size:12.5px;color:var(--txt2);margin-bottom:11px">Selecciona el stock a incluir en este envío:</div>
+      ${Object.entries({'24K':120,'22K':1032.4,'18K':1994.2,'14K':779.6,'9K':1480.6}).map(([k,g])=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--brd)"><span class="b bo">${k}</span><span style="color:var(--txt2);font-size:12.5px">${g.toFixed(1)}g disponibles</span><label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12.5px"><input type="checkbox" checked style="accent-color:var(--gold)">Incluir</label></div>`).join('')}
+    </div>
+    <div style="background:var(--bg3);border:1px solid var(--gold-b);border-radius:10px;padding:13px;margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="color:var(--txt2)">Total a enviar:</span><span style="font-weight:700;color:var(--gold)">5,406.1 g (5.406 kg)</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:12.5px"><span style="color:var(--txt2)">Valor estimado:</span><span style="font-weight:700">€348,240</span></div>
+    </div>
+    <div class="fgr" style="margin-bottom:14px"><label class="flbl">Refinería</label><input class="finp" value="Nadir Metal Rafineri"></div>
+    <div style="display:flex;gap:9px;justify-content:flex-end"><button class="btn bs" onclick="closeM()">Cancelar</button><button class="btn bp" onclick="prepEnvio(this)">Confirmar envío</button></div>`},
+  };
+  const d=defs[type]||{t:type,b:`<p style="color:var(--txt2);padding:20px 0">Esta sección está en desarrollo.</p><div style="display:flex;justify-content:flex-end"><button class="btn bs" onclick="closeM()">Cerrar</button></div>`};
+  document.getElementById('mc').innerHTML=`<div class="mov" onclick="if(event.target===this)closeM()"><div class="mo ${d.w?'mo-w':''}"><div class="mhdr"><div class="mtitle">${d.t}</div><button class="mclose" onclick="closeM()">✕</button></div>${d.b}</div></div>`;
+}
+
+function closeM(){document.getElementById('mc').innerHTML=''}
+
+function showTD(id){
+  const t=TAS.find(x=>x.id===id)||TAS[0];
+  document.getElementById('mc').innerHTML=`<div class="mov" onclick="if(event.target===this)closeM()"><div class="mo mo-w">
+    <div class="mhdr"><div><div class="mtitle">Tasación ${t.id}</div><div style="font-size:12.5px;color:var(--txt2);margin-top:3px">${t.cli} · ${t.ctr}</div></div><button class="mclose" onclick="closeM()">✕</button></div>
+    <div class="g2" style="margin-bottom:18px">
+      <div class="card" style="padding:13px"><div style="font-size:10.5px;color:var(--txt2);text-transform:uppercase;font-weight:600;margin-bottom:9px">Pieza</div>
+        ${[['Tipo',t.tipo],['Descripción',t.desc],['Peso estimado',t.pest],['Valor estimado',`<strong style="color:var(--gold)">${t.vest}</strong>`]].map(([l,v])=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--brd);font-size:12.5px"><span style="color:var(--txt2)">${l}</span><span>${v}</span></div>`).join('')}
+      </div>
+      <div class="card" style="padding:13px"><div style="font-size:10.5px;color:var(--txt2);text-transform:uppercase;font-weight:600;margin-bottom:9px">Estado</div>
+        ${[['Estado',bst(t.st)],['Empleado',t.emp],['Centro',t.ctr.replace('Luxoro ','')],['Espera',t.min>0?`<span style="color:${t.min>30?'var(--red)':t.min>15?'var(--amber)':'var(--txt2)'}">${t.min} min</span>`:'—']].map(([l,v])=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--brd);font-size:12.5px;align-items:center"><span style="color:var(--txt2)">${l}</span><span>${v}</span></div>`).join('')}
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      ${t.st==='pendiente'?`<button class="btn bp" onclick="iniciarT('${t.id}',true)">▶ Iniciar tasación</button>`:''}
+      ${t.st==='en_curso'?`<button class="btn bp" onclick="completarT('${t.id}')">✓ Completar → Nueva compra</button>`:''}
+      <button class="btn bs" onclick="closeM()">Cerrar</button>
+      ${t.st!=='completada'&&t.st!=='rechazada'?`<button class="btn bd" onclick="rechazarT('${t.id}')">✗ Rechazar</button>`:''}
+    </div>
+  </div></div>`;
+}
+
+function showCliD(id){
+  const c=CLI.find(x=>x.id===id)||CLI[0];
+  document.getElementById('mc').innerHTML=`<div class="mov" onclick="if(event.target===this)closeM()"><div class="mo mo-w">
+    <div class="mhdr"><div style="display:flex;align-items:center;gap:13px">${av(c.n,46)}<div><div class="mtitle">${c.n}</div><div style="font-size:12px;color:var(--txt2)">Cliente · ${c.ctr}</div></div></div><button class="mclose" onclick="closeM()">✕</button></div>
+    <div class="g2" style="margin-bottom:18px">
+      <div class="card" style="padding:13px"><div style="font-size:10.5px;color:var(--txt2);text-transform:uppercase;font-weight:600;margin-bottom:9px">Identificación (KYC)</div>
+        ${[['DNI/NIE',c.dni],['Teléfono',c.tel],['Estado KYC',c.kyc==='verificado'?'<span class="b bg">✓ Verificado</span>':'<span class="b ba">⚠ Pendiente</span>'],['Alerta AML',c.aml?'<span class="b br">🚨 Activa</span>':'<span class="b bm">Sin alertas</span>']].map(([l,v])=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--brd);font-size:12.5px;align-items:center"><span style="color:var(--txt2)">${l}</span><span style="font-weight:500">${v}</span></div>`).join('')}
+      </div>
+      <div class="card" style="padding:13px"><div style="font-size:10.5px;color:var(--txt2);text-transform:uppercase;font-weight:600;margin-bottom:9px">Actividad</div>
+        ${[['Nº operaciones',c.ops],['Total vendido',fe(c.tot)],['Ticket medio',fe(c.tot/c.ops)],['Última visita',c.ult],['Centro habitual',c.ctr]].map(([l,v])=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--brd);font-size:12.5px"><span style="color:var(--txt2)">${l}</span><span style="font-weight:500">${v}</span></div>`).join('')}
+      </div>
+    </div>
+    <div style="display:flex;gap:8px"><button class="btn bp" onclick="closeM();openM('nueva-compra')">+ Nueva compra</button>${c.kyc!=='verificado'?`<button class="btn bs" onclick="closeM();openM('kyc')">📋 Completar KYC</button>`:''}<button class="btn bs" onclick="closeM()">Cerrar</button></div>
+  </div></div>`;
+}
+
+function showCtrD(id){
+  const c=CENTROS.find(x=>x.id===id);if(!c)return;
+  const totM=CENTROS.reduce((s,x)=>s+x.mes,0);
+  document.getElementById('mc').innerHTML=`<div class="mov" onclick="if(event.target===this)closeM()"><div class="mo mo-w">
+    <div class="mhdr"><div><div class="mtitle">${c.n}</div><div style="font-size:12.5px;color:var(--txt2);margin-top:3px">${c.cc} · ${c.c} · <span class="b bg" style="font-size:10px">● Abierto</span></div></div><button class="mclose" onclick="closeM()">✕</button></div>
+    <div class="g2" style="margin-bottom:18px">
+      <div class="card" style="padding:13px"><div style="font-size:10.5px;color:var(--txt2);text-transform:uppercase;font-weight:600;margin-bottom:9px">Información</div>
+        ${[['CC / Ubicación',c.cc],['Ciudad',c.c],['Responsable',c.r],['Teléfono',c.t],['Empleados',c.emp],['Horario','10:00–22:00 · Lun–Dom']].map(([l,v])=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--brd);font-size:12.5px"><span style="color:var(--txt2)">${l}</span><span style="font-weight:500">${v}</span></div>`).join('')}
+      </div>
+      <div class="card" style="padding:13px"><div style="font-size:10.5px;color:var(--txt2);text-transform:uppercase;font-weight:600;margin-bottom:9px">Rendimiento</div>
+        ${[['Compras hoy',fe(c.hoy)],['Gramos hoy',c.g.toFixed(1)+'g'],['Compras mes',fe(c.mes)],['% del grupo',`${(c.mes/totM*100).toFixed(1)}%`],['Tasaciones pendientes',c.tp]].map(([l,v])=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--brd);font-size:12.5px"><span style="color:var(--txt2)">${l}</span><span style="font-weight:700;color:var(--gold)">${v}</span></div>`).join('')}
+      </div>
+    </div>
+    <div style="display:flex;gap:8px"><button class="btn bp" onclick="closeM();nav('compras')">Ver compras</button><button class="btn bs" onclick="closeM();nav('inventario')">Ver inventario</button><button class="btn bs" onclick="closeM()">Cerrar</button></div>
+  </div></div>`;
+}
+
+function showCD(id){
+  const c=COMPRAS.find(x=>x.id===id)||COMPRAS[0];
+  document.getElementById('mc').innerHTML=`<div class="mov" onclick="if(event.target===this)closeM()"><div class="mo">
+    <div class="mhdr"><div><div class="mtitle">Compra ${c.id}</div><div style="font-size:12px;color:var(--txt2)">${c.f} · ${c.ctr}</div></div><button class="mclose" onclick="closeM()">✕</button></div>
+    ${[['Cliente',c.cli],['Centro',c.ctr],['Descripción',c.desc],['Quilate / Metal',c.q],['Peso',c.g.toFixed(2)+'g'],['Precio compra',fe(c.pg)+'/g'],['Total pagado',`<strong style="color:var(--gold);font-size:16px">${fe(c.tot)}</strong>`],['KYC',c.kyc==='ok'?'<span class="b bg">✓ Verificado</span>':'<span class="b ba">⚠ Pendiente</span>']].map(([l,v])=>`<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--brd);font-size:12.5px;align-items:center"><span style="color:var(--txt2)">${l}</span><span style="font-weight:500">${v}</span></div>`).join('')}
+    <div style="display:flex;gap:8px;margin-top:18px"><button class="btn bp" onclick="this.textContent='✓ Recibo enviado';setTimeout(()=>this.textContent='Enviar recibo',1600)">Enviar recibo</button><button class="btn bs" onclick="closeM()">Cerrar</button></div>
+  </div></div>`;
+}
+
+function showNotif(){
+  document.getElementById('mc').innerHTML=`<div class="mov" onclick="if(event.target===this)closeM()" style="align-items:flex-start;justify-content:flex-end;padding-top:66px;padding-right:22px"><div class="mo" style="max-width:360px">
+    <div class="mhdr"><div class="mtitle">Notificaciones</div><button class="mclose" onclick="closeM()">✕</button></div>
+    ${[{i:'🚨',t:'Alerta AML · Carmen López',d:'Operación €4,854 sin KYC · Plaza Norte 2',ti:'Hace 12 min'},{i:'⚠️',t:'Tasación pendiente +60 min',d:'TAS-2026-0483 · Rolex Datejust · Leganés',ti:'Hace 60 min'},{i:'ℹ️',t:'Envío REF-2026-018 en tránsito',d:'2.847 kg hacia Nadir · Liquidación est. 25/06',ti:'Hace 7 días'}].map(n=>`<div style="display:flex;gap:11px;padding:13px 0;border-bottom:1px solid var(--brd);cursor:pointer" onclick="closeM()"><div style="font-size:20px;flex-shrink:0">${n.i}</div><div><div style="font-weight:600;font-size:12.5px">${n.t}</div><div style="font-size:11.5px;color:var(--txt2)">${n.d}</div><div style="font-size:10.5px;color:var(--txt3);margin-top:3px">${n.ti}</div></div></div>`).join('')}
+    <button class="btn bs" style="width:100%;margin-top:11px" onclick="closeM()">Cerrar</button>
+  </div></div>`;
+}
+
+function showUser(){
+  document.getElementById('mc').innerHTML=`<div class="mov" onclick="if(event.target===this)closeM()" style="align-items:flex-start;justify-content:flex-end;padding-top:66px;padding-right:22px"><div class="mo" style="max-width:230px">
+    <div style="text-align:center;padding-bottom:14px;border-bottom:1px solid var(--brd)">${av('Gerencia Real',46).replace('style="','style="margin:0 auto 8px;').replace('</div>','</div>')}<div style="font-weight:600">Gerencia General</div><div style="font-size:11.5px;color:var(--txt2)">gerente@grupoluxoro.com</div><span class="b bo" style="margin-top:6px;display:inline-block">Administrador</span></div>
+    <div style="margin-top:11px">${[['⚙️ Configuración','config'],['📈 Informes','informes']].map(([l,s])=>`<div style="padding:9px 0;cursor:pointer;font-size:12.5px;border-bottom:1px solid var(--brd)" onclick="closeM();nav('${s}')">${l}</div>`).join('')}</div>
+    <button class="btn bs" style="width:100%;margin-top:11px" onclick="closeM();document.getElementById('app').classList.remove('on');document.getElementById('login').style.display='flex'">🚪 Cerrar sesión</button>
+  </div></div>`;
+}
+
+// ═══════════════════════════════════════════════════
+// ACTIONS
+// ═══════════════════════════════════════════════════
+function iniciarT(id,fromM=false){const t=TAS.find(x=>x.id===id);if(t)t.st='en_curso';if(fromM)closeM();nav('tasaciones')}
+function completarT(id){const t=TAS.find(x=>x.id===id);if(t)t.st='completada';closeM();setTimeout(()=>openM('nueva-compra'),300)}
+function rechazarT(id){const t=TAS.find(x=>x.id===id);if(t)t.st='rechazada';closeM();nav('tasaciones')}
+function regComp(btn){btn.textContent='Registrando…';btn.disabled=true;setTimeout(()=>{closeM();notif('✓ Compra registrada','Recibo generado · KYC registrado')},1000)}
+function crearT(btn){btn.textContent='Creando…';btn.disabled=true;setTimeout(()=>{closeM();nav('tasaciones')},900)}
+function prepEnvio(btn){btn.textContent='Procesando…';btn.disabled=true;setTimeout(()=>{closeM();nav('refineria')},1100)}
+function resolveAML(id,btn){btn.textContent='✓ Resuelto';btn.style.background='var(--green)';btn.disabled=true;setTimeout(()=>{const i=AML.findIndex(a=>a.id===id);if(i>-1)AML.splice(i,1);nav('cumplimiento');const b=document.getElementById('aml-bdg');if(b)b.textContent=AML.length},1200)}
+function saveConf(btn){const o=btn.textContent;btn.textContent='Guardando…';btn.disabled=true;setTimeout(()=>{btn.textContent='✓ Guardado';setTimeout(()=>{btn.textContent=o;btn.disabled=false},1600)},800)}
+function expD(btn){const o=btn.textContent;btn.textContent='Preparando…';setTimeout(()=>{btn.textContent='✓ Listo';setTimeout(()=>btn.textContent=o,2000)},900)}
+function updMp(){const p=parseFloat(document.getElementById('m-peso')?.value||0);const pr=parseFloat(document.getElementById('m-prec')?.value||0);const el=document.getElementById('m-tot');if(el)el.textContent=`€${(p*pr).toFixed(2)}`}
+function calcM(){const k=parseFloat(document.getElementById('calc-k')?.value||65.2);const p=parseFloat(document.getElementById('calc-p')?.value||0);const r=document.getElementById('calc-r');const d=document.getElementById('calc-d');if(r)r.textContent=`€${(k*p).toFixed(2)}`;if(d)d.textContent=`${p}g × €${k.toFixed(2)}/g`}
+function notif(t,d){const el=document.createElement('div');el.style.cssText='position:fixed;top:70px;right:22px;background:var(--bg2);border:1px solid var(--green);border-radius:12px;padding:14px 18px;z-index:2000;animation:slideUp .3s ease;max-width:280px;box-shadow:0 8px 32px rgba(0,0,0,.3)';el.innerHTML=`<div style="color:var(--green);font-weight:600;margin-bottom:3px">${t}</div><div style="font-size:11.5px;color:var(--txt2)">${d}</div>`;document.body.appendChild(el);setTimeout(()=>el.remove(),3000)}
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM()});
+document.getElementById('lpass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+</script>
+</body>
+</html>
