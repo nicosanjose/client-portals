@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOCELA</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#FAFAF7;--bg2:#F3F2EE;--bg3:#ECEAE4;--bg4:#E3E0D8;
+  --sb-bg:#F0EFE9;--sb-brd:#E5E3DC;
+  --acc:#C45C3A;--acc-l:rgba(196,92,58,.12);--acc-b:rgba(196,92,58,.22);--acc-glow:rgba(196,92,58,.07);
+  --green:#2A9060;--green-l:rgba(42,144,96,.12);
+  --red:#C0392B;--red-l:rgba(192,57,43,.12);
+  --amber:#C47F17;--amber-l:rgba(196,127,23,.12);
+  --blue:#2471A3;--blue-l:rgba(36,113,163,.12);
+  --txt:#1C1A17;--txt2:#6B6560;--txt3:#A8A39C;
+  --brd:rgba(28,26,23,.09);
+  --shadow:0 1px 3px rgba(28,26,23,.06),0 4px 12px rgba(28,26,23,.04);
+  --shadow-md:0 2px 8px rgba(28,26,23,.08),0 8px 24px rgba(28,26,23,.06);
+  --r:12px;--r-lg:18px;
+  --sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --tx:all .25s cubic-bezier(.32,.72,0,1);
+}
+html,body{height:100%;font-family:var(--sans);background:var(--bg);color:var(--txt);font-size:14px;line-height:1.5}
+button,input,select,textarea{font-family:var(--sans)}
+
+/* LAYOUT */
+.layout{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:224px;flex-shrink:0;background:var(--sb-bg);border-right:1px solid var(--sb-brd);display:flex;flex-direction:column;padding:22px 10px 16px;overflow-y:auto;gap:2px}
+.main{flex:1;overflow-y:auto;background:var(--bg);padding:30px 36px}
+#cnt{max-width:1080px}
+
+/* SIDEBAR */
+.sb-brand{font-size:21px;font-weight:800;letter-spacing:-.5px;color:var(--txt);padding:0 10px;margin-bottom:2px}
+.sb-brand span{color:var(--acc)}
+.sb-date{font-size:11px;color:var(--txt3);padding:0 10px;margin-bottom:20px;line-height:1.4}
+.sb-sep{height:1px;background:var(--brd);margin:8px 2px}
+.sb-section{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--txt3);padding:0 10px;margin:12px 0 4px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;cursor:pointer;color:var(--txt2);font-size:13px;font-weight:500;transition:var(--tx);user-select:none}
+.nav-item:hover{background:var(--acc-glow);color:var(--txt)}
+.nav-item.active{background:var(--acc-l);color:var(--acc);font-weight:600}
+.nav-icon{font-size:14px;width:18px;text-align:center;flex-shrink:0}
+
+/* PAGE HEADER */
+.phdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:26px;gap:16px}
+.ptitle{font-size:23px;font-weight:700;letter-spacing:-.4px}
+.psub{font-size:12.5px;color:var(--txt2);margin-top:3px}
+.phdr-right{display:flex;gap:8px;flex-shrink:0;align-items:center}
+
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r-lg);padding:20px;box-shadow:var(--shadow);transition:var(--tx)}
+.card:hover{box-shadow:var(--shadow-md);border-color:rgba(28,26,23,.13);transform:translateY(-1px)}
+.card-title{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--txt3);margin-bottom:14px}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.kpi-card{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r-lg);padding:18px 20px;box-shadow:var(--shadow)}
+.kpi-label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--txt3);margin-bottom:8px}
+.kpi-value{font-size:26px;font-weight:700;letter-spacing:-.5px;line-height:1.1}
+.kpi-sub{font-size:11.5px;color:var(--txt2);margin-top:5px}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:9px;font-size:12.5px;font-weight:600;cursor:pointer;border:none;transition:var(--tx);line-height:1}
+.btn-primary{background:var(--acc);color:#fff}
+.btn-primary:hover{opacity:.88;transform:translateY(-1px)}
+.btn-secondary{background:var(--bg3);color:var(--txt);border:1px solid var(--brd)}
+.btn-secondary:hover{background:var(--bg4)}
+.btn-danger{background:var(--red-l);color:var(--red);border:1px solid rgba(192,57,43,.18)}
+.btn-danger:hover{background:rgba(192,57,43,.2)}
+.btn-ghost{background:transparent;color:var(--txt2);border:1px solid var(--brd)}
+.btn-ghost:hover{background:var(--bg3);color:var(--txt)}
+.btn-sm{padding:5px 11px;font-size:11.5px;border-radius:7px}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:10.5px;font-weight:600;line-height:1.4}
+.badge-green{background:var(--green-l);color:var(--green)}
+.badge-red{background:var(--red-l);color:var(--red)}
+.badge-amber{background:var(--amber-l);color:var(--amber)}
+.badge-blue{background:var(--blue-l);color:var(--blue)}
+.badge-muted{background:var(--bg3);color:var(--txt2)}
+.badge-acc{background:var(--acc-l);color:var(--acc)}
+
+/* PROGRESS */
+.pbar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin:8px 0}
+.pfill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--acc),#E07A5F);transition:width .5s cubic-bezier(.32,.72,0,1)}
+.pfill-green{background:linear-gradient(90deg,var(--green),#52BE80)}
+.pbar-lg{height:8px}
+
+/* FORMS */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgr{display:flex;flex-direction:column;gap:5px}
+.fgr.full{grid-column:1/-1}
+.flbl{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--txt2)}
+.finp,.fsel,.fta{background:var(--bg3);border:1px solid var(--brd);border-radius:8px;padding:9px 13px;color:var(--txt);font-size:13px;width:100%;transition:border-color .2s;outline:none}
+.finp:focus,.fsel:focus,.fta:focus{border-color:var(--acc)}
+.fta{resize:vertical;min-height:80px}
+.fsel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23A8A39C' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;cursor:pointer}
+
+/* HABITS MATRIX */
+.hcheck{width:24px;height:24px;border-radius:6px;border:2px solid var(--brd);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tx);flex-shrink:0;font-size:12px;color:#fff;user-select:none}
+.hcheck:hover{border-color:var(--acc)}
+.hcheck.on{background:var(--acc);border-color:var(--acc)}
+.streak-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--amber-l);color:var(--amber);white-space:nowrap}
+.habit-divider{height:1px;background:var(--brd);margin:0}
+.day-hdr{font-size:10px;font-weight:600;color:var(--txt3);text-transform:uppercase;text-align:center;line-height:1.2}
+.day-hdr.today-col{color:var(--acc);font-weight:700}
+.day-num{font-size:10px;color:var(--txt3);text-align:center;margin-top:1px}
+
+/* MODAL */
+.mov{position:fixed;inset:0;background:rgba(28,26,23,.45);backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;animation:fadeIn .18s ease}
+.mo{background:var(--bg);border:1px solid var(--brd);border-radius:20px;padding:28px;max-width:520px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:var(--shadow-md);animation:slideUp .22s cubic-bezier(.32,.72,0,1)}
+.mo-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.mo-title{font-size:17px;font-weight:700;letter-spacing:-.3px}
+.mo-close{background:var(--bg3);border:none;width:28px;height:28px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--txt2);transition:var(--tx)}
+.mo-close:hover{background:var(--bg4);color:var(--txt)}
+.mo-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:20px;padding-top:16px;border-top:1px solid var(--brd)}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--txt3);padding:0 10px 10px;text-align:left;border-bottom:1px solid var(--brd)}
+.tbl td{padding:10px 10px;border-bottom:1px solid var(--brd);font-size:13px;vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--acc-glow)}
+
+/* FILTER PILLS */
+.filter-pills{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+.pill{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--brd);background:transparent;color:var(--txt2);transition:var(--tx)}
+.pill:hover{border-color:var(--acc);color:var(--acc)}
+.pill.active{background:var(--acc-l);border-color:var(--acc-b);color:var(--acc)}
+
+/* TYPE TOGGLE */
+.type-toggle{display:flex;border:1px solid var(--brd);border-radius:9px;overflow:hidden;width:fit-content}
+.type-btn{padding:8px 20px;font-size:12.5px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--txt2);transition:var(--tx)}
+.type-btn.active{background:var(--acc);color:#fff}
+
+/* EMOJI GRID */
+.emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}
+.ep-btn{width:36px;height:36px;border-radius:7px;border:1px solid var(--brd);background:var(--bg3);cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center;transition:var(--tx)}
+.ep-btn:hover,.ep-btn.sel{background:var(--acc-l);border-color:var(--acc-b)}
+.ep-btn.sel{box-shadow:0 0 0 2px var(--acc-b)}
+
+/* COLOR SWATCHES */
+.color-swatches{display:flex;gap:8px}
+.csw{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:var(--tx)}
+.csw.sel{border-color:var(--txt);box-shadow:0 0 0 2px rgba(28,26,23,.12)}
+
+/* MISC */
+.status-select{background:var(--bg3);border:1px solid var(--brd);border-radius:7px;padding:5px 10px;font-size:12px;font-weight:600;font-family:var(--sans);cursor:pointer;outline:none;transition:var(--tx);color:var(--txt)}
+.status-select:focus{border-color:var(--acc)}
+.month-sel{background:var(--bg3);border:1px solid var(--brd);border-radius:9px;padding:7px 30px 7px 14px;font-size:13px;font-weight:600;font-family:var(--sans);cursor:pointer;outline:none;color:var(--txt);appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23A8A39C' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.link-sm{font-size:12px;color:var(--acc);cursor:pointer;font-weight:600}
+.link-sm:hover{opacity:.75}
+.next-action-box{background:var(--bg3);border-radius:9px;padding:10px 13px;margin:10px 0}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 20px;text-align:center;gap:10px}
+.empty-icon{font-size:30px;opacity:.35}
+.empty-text{font-size:13.5px;color:var(--txt2)}
+.empty-sub{font-size:12px;color:var(--txt3)}
+.sec{animation:slideUp .26s cubic-bezier(.32,.72,0,1)}
+
+/* ANIMATIONS */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
+
+@media(max-width:960px){.kpi-grid{grid-template-columns:1fr 1fr}.g2,.g3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div id="app" class="layout">
+  <nav class="sidebar">
+    <div class="sb-brand">TOC<span>E</span>LA</div>
+    <div class="sb-date" id="sb-date"></div>
+    <div class="sb-section">General</div>
+    <div class="nav-item active" data-sec="home" onclick="nav('home')"><span class="nav-icon">🏠</span> Inicio</div>
+    <div class="sb-section">Hábitos & Metas</div>
+    <div class="nav-item" data-sec="habitos" onclick="nav('habitos')"><span class="nav-icon">✅</span> Hábitos</div>
+    <div class="nav-item" data-sec="objetivos" onclick="nav('objetivos')"><span class="nav-icon">🎯</span> Objetivos</div>
+    <div class="sb-section">Trabajo & Crecimiento</div>
+    <div class="nav-item" data-sec="proyectos" onclick="nav('proyectos')"><span class="nav-icon">📋</span> Proyectos</div>
+    <div class="nav-item" data-sec="estudios" onclick="nav('estudios')"><span class="nav-icon">📚</span> Estudios</div>
+    <div class="sb-section">Cuerpo & Dinero</div>
+    <div class="nav-item" data-sec="deporte" onclick="nav('deporte')"><span class="nav-icon">💪</span> Deporte</div>
+    <div class="nav-item" data-sec="finanzas" onclick="nav('finanzas')"><span class="nav-icon">💰</span> Finanzas</div>
+  </nav>
+  <main class="main"><div id="cnt"></div></main>
+</div>
+<div id="mc"></div>
+
+<script>
+// ===== DATA =====
+const DB_DEFAULT = {
+  habits:[],habitLogs:{},objectives:[],projects:[],courses:[],
+  trainingSessions:[],physicalGoals:[],financeEntries:[],
+  savingsGoal:{target:0,current:0,label:'Meta de ahorro'}
+};
+function loadDB(){
+  try{const r=localStorage.getItem('tocela_db');return r?{...structuredClone(DB_DEFAULT),...JSON.parse(r)}:structuredClone(DB_DEFAULT);}
+  catch{return structuredClone(DB_DEFAULT);}
+}
+function save(){localStorage.setItem('tocela_db',JSON.stringify(DB));}
+let DB=loadDB();
+
+// ===== STATE =====
+let curSec='home', curObjFilter='todos', curProjFilter='todos',
+    curStudyFilter='todos', curFinMonth='';
+
+// ===== HELPERS =====
+function today(){return new Date().toISOString().split('T')[0];}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function fe(n){return new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n||0);}
+function fmtShort(iso){if(!iso)return'';return new Date(iso+'T12:00:00').toLocaleDateString('es-ES',{day:'2-digit',month:'short'});}
+function fmtFull(iso){if(!iso)return'';return new Date(iso+'T12:00:00').toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});}
+function fmtMonth(ym){const[y,m]=ym.split('-');const n=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];return `${n[+m-1]} ${y}`;}
+function curMonth(){return today().slice(0,7);}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function clamp(v,a,b){return Math.min(b,Math.max(a,v));}
+
+function getStreak(hid){
+  let s=0;const d=new Date();
+  while(true){const k=d.toISOString().split('T')[0];if(DB.habitLogs[k]?.[hid]){s++;d.setDate(d.getDate()-1);}else break;}
+  return s;
+}
+function habitsDayStatus(){
+  const log=DB.habitLogs[today()]||{};
+  return{checked:DB.habits.filter(h=>log[h.id]).length,total:DB.habits.length};
+}
+function finSummary(ym){
+  const e=DB.financeEntries.filter(x=>x.date.startsWith(ym));
+  const inc=e.filter(x=>x.type==='ingreso').reduce((s,x)=>s+(x.amount||0),0);
+  const exp=e.filter(x=>x.type==='gasto').reduce((s,x)=>s+(x.amount||0),0);
+  return{inc,exp,bal:inc-exp};
+}
+function topObj(){return DB.objectives.length?[...DB.objectives].sort((a,b)=>b.currentPct-a.currentPct)[0]:null;}
+function greeting(){const h=new Date().getHours();return h<13?'Buenos días':h<20?'Buenas tardes':'Buenas noches';}
+function areaLbl(a){return{personal:'Personal',trabajo:'Trabajo',salud:'Salud',finanzas:'Finanzas',estudios:'Estudios'}[a]||a;}
+function areaCls(a){return{personal:'badge-acc',trabajo:'badge-blue',salud:'badge-green',finanzas:'badge-amber',estudios:'badge-muted'}[a]||'badge-muted';}
+function statusBadge(s){const m={activo:['badge-green','Activo'],pausado:['badge-amber','Pausado'],completado:['badge-muted','Completado']};const[c,l]=m[s]||['badge-muted',s];return`<span class="badge ${c}">${l}</span>`;}
+function typeBadge(t){const m={curso:['badge-blue','Curso'],libro:['badge-acc','Libro'],podcast:['badge-green','Podcast']};const[c,l]=m[t]||['badge-muted',t];return`<span class="badge ${c}">${l}</span>`;}
+function trainBadge(t){const m={fuerza:['badge-red','Fuerza'],cardio:['badge-blue','Cardio'],movilidad:['badge-green','Movilidad'],deporte:['badge-acc','Deporte'],otro:['badge-muted','Otro']};const[c,l]=m[t]||['badge-muted',t];return`<span class="badge ${c}">${l}</span>`;}
+function last7Days(){const d=[];for(let i=6;i>=0;i--){const x=new Date();x.setDate(x.getDate()-i);d.push(x.toISOString().split('T')[0]);}return d;}
+function dayLbl(iso){return['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][new Date(iso+'T12:00:00').getDay()];}
+function weekSessions(){
+  const d=new Date(),ws=new Date(d);ws.setDate(d.getDate()-d.getDay());
+  const wk=ws.toISOString().split('T')[0];
+  const ss=DB.trainingSessions.filter(s=>s.date>=wk);
+  const byType={};ss.forEach(s=>{byType[s.type]=(byType[s.type]||0)+1;});
+  return{count:ss.length,mins:ss.reduce((s,x)=>s+(x.duration||0),0),byType};
+}
+function availableMonths(){
+  const m=new Set([curMonth()]);
+  DB.financeEntries.forEach(e=>{if(e.date)m.add(e.date.slice(0,7));});
+  return[...m].sort().reverse();
+}
+
+// ===== SIDEBAR =====
+function updateDate(){
+  const el=document.getElementById('sb-date');if(!el)return;
+  const s=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
+  el.textContent=s[0].toUpperCase()+s.slice(1);
+}
+
+// ===== NAV =====
+function nav(sec){
+  curSec=sec;
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.sec===sec));
+  const renders={home:rHome,habitos:rHabitos,objetivos:rObjetivos,proyectos:rProyectos,estudios:rEstudios,deporte:rDeporte,finanzas:rFinanzas};
+  document.getElementById('cnt').innerHTML=`<div class="sec">${renders[sec]()}</div>`;
+}
+
+// ===== MODAL =====
+function openM(html){document.getElementById('mc').innerHTML=`<div class="mov" onclick="if(event.target===this)closeM()">${html}</div>`;}
+function closeM(){document.getElementById('mc').innerHTML='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM();});
+function moHdr(t){return`<div class="mo-hdr"><div class="mo-title">${t}</div><button class="mo-close" onclick="closeM()">✕</button></div>`;}
+
+// ===== HOME =====
+function rHome(){
+  const hs=habitsDayStatus();
+  const fin=finSummary(curMonth());
+  const active=DB.projects.filter(p=>p.status==='activo');
+  const obj=topObj();
+  const dt=today();
+  const dots=DB.habits.map(h=>`<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${DB.habitLogs[dt]?.[h.id]?'var(--acc)':'var(--bg4)'};margin-right:3px"></span>`).join('');
+
+  const kpiH=`<div class="kpi-card">
+    <div class="kpi-label">Hábitos hoy</div>
+    <div class="kpi-value">${hs.checked}<span style="font-size:15px;color:var(--txt3)">/${hs.total}</span></div>
+    <div style="display:flex;flex-wrap:wrap;margin-top:8px">${dots||'<span style="font-size:11px;color:var(--txt3)">Sin hábitos</span>'}</div>
+  </div>`;
+
+  const kpiP=`<div class="kpi-card">
+    <div class="kpi-label">Proyectos activos</div>
+    <div class="kpi-value">${active.length}</div>
+    <div class="kpi-sub">${DB.projects.length} total</div>
+  </div>`;
+
+  const bc=fin.bal>=0?'var(--green)':'var(--red)';
+  const kpiF=`<div class="kpi-card">
+    <div class="kpi-label">Balance del mes</div>
+    <div class="kpi-value" style="color:${bc}">${fe(fin.bal)}</div>
+    <div class="kpi-sub">${fmtMonth(curMonth())}</div>
+  </div>`;
+
+  const kpiO=obj?`<div class="kpi-card">
+    <div class="kpi-label">Objetivo top</div>
+    <div style="font-size:13px;font-weight:600;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(obj.title)}</div>
+    <div class="pbar"><div class="pfill" style="width:${obj.currentPct}%"></div></div>
+    <div style="font-size:12px;color:var(--txt2)">${obj.currentPct}% completado</div>
+  </div>`:`<div class="kpi-card">
+    <div class="kpi-label">Objetivo top</div>
+    <div class="kpi-sub" style="margin-top:8px">Sin objetivos aún</div>
+  </div>`;
+
+  const habCard=DB.habits.length?`<div class="card">
+    <div class="card-title">Hábitos de hoy</div>
+    ${DB.habits.map(h=>{
+      const on=DB.habitLogs[dt]?.[h.id];const streak=getStreak(h.id);
+      return`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--brd)">
+        <div class="hcheck ${on?'on':''}" onclick="toggleHabit('${h.id}','${dt}')">${on?'✓':''}</div>
+        <span style="font-size:16px">${h.icon}</span>
+        <span style="font-size:13.5px;font-weight:500;${on?'text-decoration:line-through;color:var(--txt3)':''}">${esc(h.name)}</span>
+        ${streak>0?`<div class="streak-badge" style="margin-left:auto">🔥 ${streak}d</div>`:'<div style="flex:1"></div>'}
+      </div>`;
+    }).join('')}
+    <div style="margin-top:12px"><span class="link-sm" onclick="nav('habitos')">Ver todos →</span></div>
+  </div>`:`<div class="card"><div class="empty">
+    <div class="empty-icon">✅</div>
+    <div class="empty-text">Sin hábitos configurados</div>
+    <button class="btn btn-primary btn-sm" onclick="nav('habitos')">Configurar hábitos</button>
+  </div></div>`;
+
+  const objCard=obj?`<div class="card">
+    <div class="card-title">Objetivo principal</div>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+      <span class="badge ${areaCls(obj.area)}">${areaLbl(obj.area)}</span>
+      <span style="font-size:11px;color:var(--txt3)">${obj.period}</span>
+    </div>
+    <div style="font-size:15px;font-weight:700;margin-bottom:${obj.notes?'6px':'10px'}">${esc(obj.title)}</div>
+    ${obj.notes?`<div style="font-size:12.5px;color:var(--txt2);margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${esc(obj.notes)}</div>`:''}
+    <div class="pbar pbar-lg"><div class="pfill" style="width:${obj.currentPct}%"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--txt2);margin-top:4px">
+      <span>${obj.currentPct}% actual</span><span>Meta: ${obj.targetPct}%</span>
+    </div>
+    <div style="margin-top:14px"><span class="link-sm" onclick="nav('objetivos')">Ver objetivos →</span></div>
+  </div>`:`<div class="card"><div class="empty">
+    <div class="empty-icon">🎯</div>
+    <div class="empty-text">Sin objetivos configurados</div>
+    <button class="btn btn-primary btn-sm" onclick="nav('objetivos')">Añadir objetivo</button>
+  </div></div>`;
+
+  const projCard=active.length?`<div class="card">
+    <div class="card-title">Proyectos activos</div>
+    ${active.slice(0,5).map(p=>`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--brd)">
+      ${statusBadge(p.status)}
+      <span style="font-size:13.5px;font-weight:600">${esc(p.name)}</span>
+      ${p.nextAction?`<span style="font-size:12px;color:var(--txt2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">· ${esc(p.nextAction)}</span>`:''}
+    </div>`).join('')}
+    <div style="margin-top:12px"><span class="link-sm" onclick="nav('proyectos')">Ver todos →</span></div>
+  </div>`:`<div class="card"><div class="empty">
+    <div class="empty-icon">📋</div>
+    <div class="empty-text">Sin proyectos activos</div>
+    <button class="btn btn-primary btn-sm" onclick="nav('proyectos')">Añadir proyecto</button>
+  </div></div>`;
+
+  const ds=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  return`<div class="phdr" style="margin-bottom:22px">
+    <div><div class="ptitle">${greeting()}, Nicolás.</div><div class="psub">${ds[0].toUpperCase()+ds.slice(1)}</div></div>
+  </div>
+  <div class="kpi-grid">${kpiH}${kpiP}${kpiF}${kpiO}</div>
+  <div class="g2" style="margin-bottom:16px">${habCard}${objCard}</div>
+  ${projCard}`;
+}
+
+// ===== HÁBITOS =====
+function toggleHabit(hid,dk){
+  if(!DB.habitLogs[dk])DB.habitLogs[dk]={};
+  DB.habitLogs[dk][hid]=!DB.habitLogs[dk][hid];
+  save();nav(curSec);
+}
+function rHabitos(){
+  const days=last7Days();const dt=today();
+  const hdrCols=days.map(d=>`<div style="width:36px;text-align:center">
+    <div class="day-hdr ${d===dt?'today-col':''}">${dayLbl(d)}</div>
+    <div class="day-num">${d.slice(8)}</div>
+  </div>`).join('');
+
+  const rows=DB.habits.map(h=>{
+    const streak=getStreak(h.id);
+    const checks=days.map(d=>{
+      const on=DB.habitLogs[d]?.[h.id];
+      return`<div style="width:36px;display:flex;justify-content:center">
+        <div class="hcheck ${on?'on':''}" onclick="toggleHabit('${h.id}','${d}')">${on?'✓':''}</div>
+      </div>`;
+    }).join('');
+    return`<div style="display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--brd)">
+      <span style="font-size:18px;width:26px;text-align:center;flex-shrink:0">${h.icon}</span>
+      <span style="font-size:13.5px;font-weight:500;flex:1;min-width:80px">${esc(h.name)}</span>
+      <div style="display:flex;gap:0">${checks}</div>
+      <div style="width:72px;flex-shrink:0">${streak>0?`<div class="streak-badge">🔥 ${streak}d</div>`:''}</div>
+      <div style="display:flex;gap:5px;flex-shrink:0">
+        <button class="btn btn-ghost btn-sm" onclick="openHabitM('${h.id}')">Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="delHabit('${h.id}')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  return`<div class="phdr">
+    <div><div class="ptitle">Hábitos</div><div class="psub">Últimos 7 días</div></div>
+    <div class="phdr-right"><button class="btn btn-primary" onclick="openHabitM()">+ Nuevo hábito</button></div>
+  </div>
+  <div class="card">
+    ${DB.habits.length?`
+      <div style="display:flex;align-items:flex-end;gap:10px;padding-bottom:8px;border-bottom:2px solid var(--brd)">
+        <div style="width:26px"></div>
+        <div style="flex:1;min-width:80px"></div>
+        <div style="display:flex;gap:0">${hdrCols}</div>
+        <div style="width:72px"></div>
+        <div style="width:106px"></div>
+      </div>
+      ${rows}
+    `:`<div class="empty">
+      <div class="empty-icon">✅</div>
+      <div class="empty-text">Todavía no tienes hábitos</div>
+      <div class="empty-sub">Añade el primero para empezar el seguimiento</div>
+      <button class="btn btn-primary" onclick="openHabitM()">+ Nuevo hábito</button>
+    </div>`}
+  </div>`;
+}
+
+const EMOJIS=['😴','💪','📚','💧','🧘','💻','🏃','🥗','☀️','🎯','✍️','🎵','🌿','🚴','🏋️','🍎','📝','🧠','❤️','🌙','🤸','🏊','⚽','🎸','🎨','🍵','🛌','🧴'];
+const HCOLORS=[{k:'acc',bg:'var(--acc)'},{k:'green',bg:'var(--green)'},{k:'amber',bg:'var(--amber)'},{k:'blue',bg:'var(--blue)'}];
+let _hDraft={icon:'✅',color:'acc'};
+
+function openHabitM(id){
+  const h=id?DB.habits.find(x=>x.id===id):null;
+  _hDraft={icon:h?.icon||'✅',color:h?.color||'acc'};
+  const ep=EMOJIS.map(e=>`<button class="ep-btn ${_hDraft.icon===e?'sel':''}" onclick="pickEmoji('${e}',this)">${e}</button>`).join('');
+  const cs=HCOLORS.map(c=>`<div class="csw ${_hDraft.color===c.k?'sel':''}" style="background:${c.bg}" onclick="pickColor('${c.k}',this)"></div>`).join('');
+  openM(`<div class="mo">${moHdr(h?'Editar hábito':'Nuevo hábito')}
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="fgr"><label class="flbl">Nombre</label>
+        <input class="finp" id="h-name" value="${h?esc(h.name):''}" placeholder="Ej: Leer 30 min" maxlength="50" autofocus></div>
+      <div class="fgr"><label class="flbl">Icono</label>
+        <div id="ep-prev" style="font-size:28px;margin-bottom:8px">${_hDraft.icon}</div>
+        <div class="emoji-grid">${ep}</div></div>
+      <div class="fgr"><label class="flbl">Color</label>
+        <div class="color-swatches" id="csw-wrap">${cs}</div></div>
+    </div>
+    <div class="mo-footer">
+      <button class="btn btn-secondary" onclick="closeM()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveHabit('${id||''}')">Guardar</button>
+    </div>
+  </div>`);
+}
+function pickEmoji(e,el){_hDraft.icon=e;document.querySelectorAll('.ep-btn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');document.getElementById('ep-prev').textContent=e;}
+function pickColor(k,el){_hDraft.color=k;document.querySelectorAll('.csw').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
+function saveHabit(id){
+  const name=document.getElementById('h-name').value.trim();if(!name)return;
+  if(id){const h=DB.habits.find(x=>x.id===id);if(h){h.name=name;h.icon=_hDraft.icon;h.color=_hDraft.color;}}
+  else DB.habits.push({id:uid(),name,icon:_hDraft.icon,color:_hDraft.color,createdAt:today()});
+  save();closeM();nav('habitos');
+}
+function delHabit(id){
+  if(!confirm('¿Eliminar este hábito y su historial?'))return;
+  DB.habits=DB.habits.filter(h=>h.id!==id);
+  Object.keys(DB.habitLogs).forEach(d=>{delete DB.habitLogs[d][id];});
+  save();nav('habitos');
+}
+
+// ===== OBJETIVOS =====
+function rObjetivos(){
+  const areas=['todos','personal','trabajo','salud','finanzas','estudios'];
+  const lbl={todos:'Todos',personal:'Personal',trabajo:'Trabajo',salud:'Salud',finanzas:'Finanzas',estudios:'Estudios'};
+  const filtered=curObjFilter==='todos'?DB.objectives:DB.objectives.filter(o=>o.area===curObjFilter);
+  const pills=areas.map(a=>`<button class="pill ${curObjFilter===a?'active':''}" onclick="setOF('${a}')">${lbl[a]}</button>`).join('');
+  const cards=filtered.map(o=>{
+    const bw=o.targetPct?clamp((o.currentPct/o.targetPct)*100,0,100):o.currentPct;
+    return`<div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div style="display:flex;gap:6px;align-items:center">
+          <span class="badge ${areaCls(o.area)}">${areaLbl(o.area)}</span>
+          <span style="font-size:11px;color:var(--txt3);font-weight:600">${o.period}</span>
+        </div>
+        <span style="font-size:22px;font-weight:700;color:var(--acc)">${o.currentPct}%</span>
+      </div>
+      <div style="font-size:15px;font-weight:700;margin-bottom:${o.notes?'6px':'10px'}">${esc(o.title)}</div>
+      ${o.notes?`<div style="font-size:12.5px;color:var(--txt2);margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${esc(o.notes)}</div>`:''}
+      <div class="pbar pbar-lg"><div class="pfill" style="width:${bw}%"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--txt2);margin-top:4px;margin-bottom:14px">
+        <span>${o.currentPct}% actual</span><span>Meta: ${o.targetPct}%</span>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-secondary btn-sm" onclick="openObjProg('${o.id}')">Actualizar %</button>
+        <button class="btn btn-ghost btn-sm" onclick="openObjM('${o.id}')">Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="delObj('${o.id}')">Borrar</button>
+      </div>
+    </div>`;
+  }).join('');
+  return`<div class="phdr">
+    <div><div class="ptitle">Objetivos</div><div class="psub">Metas anuales y trimestrales</div></div>
+    <div class="phdr-right"><button class="btn btn-primary" onclick="openObjM()">+ Nuevo objetivo</button></div>
+  </div>
+  <div class="filter-pills">${pills}</div>
+  ${filtered.length?`<div class="g2">${cards}</div>`:`<div class="card"><div class="empty">
+    <div class="empty-icon">🎯</div>
+    <div class="empty-text">${curObjFilter==='todos'?'Sin objetivos todavía':'Sin objetivos en esta área'}</div>
+    <button class="btn btn-primary" onclick="openObjM()">+ Nuevo objetivo</button>
+  </div></div>`}`;
+}
+function setOF(f){curObjFilter=f;nav('objetivos');}
+function openObjM(id){
+  const o=id?DB.objectives.find(x=>x.id===id):null;
+  openM(`<div class="mo">${moHdr(o?'Editar objetivo':'Nuevo objetivo')}
+    <div class="fg">
+      <div class="fgr full"><label class="flbl">Título</label>
+        <input class="finp" id="o-t" value="${o?esc(o.title):''}" placeholder="Ej: Lanzar primer cliente" maxlength="80" autofocus></div>
+      <div class="fgr"><label class="flbl">Área</label>
+        <select class="fsel" id="o-a">${['personal','trabajo','salud','finanzas','estudios'].map(a=>`<option value="${a}" ${o?.area===a?'selected':''}>${areaLbl(a)}</option>`).join('')}</select></div>
+      <div class="fgr"><label class="flbl">Período</label>
+        <select class="fsel" id="o-p">${['2026','Q3-2026','Q4-2026','2027'].map(p=>`<option value="${p}" ${o?.period===p?'selected':''}>${p}</option>`).join('')}</select></div>
+      <div class="fgr"><label class="flbl">Progreso actual (%)</label>
+        <input class="finp" id="o-c" type="number" min="0" max="100" value="${o?.currentPct??0}"></div>
+      <div class="fgr"><label class="flbl">Meta (%)</label>
+        <input class="finp" id="o-m" type="number" min="1" max="100" value="${o?.targetPct??100}"></div>
+      <div class="fgr full"><label class="flbl">Notas</label>
+        <textarea class="fta" id="o-n" placeholder="Contexto, milestones...">${o?.notes??''}</textarea></div>
+    </div>
+    <div class="mo-footer">
+      <button class="btn btn-secondary" onclick="closeM()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveObj('${id||''}')">Guardar</button>
+    </div>
+  </div>`);
+}
+function openObjProg(id){
+  const o=DB.objectives.find(x=>x.id===id);if(!o)return;
+  openM(`<div class="mo" style="max-width:360px">${moHdr('Actualizar progreso')}
+    <div style="font-size:14px;font-weight:600;margin-bottom:16px">${esc(o.title)}</div>
+    <div class="fgr" style="margin-bottom:12px"><label class="flbl">Progreso (%)</label>
+      <input class="finp" id="op-v" type="number" min="0" max="100" value="${o.currentPct}"></div>
+    <div class="pbar pbar-lg"><div class="pfill" id="op-bar" style="width:${o.currentPct}%"></div></div>
+    <div class="mo-footer">
+      <button class="btn btn-secondary" onclick="closeM()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveObjProg('${id}')">Guardar</button>
+    </div>
+  </div>`);
+  document.getElementById('op-v').addEventListener('input',function(){
+    document.getElementById('op-bar').style.width=clamp(+this.value,0,100)+'%';
+  });
+}
+function saveObjProg(id){const o=DB.objectives.find(x=>x.id===id);if(!o)return;o.currentPct=clamp(+document.getElementById('op-v').value,0,100);save();closeM();nav('objetivos');}
+function saveObj(id){
+  const t=document.getElementById('o-t').value.trim();if(!t)return;
+  const d={title:t,area:document.getElementById('o-a').value,period:document.getElementById('o-p').value,
+    currentPct:clamp(+document.getElementById('o-c').value,0,100),targetPct:clamp(+document.getElementById('o-m').value,1,100),
+    notes:document.getElementById('o-n').value.trim()};
+  if(id){const o=DB.objectives.find(x=>x.id===id);if(o)Object.assign(o,d);}
+  else DB.objectives.push({id:uid(),...d,createdAt:today()});
+  save();closeM();nav('objetivos');
+}
+function delObj(id){if(!confirm('¿Eliminar este objetivo?'))return;DB.objectives=DB.objectives.filter(o=>o.id!==id);save();nav('objetivos');}
+
+// ===== PROYECTOS =====
+function rProyectos(){
+  const stats=['todos','activo','pausado','completado'];
+  const sl={todos:'Todos',activo:'Activos',pausado:'Pausados',completado:'Completados'};
+  const filtered=curProjFilter==='todos'?DB.projects:DB.projects.filter(p=>p.status===curProjFilter);
+  const pills=stats.map(s=>`<button class="pill ${curProjFilter===s?'active':''}" onclick="setPF('${s}')">${sl[s]}</button>`).join('');
+  const cards=filtered.map(p=>`<div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+      <div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:6px">${esc(p.name)}</div>
+        ${p.area?`<span class="badge badge-muted">${esc(p.area)}</span>`:''}
+      </div>
+      ${statusBadge(p.status)}
+    </div>
+    ${p.nextAction?`<div class="next-action-box">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--txt3);margin-bottom:3px">Próxima acción</div>
+      <div style="font-size:13px">${esc(p.nextAction)}</div>
+    </div>`:''}
+    ${p.notes?`<div style="font-size:12.5px;color:var(--txt2);margin-bottom:10px">${esc(p.notes)}</div>`:''}
+    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:${p.nextAction||p.notes?'0':'8px'}">
+      <select class="status-select" onchange="chgProjStatus('${p.id}',this.value)">
+        <option value="activo" ${p.status==='activo'?'selected':''}>Activo</option>
+        <option value="pausado" ${p.status==='pausado'?'selected':''}>Pausado</option>
+        <option value="completado" ${p.status==='completado'?'selected':''}>Completado</option>
+      </select>
+      <button class="btn btn-ghost btn-sm" onclick="openProjM('${p.id}')">Editar</button>
+      <button class="btn btn-danger btn-sm" onclick="delProj('${p.id}')">Borrar</button>
+    </div>
+  </div>`).join('');
+  return`<div class="phdr">
+    <div><div class="ptitle">Proyectos</div><div class="psub">Vista general</div></div>
+    <div class="phdr-right"><button class="btn btn-primary" onclick="openProjM()">+ Nuevo proyecto</button></div>
+  </div>
+  <div class="filter-pills">${pills}</div>
+  ${filtered.length?`<div class="g2">${cards}</div>`:`<div class="card"><div class="empty">
+    <div class="empty-icon">📋</div>
+    <div class="empty-text">${curProjFilter==='todos'?'Sin proyectos todavía':'Sin proyectos en este estado'}</div>
+    <button class="btn btn-primary" onclick="openProjM()">+ Nuevo proyecto</button>
+  </div></div>`}`;
+}
+function setPF(f){curProjFilter=f;nav('proyectos');}
+function chgProjStatus(id,s){const p=DB.projects.find(x=>x.id===id);if(p){p.status=s;p.updatedAt=today();save();}}
+function openProjM(id){
+  const p=id?DB.projects.find(x=>x.id===id):null;
+  openM(`<div class="mo">${moHdr(p?'Editar proyecto':'Nuevo proyecto')}
+    <div class="fg">
+      <div class="fgr full"><label class="flbl">Nombre</label>
+        <input class="finp" id="p-n" value="${p?esc(p.name):''}" placeholder="Nombre del proyecto" maxlength="80" autofocus></div>
+      <div class="fgr"><label class="flbl">Área</label>
+        <input class="finp" id="p-a" value="${p?esc(p.area||''):''}" placeholder="Trabajo, Personal..."></div>
+      <div class="fgr"><label class="flbl">Estado</label>
+        <select class="fsel" id="p-s">
+          <option value="activo" ${p?.status==='activo'?'selected':''}>Activo</option>
+          <option value="pausado" ${p?.status==='pausado'?'selected':''}>Pausado</option>
+          <option value="completado" ${p?.status==='completado'?'selected':''}>Completado</option>
+        </select></div>
+      <div class="fgr full"><label class="flbl">Próxima acción</label>
+        <input class="finp" id="p-x" value="${p?esc(p.nextAction||''):''}" placeholder="La siguiente cosa concreta a hacer"></div>
+      <div class="fgr full"><label class="flbl">Notas</label>
+        <textarea class="fta" id="p-no" placeholder="Contexto, links, ideas...">${p?.notes??''}</textarea></div>
+    </div>
+    <div class="mo-footer">
+      <button class="btn btn-secondary" onclick="closeM()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveProj('${id||''}')">Guardar</button>
+    </div>
+  </div>`);
+}
+function saveProj(id){
+  const n=document.getElementById('p-n').value.trim();if(!n)return;
+  const d={name:n,area:document.getElementById('p-a').value.trim(),status:document.getElementById('p-s').value,
+    nextAction:document.getElementById('p-x').value.trim(),notes:document.getElementById('p-no').value.trim(),updatedAt:today()};
+  if(id){const p=DB.projects.find(x=>x.id===id);if(p)Object.assign(p,d);}
+  else DB.projects.push({id:uid(),...d});
+  save();closeM();nav('proyectos');
+}
+function delProj(id){if(!confirm('¿Eliminar este proyecto?'))return;DB.projects=DB.projects.filter(p=>p.id!==id);save();nav('proyectos');}
+
+// ===== ESTUDIOS =====
+function rEstudios(){
+  const types=['todos','curso','libro','podcast'];
+  const tl={todos:'Todos',curso:'Cursos',libro:'Libros',podcast:'Podcasts'};
+  const filtered=curStudyFilter==='todos'?DB.courses:DB.courses.filter(c=>c.type===curStudyFilter);
+  const pills=types.map(t=>`<button class="pill ${curStudyFilter===t?'active':''}" onclick="setSF('${t}')">${tl[t]}</button>`).join('');
+  const cards=filtered.map(c=>{
+    const pct=c.totalUnits?clamp(Math.round((c.currentUnit/c.totalUnits)*100),0,100):0;
+    return`<div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        ${typeBadge(c.type)}
+        <span style="font-size:22px;font-weight:700;color:var(--acc)">${pct}%</span>
+      </div>
+      <div style="font-size:15px;font-weight:700;margin-bottom:10px">${esc(c.title)}</div>
+      <div class="pbar pbar-lg"><div class="pfill" style="width:${pct}%"></div></div>
+      <div style="font-size:12px;color:var(--txt2);margin-top:4px;margin-bottom:${c.notes?'8px':'14px'}">${c.currentUnit} / ${c.totalUnits} ${esc(c.unitLabel)}</div>
+      ${c.notes?`<div style="font-size:12.5px;color:var(--txt2);margin-bottom:12px">${esc(c.notes)}</div>`:''}
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-primary btn-sm" onclick="advanceCourse('${c.id}')">+ Avanzar 1</button>
+        <button class="btn btn-ghost btn-sm" onclick="openCourseM('${c.id}')">Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="delCourse('${c.id}')">Borrar</button>
+      </div>
+    </div>`;
+  }).join('');
+  return`<div class="phdr">
+    <div><div class="ptitle">Estudios</div><div class="psub">Cursos, libros y formación en progreso</div></div>
+    <div class="phdr-right"><button class="btn btn-primary" onclick="openCourseM()">+ Añadir</button></div>
+  </div>
+  <div class="filter-pills">${pills}</div>
+  ${filtered.length?`<div class="g2">${cards}</div>`:`<div class="card"><div class="empty">
+    <div class="empty-icon">📚</div>
+    <div class="empty-text">${curStudyFilter==='todos'?'Sin contenido en progreso':'Sin '+tl[curStudyFilter].toLowerCase()}</div>
+    <button class="btn btn-primary" onclick="openCourseM()">+ Añadir</button>
+  </div></div>`}`;
+}
+function setSF(f){curStudyFilter=f;nav('estudios');}
+function advanceCourse(id){const c=DB.courses.find(x=>x.id===id);if(c&&c.currentUnit<c.totalUnits){c.currentUnit++;save();nav('estudios');}}
+function openCourseM(id){
+  const c=id?DB.courses.find(x=>x.id===id):null;
+  openM(`<div class="mo">${moHdr(c?'Editar':'Nuevo contenido')}
+    <div class="fg">
+      <div class="fgr full"><label class="flbl">Título</label>
+        <input class="finp" id="c-t" value="${c?esc(c.title):''}" placeholder="Nombre del curso o libro" autofocus></div>
+      <div class="fgr"><label class="flbl">Tipo</label>
+        <select class="fsel" id="c-ty">
+          <option value="curso" ${c?.type==='curso'?'selected':''}>Curso</option>
+          <option value="libro" ${c?.type==='libro'?'selected':''}>Libro</option>
+          <option value="podcast" ${c?.type==='podcast'?'selected':''}>Podcast</option>
+        </select></div>
+      <div class="fgr"><label class="flbl">Unidad</label>
+        <select class="fsel" id="c-ul">
+          ${['módulos','páginas','capítulos','episodios','lecciones'].map(u=>`<option value="${u}" ${c?.unitLabel===u?'selected':''}>${u[0].toUpperCase()+u.slice(1)}</option>`).join('')}
+        </select></div>
+      <div class="fgr"><label class="flbl">Total unidades</label>
+        <input class="finp" id="c-tot" type="number" min="1" value="${c?.totalUnits??''}"></div>
+      <div class="fgr"><label class="flbl">Unidad actual</label>
+        <input class="finp" id="c-cur" type="number" min="0" value="${c?.currentUnit??0}"></div>
+      <div class="fgr full"><label class="flbl">Notas</label>
+        <textarea class="fta" id="c-no" placeholder="Plataforma, autor, enlace...">${c?.notes??''}</textarea></div>
+    </div>
+    <div class="mo-footer">
+      <button class="btn btn-secondary" onclick="closeM()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveCourse('${id||''}')">Guardar</button>
+    </div>
+  </div>`);
+}
+function saveCourse(id){
+  const t=document.getElementById('c-t').value.trim();if(!t)return;
+  const tot=Math.max(1,+document.getElementById('c-tot').value||1);
+  const cur=clamp(+document.getElementById('c-cur').value||0,0,tot);
+  const d={title:t,type:document.getElementById('c-ty').value,unitLabel:document.getElementById('c-ul').value,totalUnits:tot,currentUnit:cur,notes:document.getElementById('c-no').value.trim()};
+  if(id){const c=DB.courses.find(x=>x.id===id);if(c)Object.assign(c,d);}
+  else DB.courses.push({id:uid(),...d,startedAt:today()});
+  save();closeM();nav('estudios');
+}
+function delCourse(id){if(!confirm('¿Eliminar?'))return;DB.courses=DB.courses.filter(c=>c.id!==id);save();nav('estudios');}
+
+// ===== DEPORTE =====
+function rDeporte(){
+  const wk=weekSessions();
+  const sessions=[...DB.trainingSessions].sort((a,b)=>b.date.localeCompare(a.date));
+  const tc={fuerza:'var(--red)',cardio:'var(--blue)',movilidad:'var(--green)',deporte:'var(--acc)',otro:'var(--txt3)'};
+
+  const goalsCard=`<div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div class="card-title" style="margin-bottom:0">Objetivos físicos</div>
+      <button class="btn btn-ghost btn-sm" onclick="openPGoalM()">+ Añadir</button>
+    </div>
+    ${DB.physicalGoals.length?DB.physicalGoals.map(g=>{
+      const pw=g.targetValue?clamp((g.currentValue/g.targetValue)*100,0,100):0;
+      return`<div style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">
+          <span style="font-size:13.5px;font-weight:600">${esc(g.title)}</span>
+          <span style="font-size:12px;color:var(--txt2)">${g.currentValue} / ${g.targetValue} ${esc(g.unit)}</span>
+        </div>
+        <div class="pbar"><div class="pfill pfill-green" style="width:${pw}%"></div></div>
+        <div style="display:flex;gap:6px;margin-top:6px">
+          <button class="btn btn-ghost btn-sm" onclick="openPGoalM('${g.id}')">Editar</button>
+          <button class="btn btn-danger btn-sm" onclick="delPGoal('${g.id}')">Borrar</button>
+        </div>
+      </div>`;
+    }).join(''):`<div class="empty" style="padding:20px 0"><div class="empty-text">Sin objetivos físicos</div></div>`}
+  </div>`;
+
+  const wkBreak=Object.entries(wk.byType).map(([t,n])=>
+    `<span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:${tc[t]||'var(--txt2)'}">
+      <span style="width:8px;height:8px;border-radius:50%;background:${tc[t]||'var(--txt3)'}"></span>${n} ${t}
+    </span>`).join('<span style="color:var(--txt3);margin:0 6px">·</span>');
+
+  const weekCard=`<div class="card">
+    <div class="card-title">Esta semana</div>
+    <div style="display:flex;gap:24px;margin-bottom:12px">
+      <div><div style="font-size:28px;font-weight:700;letter-spacing:-.5px">${wk.count}</div><div style="font-size:11.5px;color:var(--txt2)">sesiones</div></div>
+      <div><div style="font-size:28px;font-weight:700;letter-spacing:-.5px">${wk.mins}</div><div style="font-size:11.5px;color:var(--txt2)">minutos</div></div>
+    </div>
+    ${wkBreak?`<div style="display:flex;flex-wrap:wrap;gap:8px">${wkBreak}</div>`:`<div style="color:var(--txt3);font-size:13px">Sin sesiones esta semana</div>`}
+  </div>`;
+
+  const rows=sessions.length?sessions.map(s=>`<tr>
+    <td>${fmtShort(s.date)}</td>
+    <td>${trainBadge(s.type)}</td>
+    <td>${s.duration?s.duration+' min':'—'}</td>
+    <td style="color:var(--txt2);font-size:12.5px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.notes||'—'}</td>
+    <td style="text-align:right;white-space:nowrap">
+      <button class="btn btn-ghost btn-sm" onclick="openTrainM('${s.id}')">Editar</button>
+      <button class="btn btn-danger btn-sm" onclick="delTrain('${s.id}')">Borrar</button>
+    </td>
+  </tr>`).join(''):`<tr><td colspan="5"><div class="empty"><div class="empty-icon">💪</div><div class="empty-text">Sin sesiones registradas</div></div></td></tr>`;
+
+  return`<div class="phdr">
+    <div><div class="ptitle">Deporte & Salud</div><div class="psub">Entrenamientos y objetivos físicos</div></div>
+    <div class="phdr-right"><button class="btn btn-primary" onclick="openTrainM()">+ Registrar sesión</button></div>
+  </div>
+  <div class="g2" style="margin-bottom:16px">${goalsCard}${weekCard}</div>
+  <div class="card">
+    <div class="card-title">Historial de sesiones</div>
+    <table class="tbl"><thead><tr><th>Fecha</th><th>Tipo</th><th>Duración</th><th>Notas</th><th></th></tr></thead>
+    <tbody>${rows}</tbody></table>
+  </div>`;
+}
+function openTrainM(id){
+  const s=id?DB.trainingSessions.find(x=>x.id===id):null;
+  openM(`<div class="mo">${moHdr(s?'Editar sesión':'Nueva sesión')}
+    <div class="fg">
+      <div class="fgr"><label class="flbl">Fecha</label>
+        <input class="finp" id="tr-d" type="date" value="${s?.date??today()}"></div>
+      <div class="fgr"><label class="flbl">Tipo</label>
+        <select class="fsel" id="tr-t">
+          ${['fuerza','cardio','movilidad','deporte','otro'].map(t=>`<option value="${t}" ${s?.type===t?'selected':''}>${t[0].toUpperCase()+t.slice(1)}</option>`).join('')}
+        </select></div>
+      <div class="fgr full"><label class="flbl">Duración (minutos)</label>
+        <input class="finp" id="tr-dur" type="number" min="1" value="${s?.duration??''}"></div>
+      <div class="fgr full"><label class="flbl">Notas</label>
+        <textarea class="fta" id="tr-no" placeholder="Qué entrenaste, cómo fue...">${s?.notes??''}</textarea></div>
+    </div>
+    <div class="mo-footer">
+      <button class="btn btn-secondary" onclick="closeM()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveTrain('${id||''}')">Guardar</button>
+    </div>
+  </div>`);
+}
+function saveTrain(id){
+  const date=document.getElementById('tr-d').value;if(!date)return;
+  const d={date,type:document.getElementById('tr-t').value,duration:+document.getElementById('tr-dur').value||0,notes:document.getElementById('tr-no').value.trim()};
+  if(id){const s=DB.trainingSessions.find(x=>x.id===id);if(s)Object.assign(s,d);}
+  else DB.trainingSessions.push({id:uid(),...d});
+  save();closeM();nav('deporte');
+}
+function delTrain(id){if(!confirm('¿Eliminar esta sesión?'))return;DB.trainingSessions=DB.trainingSessions.filter(s=>s.id!==id);save();nav('deporte');}
+function openPGoalM(id){
+  const g=id?DB.physicalGoals.find(x=>x.id===id):null;
+  openM(`<div class="mo" style="max-width:400px">${moHdr(g?'Editar objetivo físico':'Nuevo objetivo físico')}
+    <div class="fg">
+      <div class="fgr full"><label class="flbl">Título</label>
+        <input class="finp" id="pg-t" value="${g?esc(g.title):''}" placeholder="Ej: Peso corporal, Press banca..." autofocus></div>
+      <div class="fgr"><label class="flbl">Valor actual</label>
+        <input class="finp" id="pg-c" type="number" step="0.1" value="${g?.currentValue??''}"></div>
+      <div class="fgr"><label class="flbl">Valor objetivo</label>
+        <input class="finp" id="pg-ta" type="number" step="0.1" value="${g?.targetValue??''}"></div>
+      <div class="fgr full"><label class="flbl">Unidad</label>
+        <input class="finp" id="pg-u" value="${g?esc(g.unit):''}" placeholder="kg, rep, min..."></div>
+    </div>
+    <div class="mo-footer">
+      <button class="btn btn-secondary" onclick="closeM()">Cancelar</button>
+      <button class="btn btn-primary" onclick="savePGoal('${id||''}')">Guardar</button>
+    </div>
+  </div>`);
+}
+function savePGoal(id){
+  const t=document.getElementById('pg-t').value.trim();if(!t)return;
+  const d={title:t,currentValue:parseFloat(document.getElementById('pg-c').value)||0,targetValue:parseFloat(document.getElementById('pg-ta').value)||0,unit:document.getElementById('pg-u').value.trim()};
+  if(id){const g=DB.physicalGoals.find(x=>x.id===id);if(g)Object.assign(g,d);}
+  else DB.physicalGoals.push({id:uid(),...d});
+  save();closeM();nav('deporte');
+}
+function delPGoal(id){if(!confirm('¿Eliminar?'))return;DB.physicalGoals=DB.physicalGoals.filter(g=>g.id!==id);save();nav('deporte');}
+
+// ===== FINANZAS =====
+function rFinanzas(){
+  const months=availableMonths();
+  if(!curFinMonth||!months.includes(curFinMonth))curFinMonth=curMonth();
+  const fin=finSummary(curFinMonth);
+  const entries=DB.financeEntries.filter(e=>e.date.startsWith(curFinMonth)).sort((a,b)=>b.date.localeCompare(a.date));
+  const sg=DB.savingsGoal;
+  const sgPct=sg.target?clamp(Math.round((sg.current/sg.target)*100),0,100):0;
+  const mopts=months.map(m=>`<option value="${m}" ${m===curFinMonth?'selected':''}>${fmtMonth(m)}</option>`).join('');
+
+  const kpis=`<div class="g3" style="margin-bottom:16px">
+    <div class="kpi-card"><div class="kpi-label">Ingresos</div>
+      <div class="kpi-value" style="color:var(--green)">${fe(fin.inc)}</div>
+      <div class="kpi-sub">${fmtMonth(curFinMonth)}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Gastos</div>
+      <div class="kpi-value" style="color:var(--red)">${fe(fin.exp)}</div>
+      <div class="kpi-sub">${fmtMonth(curFinMonth)}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Balance</div>
+      <div class="kpi-value" style="color:${fin.bal>=0?'var(--green)':'var(--red)'}">${fe(fin.bal)}</div>
+      <div class="kpi-sub">${fin.bal>=0?'Positivo ✓':'En negativo'}</div></div>
+  </div>`;
+
+  const rows=entries.length?entries.map(e=>`<tr>
+    <td style="white-space:nowrap">${fmtShort(e.date)}</td>
+    <td><span class="badge ${e.type==='ingreso'?'badge-green':'badge-red'}">${e.type==='ingreso'?'Ingreso':'Gasto'}</span></td>
+    <td>${e.category?`<span class="badge badge-muted">${esc(e.category)}</span>`:''}</td>
+    <td style="font-weight:600;color:${e.type==='ingreso'?'var(--green)':'var(--red)'}">${e.type==='ingreso'?'+':'-'}${fe(e.amount)}</td>
+    <td style="color:var(--txt2);font-size:12px">${esc(e.notes||'')}</td>
+    <td style="text-align:right;white-space:nowrap">
+      <button class="btn btn-ghost btn-sm" onclick="openFinM('${e.id}')">Editar</button>
+      <button class="btn btn-danger btn-sm" onclick="delFin('${e.id}')">Borrar</button>
+    </td>
+  </tr>`).join(''):`<tr><td colspan="6"><div class="empty"><div class="empty-icon">💰</div><div class="empty-text">Sin entradas en ${fmtMonth(curFinMonth)}</div></div></td></tr>`;
+
+  const savCard=`<div class="card" style="height:fit-content">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div class="card-title" style="margin-bottom:0">${esc(sg.label||'Meta de ahorro')}</div>
+      <button class="btn btn-ghost btn-sm" onclick="openSavM()">Editar</button>
+    </div>
+    ${sg.target>0?`
+      <div style="font-size:28px;font-weight:700;letter-spacing:-.5px;margin-bottom:4px">${fe(sg.current)}</div>
+      <div style="font-size:12.5px;color:var(--txt2);margin-bottom:12px">de ${fe(sg.target)}</div>
+      <div class="pbar pbar-lg"><div class="pfill pfill-green" style="width:${sgPct}%"></div></div>
+      <div style="font-size:13px;font-weight:600;color:var(--green);margin-top:6px">${sgPct}% logrado</div>
+    `:`<div class="empty" style="padding:20px 0">
+      <div class="empty-text">Sin meta configurada</div>
+      <button class="btn btn-primary btn-sm" onclick="openSavM()">Configurar meta</button>
+    </div>`}
+  </div>`;
+
+  return`<div class="phdr">
+    <div><div class="ptitle">Finanzas</div><div class="psub">Ingresos, gastos y ahorro</div></div>
+    <div class="phdr-right">
+      <select class="month-sel" onchange="setFinM(this.value)">${mopts}</select>
+      <button class="btn btn-primary" onclick="openFinM()">+ Añadir entrada</button>
+    </div>
+  </div>
+  ${kpis}
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Movimientos — ${fmtMonth(curFinMonth)}</div>
+      <table class="tbl"><thead><tr><th>Fecha</th><th>Tipo</th><th>Categoría</th><th>Importe</th><th>Notas</th><th></th></tr></thead>
+      <tbody>${rows}</tbody></table>
+    </div>
+    ${savCard}
+  </div>`;
+}
+function setFinM(m){curFinMonth=m;nav('finanzas');}
+function openFinM(id){
+  const e=id?DB.financeEntries.find(x=>x.id===id):null;
+  const isInc=e?e.type==='ingreso':true;
+  openM(`<div class="mo">${moHdr(e?'Editar entrada':'Nueva entrada')}
+    <div style="margin-bottom:16px">
+      <label class="flbl" style="display:block;margin-bottom:8px">Tipo</label>
+      <div class="type-toggle">
+        <button class="type-btn ${isInc?'active':''}" id="fi-bi" onclick="setFinType('ingreso')">Ingreso</button>
+        <button class="type-btn ${!isInc?'active':''}" id="fi-bg" onclick="setFinType('gasto')">Gasto</button>
+      </div>
+      <input type="hidden" id="fi-t" value="${e?.type??'ingreso'}">
+    </div>
+    <div class="fg">
+      <div class="fgr"><label class="flbl">Fecha</label>
+        <input class="finp" id="fi-d" type="date" value="${e?.date??today()}"></div>
+      <div class="fgr"><label class="flbl">Categoría</label>
+        <input class="finp" id="fi-c" value="${e?esc(e.category||''):''}" placeholder="Salario, Alquiler, Ocio..."></div>
+      <div class="fgr full"><label class="flbl">Importe (€)</label>
+        <input class="finp" id="fi-a" type="number" min="0" step="0.01" value="${e?.amount??''}" autofocus></div>
+      <div class="fgr full"><label class="flbl">Notas</label>
+        <input class="finp" id="fi-no" value="${e?esc(e.notes||''):''}" placeholder="Descripción opcional"></div>
+    </div>
+    <div class="mo-footer">
+      <button class="btn btn-secondary" onclick="closeM()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveFin('${id||''}')">Guardar</button>
+    </div>
+  </div>`);
+}
+function setFinType(t){
+  document.getElementById('fi-t').value=t;
+  document.getElementById('fi-bi').classList.toggle('active',t==='ingreso');
+  document.getElementById('fi-bg').classList.toggle('active',t==='gasto');
+}
+function saveFin(id){
+  const a=parseFloat(document.getElementById('fi-a').value);
+  const date=document.getElementById('fi-d').value;
+  if(!date||isNaN(a)||a<0)return;
+  const d={date,type:document.getElementById('fi-t').value,category:document.getElementById('fi-c').value.trim(),amount:a,notes:document.getElementById('fi-no').value.trim()};
+  if(id){const e=DB.financeEntries.find(x=>x.id===id);if(e)Object.assign(e,d);}
+  else DB.financeEntries.push({id:uid(),...d});
+  curFinMonth=d.date.slice(0,7);
+  save();closeM();nav('finanzas');
+}
+function delFin(id){if(!confirm('¿Eliminar esta entrada?'))return;DB.financeEntries=DB.financeEntries.filter(e=>e.id!==id);save();nav('finanzas');}
+function openSavM(){
+  const sg=DB.savingsGoal;
+  openM(`<div class="mo" style="max-width:400px">${moHdr('Meta de ahorro')}
+    <div class="fg">
+      <div class="fgr full"><label class="flbl">Descripción</label>
+        <input class="finp" id="sg-l" value="${esc(sg.label||'')}" placeholder="Ej: Fondo de emergencia" autofocus></div>
+      <div class="fgr"><label class="flbl">Objetivo (€)</label>
+        <input class="finp" id="sg-ta" type="number" min="0" value="${sg.target??0}"></div>
+      <div class="fgr"><label class="flbl">Ahorro actual (€)</label>
+        <input class="finp" id="sg-cu" type="number" min="0" value="${sg.current??0}"></div>
+    </div>
+    <div class="mo-footer">
+      <button class="btn btn-secondary" onclick="closeM()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveSav()">Guardar</button>
+    </div>
+  </div>`);
+}
+function saveSav(){
+  DB.savingsGoal={label:document.getElementById('sg-l').value.trim()||'Meta de ahorro',target:parseFloat(document.getElementById('sg-ta').value)||0,current:parseFloat(document.getElementById('sg-cu').value)||0};
+  save();closeM();nav('finanzas');
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded',()=>{updateDate();nav('home');});
+</script>
+</body>
+</html>
