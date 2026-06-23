@@ -2,82 +2,110 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>TOCELA</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#FAFAF7;--bg2:#F3F2EE;--bg3:#ECEAE4;--bg4:#E3E0D8;
-  --sb-bg:#F0EFE9;--sb-brd:#E5E3DC;
-  --acc:#C45C3A;--acc-l:rgba(196,92,58,.12);--acc-b:rgba(196,92,58,.22);--acc-glow:rgba(196,92,58,.07);
-  --green:#2A9060;--green-l:rgba(42,144,96,.12);
-  --red:#C0392B;--red-l:rgba(192,57,43,.12);
-  --amber:#C47F17;--amber-l:rgba(196,127,23,.12);
-  --blue:#2471A3;--blue-l:rgba(36,113,163,.12);
-  --txt:#1C1A17;--txt2:#6B6560;--txt3:#A8A39C;
-  --brd:rgba(28,26,23,.09);
-  --shadow:0 1px 3px rgba(28,26,23,.06),0 4px 12px rgba(28,26,23,.04);
-  --shadow-md:0 2px 8px rgba(28,26,23,.08),0 8px 24px rgba(28,26,23,.06);
-  --r:12px;--r-lg:18px;
-  --sans:'Plus Jakarta Sans',system-ui,sans-serif;
-  --tx:all .25s cubic-bezier(.32,.72,0,1);
-}
-html,body{height:100%;font-family:var(--sans);background:var(--bg);color:var(--txt);font-size:14px;line-height:1.5}
-button,input,select,textarea{font-family:var(--sans)}
+  --bg:#07080D;
+  --bg2:rgba(255,255,255,.04);
+  --bg3:rgba(255,255,255,.07);
+  --bg4:rgba(255,255,255,.11);
+  --sb:#0B0C15;
+  --sb-brd:rgba(255,255,255,.06);
 
-/* LAYOUT */
+  --acc:#F59E0B;
+  --acc-l:rgba(245,158,11,.13);
+  --acc-b:rgba(245,158,11,.28);
+  --acc-glow:rgba(245,158,11,.07);
+
+  --green:#4ADE80;--green-l:rgba(74,222,128,.12);
+  --red:#F87171;--red-l:rgba(248,113,113,.12);
+  --amber:#FBBF24;--amber-l:rgba(251,191,36,.12);
+  --blue:#60A5FA;--blue-l:rgba(96,165,250,.12);
+
+  --txt:#F0EDE8;--txt2:#8B8B9E;--txt3:#454558;
+
+  --brd:rgba(255,255,255,.07);
+  --brd-s:rgba(255,255,255,.13);
+  --shadow:0 1px 3px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+  --shadow-md:0 4px 16px rgba(0,0,0,.5),0 12px 40px rgba(0,0,0,.4);
+
+  --r:12px;--r-lg:18px;--r-xl:24px;
+  --sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --tx:all .22s cubic-bezier(.32,.72,0,1);
+
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+html,body{height:100%;font-family:var(--sans);background:var(--bg);color:var(--txt);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font-family:var(--sans);color:var(--txt)}
+input,select,textarea{background:var(--bg3);border:1px solid var(--brd);color:var(--txt)}
+input::placeholder,textarea::placeholder{color:var(--txt3)}
+select option{background:#1a1b28}
+
+/* ── LAYOUT ── */
 .layout{display:flex;height:100vh;overflow:hidden}
-.sidebar{width:224px;flex-shrink:0;background:var(--sb-bg);border-right:1px solid var(--sb-brd);display:flex;flex-direction:column;padding:22px 10px 16px;overflow-y:auto;gap:2px}
-.main{flex:1;overflow-y:auto;background:var(--bg);padding:30px 36px}
+.sidebar{width:220px;flex-shrink:0;background:var(--sb);border-right:1px solid var(--sb-brd);display:flex;flex-direction:column;padding:22px 10px 16px;overflow-y:auto;gap:1px}
+.main{flex:1;overflow-y:auto;background:var(--bg);padding:28px 32px}
 #cnt{max-width:1080px}
 
-/* SIDEBAR */
-.sb-brand{font-size:21px;font-weight:800;letter-spacing:-.5px;color:var(--txt);padding:0 10px;margin-bottom:2px}
+/* ── SIDEBAR ── */
+.sb-brand{font-size:20px;font-weight:800;letter-spacing:-.5px;padding:0 10px;margin-bottom:2px}
 .sb-brand span{color:var(--acc)}
 .sb-date{font-size:11px;color:var(--txt3);padding:0 10px;margin-bottom:20px;line-height:1.4}
-.sb-sep{height:1px;background:var(--brd);margin:8px 2px}
-.sb-section{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--txt3);padding:0 10px;margin:12px 0 4px}
-.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;cursor:pointer;color:var(--txt2);font-size:13px;font-weight:500;transition:var(--tx);user-select:none}
-.nav-item:hover{background:var(--acc-glow);color:var(--txt)}
+.sb-section{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--txt3);padding:0 10px;margin:14px 0 4px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--txt2);font-size:13px;font-weight:500;transition:var(--tx);user-select:none}
+.nav-item:hover{background:rgba(255,255,255,.04);color:var(--txt)}
 .nav-item.active{background:var(--acc-l);color:var(--acc);font-weight:600}
 .nav-icon{font-size:14px;width:18px;text-align:center;flex-shrink:0}
 
-/* PAGE HEADER */
-.phdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:26px;gap:16px}
-.ptitle{font-size:23px;font-weight:700;letter-spacing:-.4px}
+/* ── BOTTOM NAV (mobile) ── */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(11,12,21,.95);border-top:1px solid var(--sb-brd);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:200;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:var(--safe-bottom)}
+.bottom-nav::-webkit-scrollbar{display:none}
+.bnav-wrap{display:flex;min-width:max-content;padding:6px 8px 2px}
+.bnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 14px;cursor:pointer;color:var(--txt2);font-size:10px;font-weight:600;letter-spacing:.02em;min-width:58px;border-radius:10px;transition:var(--tx);user-select:none}
+.bnav-item:active{background:var(--acc-glow)}
+.bnav-item.active{color:var(--acc)}
+.bnav-icon{font-size:20px;line-height:1}
+.bnav-dot{width:4px;height:4px;border-radius:50%;background:var(--acc);margin-top:1px;visibility:hidden}
+.bnav-item.active .bnav-dot{visibility:visible}
+
+/* ── PAGE HEADER ── */
+.phdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:12px}
+.ptitle{font-size:22px;font-weight:700;letter-spacing:-.4px}
 .psub{font-size:12.5px;color:var(--txt2);margin-top:3px}
 .phdr-right{display:flex;gap:8px;flex-shrink:0;align-items:center}
 
-/* CARDS */
-.card{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r-lg);padding:20px;box-shadow:var(--shadow);transition:var(--tx)}
-.card:hover{box-shadow:var(--shadow-md);border-color:rgba(28,26,23,.13);transform:translateY(-1px)}
+/* ── CARDS ── */
+.card{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r-lg);padding:20px;transition:var(--tx)}
+.card:hover{border-color:var(--brd-s);background:rgba(255,255,255,.055)}
 .card-title{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--txt3);margin-bottom:14px}
 
-/* KPI */
-.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
-.kpi-card{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r-lg);padding:18px 20px;box-shadow:var(--shadow)}
-.kpi-label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--txt3);margin-bottom:8px}
-.kpi-value{font-size:26px;font-weight:700;letter-spacing:-.5px;line-height:1.1}
-.kpi-sub{font-size:11.5px;color:var(--txt2);margin-top:5px}
+/* ── KPI ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.kpi-card{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r-lg);padding:16px 18px}
+.kpi-label{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--txt3);margin-bottom:8px}
+.kpi-value{font-size:24px;font-weight:700;letter-spacing:-.5px;line-height:1.1}
+.kpi-sub{font-size:11px;color:var(--txt2);margin-top:4px}
 
-/* GRIDS */
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+/* ── GRIDS ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 
-/* BUTTONS */
-.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:9px;font-size:12.5px;font-weight:600;cursor:pointer;border:none;transition:var(--tx);line-height:1}
-.btn-primary{background:var(--acc);color:#fff}
-.btn-primary:hover{opacity:.88;transform:translateY(-1px)}
-.btn-secondary{background:var(--bg3);color:var(--txt);border:1px solid var(--brd)}
-.btn-secondary:hover{background:var(--bg4)}
-.btn-danger{background:var(--red-l);color:var(--red);border:1px solid rgba(192,57,43,.18)}
-.btn-danger:hover{background:rgba(192,57,43,.2)}
-.btn-ghost{background:transparent;color:var(--txt2);border:1px solid var(--brd)}
-.btn-ghost:hover{background:var(--bg3);color:var(--txt)}
-.btn-sm{padding:5px 11px;font-size:11.5px;border-radius:7px}
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:10px;font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid transparent;transition:var(--tx);line-height:1;white-space:nowrap}
+.btn-primary{background:var(--acc);color:#07080D;border-color:transparent}
+.btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn-secondary{background:var(--bg3);color:var(--txt);border-color:var(--brd)}
+.btn-secondary:hover{background:var(--bg4);border-color:var(--brd-s)}
+.btn-danger{background:var(--red-l);color:var(--red);border-color:rgba(248,113,113,.2)}
+.btn-danger:hover{background:rgba(248,113,113,.2)}
+.btn-ghost{background:transparent;color:var(--txt2);border-color:var(--brd)}
+.btn-ghost:hover{background:var(--bg3);color:var(--txt);border-color:var(--brd-s)}
+.btn-sm{padding:5px 11px;font-size:11.5px;border-radius:8px}
 
-/* BADGES */
+/* ── BADGES ── */
 .badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:10.5px;font-weight:600;line-height:1.4}
 .badge-green{background:var(--green-l);color:var(--green)}
 .badge-red{background:var(--red-l);color:var(--red)}
@@ -86,93 +114,117 @@ button,input,select,textarea{font-family:var(--sans)}
 .badge-muted{background:var(--bg3);color:var(--txt2)}
 .badge-acc{background:var(--acc-l);color:var(--acc)}
 
-/* PROGRESS */
-.pbar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin:8px 0}
-.pfill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--acc),#E07A5F);transition:width .5s cubic-bezier(.32,.72,0,1)}
-.pfill-green{background:linear-gradient(90deg,var(--green),#52BE80)}
-.pbar-lg{height:8px}
+/* ── PROGRESS ── */
+.pbar{height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;margin:8px 0}
+.pfill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--acc),#FCD34D);transition:width .5s cubic-bezier(.32,.72,0,1)}
+.pfill-green{background:linear-gradient(90deg,var(--green),#86EFAC)}
+.pbar-lg{height:7px}
 
-/* FORMS */
+/* ── FORMS ── */
 .fg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .fgr{display:flex;flex-direction:column;gap:5px}
 .fgr.full{grid-column:1/-1}
 .flbl{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--txt2)}
 .finp,.fsel,.fta{background:var(--bg3);border:1px solid var(--brd);border-radius:8px;padding:9px 13px;color:var(--txt);font-size:13px;width:100%;transition:border-color .2s;outline:none}
-.finp:focus,.fsel:focus,.fta:focus{border-color:var(--acc)}
+.finp:focus,.fsel:focus,.fta:focus{border-color:var(--acc);background:var(--bg4)}
 .fta{resize:vertical;min-height:80px}
-.fsel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23A8A39C' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;cursor:pointer}
+.fsel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23454558' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;cursor:pointer}
 
-/* HABITS MATRIX */
-.hcheck{width:24px;height:24px;border-radius:6px;border:2px solid var(--brd);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tx);flex-shrink:0;font-size:12px;color:#fff;user-select:none}
+/* ── HABITS ── */
+.hcheck{width:26px;height:26px;border-radius:7px;border:2px solid var(--brd-s);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tx);flex-shrink:0;font-size:13px;color:var(--bg);user-select:none}
 .hcheck:hover{border-color:var(--acc)}
 .hcheck.on{background:var(--acc);border-color:var(--acc)}
 .streak-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--amber-l);color:var(--amber);white-space:nowrap}
-.habit-divider{height:1px;background:var(--brd);margin:0}
-.day-hdr{font-size:10px;font-weight:600;color:var(--txt3);text-transform:uppercase;text-align:center;line-height:1.2}
-.day-hdr.today-col{color:var(--acc);font-weight:700}
+.day-hdr{font-size:10px;font-weight:600;color:var(--txt3);text-transform:uppercase;text-align:center}
+.day-hdr.tc{color:var(--acc);font-weight:700}
 .day-num{font-size:10px;color:var(--txt3);text-align:center;margin-top:1px}
 
-/* MODAL */
-.mov{position:fixed;inset:0;background:rgba(28,26,23,.45);backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;animation:fadeIn .18s ease}
-.mo{background:var(--bg);border:1px solid var(--brd);border-radius:20px;padding:28px;max-width:520px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:var(--shadow-md);animation:slideUp .22s cubic-bezier(.32,.72,0,1)}
+/* ── MODAL ── */
+.mov{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .18s ease}
+.mo{background:#12131E;border:1px solid var(--brd-s);border-radius:var(--r-xl);padding:26px;max-width:520px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:var(--shadow-md);animation:slideUp .22s cubic-bezier(.32,.72,0,1)}
 .mo-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
 .mo-title{font-size:17px;font-weight:700;letter-spacing:-.3px}
-.mo-close{background:var(--bg3);border:none;width:28px;height:28px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--txt2);transition:var(--tx)}
+.mo-close{background:var(--bg3);border:1px solid var(--brd);width:28px;height:28px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--txt2);transition:var(--tx)}
 .mo-close:hover{background:var(--bg4);color:var(--txt)}
 .mo-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:20px;padding-top:16px;border-top:1px solid var(--brd)}
 
-/* TABLE */
-.tbl{width:100%;border-collapse:collapse}
-.tbl th{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--txt3);padding:0 10px 10px;text-align:left;border-bottom:1px solid var(--brd)}
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px}
+.tbl{width:100%;border-collapse:collapse;min-width:400px}
+.tbl th{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--txt3);padding:0 10px 10px;text-align:left;border-bottom:1px solid var(--brd)}
 .tbl td{padding:10px 10px;border-bottom:1px solid var(--brd);font-size:13px;vertical-align:middle}
 .tbl tr:last-child td{border-bottom:none}
-.tbl tr:hover td{background:var(--acc-glow)}
+.tbl tr:hover td{background:rgba(255,255,255,.02)}
 
-/* FILTER PILLS */
-.filter-pills{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
-.pill{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--brd);background:transparent;color:var(--txt2);transition:var(--tx)}
+/* ── FILTER PILLS ── */
+.filter-pills{display:flex;gap:6px;margin-bottom:18px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
+.filter-pills::-webkit-scrollbar{display:none}
+.pill{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--brd);background:transparent;color:var(--txt2);transition:var(--tx);white-space:nowrap;flex-shrink:0}
 .pill:hover{border-color:var(--acc);color:var(--acc)}
 .pill.active{background:var(--acc-l);border-color:var(--acc-b);color:var(--acc)}
 
-/* TYPE TOGGLE */
-.type-toggle{display:flex;border:1px solid var(--brd);border-radius:9px;overflow:hidden;width:fit-content}
+/* ── TYPE TOGGLE ── */
+.type-toggle{display:flex;border:1px solid var(--brd);border-radius:10px;overflow:hidden;width:fit-content}
 .type-btn{padding:8px 20px;font-size:12.5px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--txt2);transition:var(--tx)}
-.type-btn.active{background:var(--acc);color:#fff}
+.type-btn.active{background:var(--acc);color:#07080D}
 
-/* EMOJI GRID */
+/* ── EMOJI GRID ── */
 .emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}
-.ep-btn{width:36px;height:36px;border-radius:7px;border:1px solid var(--brd);background:var(--bg3);cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center;transition:var(--tx)}
+.ep-btn{width:36px;height:36px;border-radius:8px;border:1px solid var(--brd);background:var(--bg3);cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center;transition:var(--tx)}
 .ep-btn:hover,.ep-btn.sel{background:var(--acc-l);border-color:var(--acc-b)}
-.ep-btn.sel{box-shadow:0 0 0 2px var(--acc-b)}
 
-/* COLOR SWATCHES */
+/* ── COLOR SWATCHES ── */
 .color-swatches{display:flex;gap:8px}
 .csw{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:var(--tx)}
-.csw.sel{border-color:var(--txt);box-shadow:0 0 0 2px rgba(28,26,23,.12)}
+.csw.sel{border-color:var(--txt);box-shadow:0 0 0 2px rgba(255,255,255,.15)}
 
-/* MISC */
-.status-select{background:var(--bg3);border:1px solid var(--brd);border-radius:7px;padding:5px 10px;font-size:12px;font-weight:600;font-family:var(--sans);cursor:pointer;outline:none;transition:var(--tx);color:var(--txt)}
-.status-select:focus{border-color:var(--acc)}
-.month-sel{background:var(--bg3);border:1px solid var(--brd);border-radius:9px;padding:7px 30px 7px 14px;font-size:13px;font-weight:600;font-family:var(--sans);cursor:pointer;outline:none;color:var(--txt);appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23A8A39C' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+/* ── MISC ── */
+.status-select{background:var(--bg3);border:1px solid var(--brd);border-radius:7px;padding:5px 10px;font-size:12px;font-weight:600;cursor:pointer;outline:none;transition:var(--tx);appearance:none;padding-right:26px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M1 1l3 3 3-3' stroke='%23454558' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
+.month-sel{background:var(--bg3);border:1px solid var(--brd);border-radius:10px;padding:7px 28px 7px 13px;font-size:13px;font-weight:600;cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23454558' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
 .link-sm{font-size:12px;color:var(--acc);cursor:pointer;font-weight:600}
 .link-sm:hover{opacity:.75}
-.next-action-box{background:var(--bg3);border-radius:9px;padding:10px 13px;margin:10px 0}
+.nxt-box{background:var(--bg3);border-radius:10px;padding:10px 13px;margin:10px 0;border:1px solid var(--brd)}
 .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 20px;text-align:center;gap:10px}
-.empty-icon{font-size:30px;opacity:.35}
+.empty-icon{font-size:28px;opacity:.3}
 .empty-text{font-size:13.5px;color:var(--txt2)}
-.empty-sub{font-size:12px;color:var(--txt3)}
-.sec{animation:slideUp .26s cubic-bezier(.32,.72,0,1)}
+.sec{animation:slideUp .24s cubic-bezier(.32,.72,0,1)}
 
-/* ANIMATIONS */
+/* ── ANIMATIONS ── */
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
-/* SCROLLBAR */
-::-webkit-scrollbar{width:5px}
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
 
-@media(max-width:960px){.kpi-grid{grid-template-columns:1fr 1fr}.g2,.g3{grid-template-columns:1fr}}
+/* ── MOBILE ── */
+@media(max-width:640px){
+  .sidebar{display:none}
+  .bottom-nav{display:block}
+  .layout{height:calc(100vh - 0px)}
+  .main{padding:20px 16px;padding-bottom:calc(80px + var(--safe-bottom))}
+  #cnt{max-width:100%}
+  .kpi-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .g2,.g3{grid-template-columns:1fr;gap:10px}
+  .ptitle{font-size:19px}
+  .phdr{margin-bottom:18px}
+  .phdr-right{gap:6px}
+  .phdr-right .btn:not(.btn-primary){display:none}
+  .mo{border-radius:var(--r-xl) var(--r-xl) 0 0;position:fixed;bottom:0;left:0;right:0;max-width:100%;max-height:90vh;border-bottom:none;padding:22px 20px}
+  .mov{align-items:flex-end;padding:0}
+  .fg{grid-template-columns:1fr}
+  .fgr.full{grid-column:1}
+  .emoji-grid{grid-template-columns:repeat(7,1fr)}
+  .btn{padding:7px 14px;font-size:12px}
+  .btn-sm{padding:5px 10px;font-size:11px}
+  .filter-pills{margin-bottom:14px}
+  .kpi-value{font-size:20px}
+  .tbl th,.tbl td{padding:8px 8px;font-size:12px}
+  .card{padding:16px}
+  .kpi-card{padding:14px 14px}
+}
+@media(min-width:641px){.bottom-nav{display:none!important}}
 </style>
 </head>
 <body>
@@ -195,11 +247,25 @@ button,input,select,textarea{font-family:var(--sans)}
   </nav>
   <main class="main"><div id="cnt"></div></main>
 </div>
+
+<!-- BOTTOM NAV (mobile only) -->
+<nav class="bottom-nav">
+  <div class="bnav-wrap">
+    <div class="bnav-item active" data-sec="home" onclick="nav('home')"><span class="bnav-icon">🏠</span><span>Inicio</span><div class="bnav-dot"></div></div>
+    <div class="bnav-item" data-sec="habitos" onclick="nav('habitos')"><span class="bnav-icon">✅</span><span>Hábitos</span><div class="bnav-dot"></div></div>
+    <div class="bnav-item" data-sec="objetivos" onclick="nav('objetivos')"><span class="bnav-icon">🎯</span><span>Metas</span><div class="bnav-dot"></div></div>
+    <div class="bnav-item" data-sec="proyectos" onclick="nav('proyectos')"><span class="bnav-icon">📋</span><span>Proyectos</span><div class="bnav-dot"></div></div>
+    <div class="bnav-item" data-sec="estudios" onclick="nav('estudios')"><span class="bnav-icon">📚</span><span>Estudios</span><div class="bnav-dot"></div></div>
+    <div class="bnav-item" data-sec="deporte" onclick="nav('deporte')"><span class="bnav-icon">💪</span><span>Deporte</span><div class="bnav-dot"></div></div>
+    <div class="bnav-item" data-sec="finanzas" onclick="nav('finanzas')"><span class="bnav-icon">💰</span><span>Finanzas</span><div class="bnav-dot"></div></div>
+  </div>
+</nav>
+
 <div id="mc"></div>
 
 <script>
 // ===== DATA =====
-const DB_DEFAULT = {
+const DB_DEFAULT={
   habits:[],habitLogs:{},objectives:[],projects:[],courses:[],
   trainingSessions:[],physicalGoals:[],financeEntries:[],
   savingsGoal:{target:0,current:0,label:'Meta de ahorro'}
@@ -212,19 +278,18 @@ function save(){localStorage.setItem('tocela_db',JSON.stringify(DB));}
 let DB=loadDB();
 
 // ===== STATE =====
-let curSec='home', curObjFilter='todos', curProjFilter='todos',
-    curStudyFilter='todos', curFinMonth='';
+let curSec='home',curObjF='todos',curProjF='todos',curStudyF='todos',curFinM='';
 
 // ===== HELPERS =====
 function today(){return new Date().toISOString().split('T')[0];}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
 function fe(n){return new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n||0);}
-function fmtShort(iso){if(!iso)return'';return new Date(iso+'T12:00:00').toLocaleDateString('es-ES',{day:'2-digit',month:'short'});}
-function fmtFull(iso){if(!iso)return'';return new Date(iso+'T12:00:00').toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});}
-function fmtMonth(ym){const[y,m]=ym.split('-');const n=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];return `${n[+m-1]} ${y}`;}
+function fmtS(iso){if(!iso)return'';return new Date(iso+'T12:00:00').toLocaleDateString('es-ES',{day:'2-digit',month:'short'});}
+function fmtMonth(ym){const[y,m]=ym.split('-');const n=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];return`${n[+m-1]} ${y}`;}
 function curMonth(){return today().slice(0,7);}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function clamp(v,a,b){return Math.min(b,Math.max(a,v));}
+function isMobile(){return window.innerWidth<=640;}
 
 function getStreak(hid){
   let s=0;const d=new Date();
@@ -235,7 +300,7 @@ function habitsDayStatus(){
   const log=DB.habitLogs[today()]||{};
   return{checked:DB.habits.filter(h=>log[h.id]).length,total:DB.habits.length};
 }
-function finSummary(ym){
+function finSum(ym){
   const e=DB.financeEntries.filter(x=>x.date.startsWith(ym));
   const inc=e.filter(x=>x.type==='ingreso').reduce((s,x)=>s+(x.amount||0),0);
   const exp=e.filter(x=>x.type==='gasto').reduce((s,x)=>s+(x.amount||0),0);
@@ -250,20 +315,20 @@ function typeBadge(t){const m={curso:['badge-blue','Curso'],libro:['badge-acc','
 function trainBadge(t){const m={fuerza:['badge-red','Fuerza'],cardio:['badge-blue','Cardio'],movilidad:['badge-green','Movilidad'],deporte:['badge-acc','Deporte'],otro:['badge-muted','Otro']};const[c,l]=m[t]||['badge-muted',t];return`<span class="badge ${c}">${l}</span>`;}
 function last7Days(){const d=[];for(let i=6;i>=0;i--){const x=new Date();x.setDate(x.getDate()-i);d.push(x.toISOString().split('T')[0]);}return d;}
 function dayLbl(iso){return['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][new Date(iso+'T12:00:00').getDay()];}
-function weekSessions(){
+function weekSess(){
   const d=new Date(),ws=new Date(d);ws.setDate(d.getDate()-d.getDay());
   const wk=ws.toISOString().split('T')[0];
   const ss=DB.trainingSessions.filter(s=>s.date>=wk);
   const byType={};ss.forEach(s=>{byType[s.type]=(byType[s.type]||0)+1;});
   return{count:ss.length,mins:ss.reduce((s,x)=>s+(x.duration||0),0),byType};
 }
-function availableMonths(){
+function availMonths(){
   const m=new Set([curMonth()]);
   DB.financeEntries.forEach(e=>{if(e.date)m.add(e.date.slice(0,7));});
   return[...m].sort().reverse();
 }
 
-// ===== SIDEBAR =====
+// ===== SIDEBAR DATE =====
 function updateDate(){
   const el=document.getElementById('sb-date');if(!el)return;
   const s=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
@@ -273,9 +338,10 @@ function updateDate(){
 // ===== NAV =====
 function nav(sec){
   curSec=sec;
-  document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.sec===sec));
+  document.querySelectorAll('.nav-item,.bnav-item').forEach(el=>el.classList.toggle('active',el.dataset.sec===sec));
   const renders={home:rHome,habitos:rHabitos,objetivos:rObjetivos,proyectos:rProyectos,estudios:rEstudios,deporte:rDeporte,finanzas:rFinanzas};
   document.getElementById('cnt').innerHTML=`<div class="sec">${renders[sec]()}</div>`;
+  document.querySelector('.main').scrollTo(0,0);
 }
 
 // ===== MODAL =====
@@ -287,41 +353,38 @@ function moHdr(t){return`<div class="mo-hdr"><div class="mo-title">${t}</div><bu
 // ===== HOME =====
 function rHome(){
   const hs=habitsDayStatus();
-  const fin=finSummary(curMonth());
+  const fin=finSum(curMonth());
   const active=DB.projects.filter(p=>p.status==='activo');
-  const obj=topObj();
-  const dt=today();
-  const dots=DB.habits.map(h=>`<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${DB.habitLogs[dt]?.[h.id]?'var(--acc)':'var(--bg4)'};margin-right:3px"></span>`).join('');
+  const obj=topObj();const dt=today();
+  const dots=DB.habits.map(h=>`<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${DB.habitLogs[dt]?.[h.id]?'var(--acc)':'var(--bg4)'};margin-right:3px;flex-shrink:0"></span>`).join('');
 
   const kpiH=`<div class="kpi-card">
     <div class="kpi-label">Hábitos hoy</div>
-    <div class="kpi-value">${hs.checked}<span style="font-size:15px;color:var(--txt3)">/${hs.total}</span></div>
-    <div style="display:flex;flex-wrap:wrap;margin-top:8px">${dots||'<span style="font-size:11px;color:var(--txt3)">Sin hábitos</span>'}</div>
+    <div class="kpi-value">${hs.checked}<span style="font-size:14px;color:var(--txt3)">/${hs.total}</span></div>
+    <div style="display:flex;flex-wrap:wrap;margin-top:8px;gap:1px">${dots||'<span style="font-size:11px;color:var(--txt3)">Sin hábitos</span>'}</div>
   </div>`;
-
   const kpiP=`<div class="kpi-card">
     <div class="kpi-label">Proyectos activos</div>
     <div class="kpi-value">${active.length}</div>
     <div class="kpi-sub">${DB.projects.length} total</div>
   </div>`;
-
   const bc=fin.bal>=0?'var(--green)':'var(--red)';
   const kpiF=`<div class="kpi-card">
-    <div class="kpi-label">Balance del mes</div>
-    <div class="kpi-value" style="color:${bc}">${fe(fin.bal)}</div>
+    <div class="kpi-label">Balance mes</div>
+    <div class="kpi-value" style="color:${bc};font-size:${Math.abs(fin.bal)>=10000?'18px':'24px'}">${fe(fin.bal)}</div>
     <div class="kpi-sub">${fmtMonth(curMonth())}</div>
   </div>`;
-
   const kpiO=obj?`<div class="kpi-card">
     <div class="kpi-label">Objetivo top</div>
     <div style="font-size:13px;font-weight:600;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(obj.title)}</div>
     <div class="pbar"><div class="pfill" style="width:${obj.currentPct}%"></div></div>
-    <div style="font-size:12px;color:var(--txt2)">${obj.currentPct}% completado</div>
+    <div style="font-size:11px;color:var(--txt2)">${obj.currentPct}%</div>
   </div>`:`<div class="kpi-card">
     <div class="kpi-label">Objetivo top</div>
-    <div class="kpi-sub" style="margin-top:8px">Sin objetivos aún</div>
+    <div style="font-size:12px;color:var(--txt3);margin-top:10px">Sin objetivos</div>
   </div>`;
 
+  // Habits card — interactive
   const habCard=DB.habits.length?`<div class="card">
     <div class="card-title">Hábitos de hoy</div>
     ${DB.habits.map(h=>{
@@ -329,56 +392,58 @@ function rHome(){
       return`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--brd)">
         <div class="hcheck ${on?'on':''}" onclick="toggleHabit('${h.id}','${dt}')">${on?'✓':''}</div>
         <span style="font-size:16px">${h.icon}</span>
-        <span style="font-size:13.5px;font-weight:500;${on?'text-decoration:line-through;color:var(--txt3)':''}">${esc(h.name)}</span>
-        ${streak>0?`<div class="streak-badge" style="margin-left:auto">🔥 ${streak}d</div>`:'<div style="flex:1"></div>'}
+        <span style="font-size:13.5px;font-weight:500;flex:1;${on?'text-decoration:line-through;color:var(--txt3)':''}">${esc(h.name)}</span>
+        ${streak>0?`<div class="streak-badge">🔥 ${streak}d</div>`:''}
       </div>`;
     }).join('')}
     <div style="margin-top:12px"><span class="link-sm" onclick="nav('habitos')">Ver todos →</span></div>
   </div>`:`<div class="card"><div class="empty">
     <div class="empty-icon">✅</div>
     <div class="empty-text">Sin hábitos configurados</div>
-    <button class="btn btn-primary btn-sm" onclick="nav('habitos')">Configurar hábitos</button>
+    <button class="btn btn-primary btn-sm" style="margin-top:4px" onclick="nav('habitos')">Configurar</button>
   </div></div>`;
 
+  // Objective card
   const objCard=obj?`<div class="card">
     <div class="card-title">Objetivo principal</div>
-    <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+    <div style="display:flex;gap:7px;align-items:center;margin-bottom:10px">
       <span class="badge ${areaCls(obj.area)}">${areaLbl(obj.area)}</span>
       <span style="font-size:11px;color:var(--txt3)">${obj.period}</span>
     </div>
     <div style="font-size:15px;font-weight:700;margin-bottom:${obj.notes?'6px':'10px'}">${esc(obj.title)}</div>
-    ${obj.notes?`<div style="font-size:12.5px;color:var(--txt2);margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${esc(obj.notes)}</div>`:''}
+    ${obj.notes?`<div style="font-size:12px;color:var(--txt2);margin-bottom:10px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">${esc(obj.notes)}</div>`:''}
     <div class="pbar pbar-lg"><div class="pfill" style="width:${obj.currentPct}%"></div></div>
-    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--txt2);margin-top:4px">
-      <span>${obj.currentPct}% actual</span><span>Meta: ${obj.targetPct}%</span>
+    <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--txt2);margin-top:4px">
+      <span>${obj.currentPct}%</span><span>Meta ${obj.targetPct}%</span>
     </div>
     <div style="margin-top:14px"><span class="link-sm" onclick="nav('objetivos')">Ver objetivos →</span></div>
   </div>`:`<div class="card"><div class="empty">
     <div class="empty-icon">🎯</div>
-    <div class="empty-text">Sin objetivos configurados</div>
-    <button class="btn btn-primary btn-sm" onclick="nav('objetivos')">Añadir objetivo</button>
+    <div class="empty-text">Sin objetivos</div>
+    <button class="btn btn-primary btn-sm" style="margin-top:4px" onclick="nav('objetivos')">Añadir</button>
   </div></div>`;
 
+  // Projects mini list
   const projCard=active.length?`<div class="card">
     <div class="card-title">Proyectos activos</div>
     ${active.slice(0,5).map(p=>`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--brd)">
       ${statusBadge(p.status)}
-      <span style="font-size:13.5px;font-weight:600">${esc(p.name)}</span>
-      ${p.nextAction?`<span style="font-size:12px;color:var(--txt2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">· ${esc(p.nextAction)}</span>`:''}
+      <span style="font-size:13.5px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p.name)}</span>
+      ${p.nextAction?`<span style="font-size:11.5px;color:var(--txt2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px">→ ${esc(p.nextAction)}</span>`:''}
     </div>`).join('')}
     <div style="margin-top:12px"><span class="link-sm" onclick="nav('proyectos')">Ver todos →</span></div>
   </div>`:`<div class="card"><div class="empty">
     <div class="empty-icon">📋</div>
     <div class="empty-text">Sin proyectos activos</div>
-    <button class="btn btn-primary btn-sm" onclick="nav('proyectos')">Añadir proyecto</button>
+    <button class="btn btn-primary btn-sm" style="margin-top:4px" onclick="nav('proyectos')">Añadir</button>
   </div></div>`;
 
   const ds=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  return`<div class="phdr" style="margin-bottom:22px">
+  return`<div class="phdr" style="margin-bottom:20px">
     <div><div class="ptitle">${greeting()}, Nicolás.</div><div class="psub">${ds[0].toUpperCase()+ds.slice(1)}</div></div>
   </div>
   <div class="kpi-grid">${kpiH}${kpiP}${kpiF}${kpiO}</div>
-  <div class="g2" style="margin-bottom:16px">${habCard}${objCard}</div>
+  <div class="g2" style="margin-bottom:14px">${habCard}${objCard}</div>
   ${projCard}`;
 }
 
@@ -388,33 +453,76 @@ function toggleHabit(hid,dk){
   DB.habitLogs[dk][hid]=!DB.habitLogs[dk][hid];
   save();nav(curSec);
 }
-function rHabitos(){
-  const days=last7Days();const dt=today();
-  const hdrCols=days.map(d=>`<div style="width:36px;text-align:center">
-    <div class="day-hdr ${d===dt?'today-col':''}">${dayLbl(d)}</div>
-    <div class="day-num">${d.slice(8)}</div>
-  </div>`).join('');
 
-  const rows=DB.habits.map(h=>{
-    const streak=getStreak(h.id);
-    const checks=days.map(d=>{
-      const on=DB.habitLogs[d]?.[h.id];
-      return`<div style="width:36px;display:flex;justify-content:center">
-        <div class="hcheck ${on?'on':''}" onclick="toggleHabit('${h.id}','${d}')">${on?'✓':''}</div>
+function rHabitos(){
+  const days=last7Days();const dt=today();const mob=isMobile();
+  const shownDays=mob?[dt]:days; // mobile: only today column; desktop: 7 days
+
+  // Mobile: simple checklist
+  if(mob){
+    const rows=DB.habits.map(h=>{
+      const on=DB.habitLogs[dt]?.[h.id];const streak=getStreak(h.id);
+      return`<div style="display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--brd)">
+        <div class="hcheck ${on?'on':''}" style="width:30px;height:30px;border-radius:9px;font-size:15px" onclick="toggleHabit('${h.id}','${dt}')">${on?'✓':''}</div>
+        <span style="font-size:18px">${h.icon}</span>
+        <span style="font-size:14px;font-weight:500;flex:1;${on?'text-decoration:line-through;color:var(--txt3)':''}">${esc(h.name)}</span>
+        <div style="display:flex;align-items:center;gap:6px">
+          ${streak>0?`<div class="streak-badge">🔥 ${streak}d</div>`:''}
+          <button class="btn btn-ghost btn-sm" style="width:30px;height:30px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:8px" onclick="openHabitM('${h.id}')">✎</button>
+        </div>
       </div>`;
     }).join('');
+    return`<div class="phdr">
+      <div><div class="ptitle">Hábitos</div><div class="psub">${new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'})}</div></div>
+      <div class="phdr-right"><button class="btn btn-primary" onclick="openHabitM()">+</button></div>
+    </div>
+    <div class="card">
+      ${DB.habits.length?rows:`<div class="empty">
+        <div class="empty-icon">✅</div>
+        <div class="empty-text">Añade tu primer hábito</div>
+        <button class="btn btn-primary" onclick="openHabitM()">+ Nuevo hábito</button>
+      </div>`}
+    </div>
+    ${DB.habits.length?`<div style="margin-top:14px">
+      <div class="card-title" style="padding:0 4px;margin-bottom:10px">Últimos 7 días</div>
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px">
+        <div style="display:inline-flex;gap:6px;min-width:max-content">
+          ${days.map(d=>{
+            const pct=DB.habits.length?Math.round((DB.habits.filter(h=>DB.habitLogs[d]?.[h.id]).length/DB.habits.length)*100):0;
+            const isT=d===dt;
+            return`<div style="display:flex;flex-direction:column;align-items:center;gap:5px;width:36px">
+              <div style="font-size:9px;font-weight:700;text-transform:uppercase;color:${isT?'var(--acc)':'var(--txt3)'}">${dayLbl(d)}</div>
+              <div style="font-size:9px;color:var(--txt3)">${d.slice(8)}</div>
+              <div style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;background:${pct===100?'var(--acc)':pct>0?'var(--acc-l)':'var(--bg3)'};color:${pct===100?'#07080D':pct>0?'var(--acc)':'var(--txt3)';border:1px solid ${isT?'var(--acc)':'transparent'}">${pct}%</div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+    </div>`:''}`;
+  }
+
+  // Desktop: 7-day matrix
+  const hdrCols=days.map(d=>`<div style="width:36px;text-align:center">
+    <div class="day-hdr ${d===dt?'tc':''}">${dayLbl(d)}</div>
+    <div class="day-num">${d.slice(8)}</div>
+  </div>`).join('');
+  const rows=DB.habits.map(h=>{
+    const streak=getStreak(h.id);
+    const checks=days.map(d=>{const on=DB.habitLogs[d]?.[h.id];
+      return`<div style="width:36px;display:flex;justify-content:center">
+        <div class="hcheck ${on?'on':''}" onclick="toggleHabit('${h.id}','${d}')">${on?'✓':''}</div>
+      </div>`;}).join('');
     return`<div style="display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--brd)">
       <span style="font-size:18px;width:26px;text-align:center;flex-shrink:0">${h.icon}</span>
       <span style="font-size:13.5px;font-weight:500;flex:1;min-width:80px">${esc(h.name)}</span>
-      <div style="display:flex;gap:0">${checks}</div>
-      <div style="width:72px;flex-shrink:0">${streak>0?`<div class="streak-badge">🔥 ${streak}d</div>`:''}</div>
+      <div style="display:flex">${checks}</div>
+      <div style="width:70px;flex-shrink:0">${streak>0?`<div class="streak-badge">🔥 ${streak}d</div>`:''}</div>
       <div style="display:flex;gap:5px;flex-shrink:0">
         <button class="btn btn-ghost btn-sm" onclick="openHabitM('${h.id}')">Editar</button>
         <button class="btn btn-danger btn-sm" onclick="delHabit('${h.id}')">✕</button>
       </div>
     </div>`;
   }).join('');
-
   return`<div class="phdr">
     <div><div class="ptitle">Hábitos</div><div class="psub">Últimos 7 días</div></div>
     <div class="phdr-right"><button class="btn btn-primary" onclick="openHabitM()">+ Nuevo hábito</button></div>
@@ -422,17 +530,13 @@ function rHabitos(){
   <div class="card">
     ${DB.habits.length?`
       <div style="display:flex;align-items:flex-end;gap:10px;padding-bottom:8px;border-bottom:2px solid var(--brd)">
-        <div style="width:26px"></div>
-        <div style="flex:1;min-width:80px"></div>
-        <div style="display:flex;gap:0">${hdrCols}</div>
-        <div style="width:72px"></div>
-        <div style="width:106px"></div>
-      </div>
-      ${rows}
+        <div style="width:26px"></div><div style="flex:1;min-width:80px"></div>
+        <div style="display:flex">${hdrCols}</div>
+        <div style="width:70px"></div><div style="width:110px"></div>
+      </div>${rows}
     `:`<div class="empty">
       <div class="empty-icon">✅</div>
       <div class="empty-text">Todavía no tienes hábitos</div>
-      <div class="empty-sub">Añade el primero para empezar el seguimiento</div>
       <button class="btn btn-primary" onclick="openHabitM()">+ Nuevo hábito</button>
     </div>`}
   </div>`;
@@ -440,22 +544,22 @@ function rHabitos(){
 
 const EMOJIS=['😴','💪','📚','💧','🧘','💻','🏃','🥗','☀️','🎯','✍️','🎵','🌿','🚴','🏋️','🍎','📝','🧠','❤️','🌙','🤸','🏊','⚽','🎸','🎨','🍵','🛌','🧴'];
 const HCOLORS=[{k:'acc',bg:'var(--acc)'},{k:'green',bg:'var(--green)'},{k:'amber',bg:'var(--amber)'},{k:'blue',bg:'var(--blue)'}];
-let _hDraft={icon:'✅',color:'acc'};
+let _hD={icon:'✅',color:'acc'};
 
 function openHabitM(id){
   const h=id?DB.habits.find(x=>x.id===id):null;
-  _hDraft={icon:h?.icon||'✅',color:h?.color||'acc'};
-  const ep=EMOJIS.map(e=>`<button class="ep-btn ${_hDraft.icon===e?'sel':''}" onclick="pickEmoji('${e}',this)">${e}</button>`).join('');
-  const cs=HCOLORS.map(c=>`<div class="csw ${_hDraft.color===c.k?'sel':''}" style="background:${c.bg}" onclick="pickColor('${c.k}',this)"></div>`).join('');
+  _hD={icon:h?.icon||'✅',color:h?.color||'acc'};
+  const ep=EMOJIS.map(e=>`<button class="ep-btn ${_hD.icon===e?'sel':''}" onclick="pickEmoji('${e}',this)">${e}</button>`).join('');
+  const cs=HCOLORS.map(c=>`<div class="csw ${_hD.color===c.k?'sel':''}" style="background:${c.bg}" onclick="pickColor('${c.k}',this)"></div>`).join('');
   openM(`<div class="mo">${moHdr(h?'Editar hábito':'Nuevo hábito')}
     <div style="display:flex;flex-direction:column;gap:14px">
       <div class="fgr"><label class="flbl">Nombre</label>
         <input class="finp" id="h-name" value="${h?esc(h.name):''}" placeholder="Ej: Leer 30 min" maxlength="50" autofocus></div>
       <div class="fgr"><label class="flbl">Icono</label>
-        <div id="ep-prev" style="font-size:28px;margin-bottom:8px">${_hDraft.icon}</div>
+        <div id="ep-prev" style="font-size:28px;margin-bottom:8px">${_hD.icon}</div>
         <div class="emoji-grid">${ep}</div></div>
       <div class="fgr"><label class="flbl">Color</label>
-        <div class="color-swatches" id="csw-wrap">${cs}</div></div>
+        <div class="color-swatches">${cs}</div></div>
     </div>
     <div class="mo-footer">
       <button class="btn btn-secondary" onclick="closeM()">Cancelar</button>
@@ -463,16 +567,16 @@ function openHabitM(id){
     </div>
   </div>`);
 }
-function pickEmoji(e,el){_hDraft.icon=e;document.querySelectorAll('.ep-btn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');document.getElementById('ep-prev').textContent=e;}
-function pickColor(k,el){_hDraft.color=k;document.querySelectorAll('.csw').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
+function pickEmoji(e,el){_hD.icon=e;document.querySelectorAll('.ep-btn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');document.getElementById('ep-prev').textContent=e;}
+function pickColor(k,el){_hD.color=k;document.querySelectorAll('.csw').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
 function saveHabit(id){
   const name=document.getElementById('h-name').value.trim();if(!name)return;
-  if(id){const h=DB.habits.find(x=>x.id===id);if(h){h.name=name;h.icon=_hDraft.icon;h.color=_hDraft.color;}}
-  else DB.habits.push({id:uid(),name,icon:_hDraft.icon,color:_hDraft.color,createdAt:today()});
+  if(id){const h=DB.habits.find(x=>x.id===id);if(h){h.name=name;h.icon=_hD.icon;h.color=_hD.color;}}
+  else DB.habits.push({id:uid(),name,icon:_hD.icon,color:_hD.color,createdAt:today()});
   save();closeM();nav('habitos');
 }
 function delHabit(id){
-  if(!confirm('¿Eliminar este hábito y su historial?'))return;
+  if(!confirm('¿Eliminar este hábito?'))return;
   DB.habits=DB.habits.filter(h=>h.id!==id);
   Object.keys(DB.habitLogs).forEach(d=>{delete DB.habitLogs[d][id];});
   save();nav('habitos');
@@ -482,26 +586,26 @@ function delHabit(id){
 function rObjetivos(){
   const areas=['todos','personal','trabajo','salud','finanzas','estudios'];
   const lbl={todos:'Todos',personal:'Personal',trabajo:'Trabajo',salud:'Salud',finanzas:'Finanzas',estudios:'Estudios'};
-  const filtered=curObjFilter==='todos'?DB.objectives:DB.objectives.filter(o=>o.area===curObjFilter);
-  const pills=areas.map(a=>`<button class="pill ${curObjFilter===a?'active':''}" onclick="setOF('${a}')">${lbl[a]}</button>`).join('');
+  const filtered=curObjF==='todos'?DB.objectives:DB.objectives.filter(o=>o.area===curObjF);
+  const pills=areas.map(a=>`<button class="pill ${curObjF===a?'active':''}" onclick="setOF('${a}')">${lbl[a]}</button>`).join('');
   const cards=filtered.map(o=>{
     const bw=o.targetPct?clamp((o.currentPct/o.targetPct)*100,0,100):o.currentPct;
     return`<div class="card">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-        <div style="display:flex;gap:6px;align-items:center">
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
           <span class="badge ${areaCls(o.area)}">${areaLbl(o.area)}</span>
           <span style="font-size:11px;color:var(--txt3);font-weight:600">${o.period}</span>
         </div>
         <span style="font-size:22px;font-weight:700;color:var(--acc)">${o.currentPct}%</span>
       </div>
       <div style="font-size:15px;font-weight:700;margin-bottom:${o.notes?'6px':'10px'}">${esc(o.title)}</div>
-      ${o.notes?`<div style="font-size:12.5px;color:var(--txt2);margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${esc(o.notes)}</div>`:''}
+      ${o.notes?`<div style="font-size:12px;color:var(--txt2);margin-bottom:10px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">${esc(o.notes)}</div>`:''}
       <div class="pbar pbar-lg"><div class="pfill" style="width:${bw}%"></div></div>
-      <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--txt2);margin-top:4px;margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--txt2);margin-top:3px;margin-bottom:14px">
         <span>${o.currentPct}% actual</span><span>Meta: ${o.targetPct}%</span>
       </div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <button class="btn btn-secondary btn-sm" onclick="openObjProg('${o.id}')">Actualizar %</button>
+        <button class="btn btn-primary btn-sm" onclick="openObjProg('${o.id}')">Actualizar %</button>
         <button class="btn btn-ghost btn-sm" onclick="openObjM('${o.id}')">Editar</button>
         <button class="btn btn-danger btn-sm" onclick="delObj('${o.id}')">Borrar</button>
       </div>
@@ -509,16 +613,16 @@ function rObjetivos(){
   }).join('');
   return`<div class="phdr">
     <div><div class="ptitle">Objetivos</div><div class="psub">Metas anuales y trimestrales</div></div>
-    <div class="phdr-right"><button class="btn btn-primary" onclick="openObjM()">+ Nuevo objetivo</button></div>
+    <div class="phdr-right"><button class="btn btn-primary" onclick="openObjM()">+ Nuevo</button></div>
   </div>
   <div class="filter-pills">${pills}</div>
   ${filtered.length?`<div class="g2">${cards}</div>`:`<div class="card"><div class="empty">
     <div class="empty-icon">🎯</div>
-    <div class="empty-text">${curObjFilter==='todos'?'Sin objetivos todavía':'Sin objetivos en esta área'}</div>
+    <div class="empty-text">${curObjF==='todos'?'Sin objetivos todavía':'Sin objetivos en esta área'}</div>
     <button class="btn btn-primary" onclick="openObjM()">+ Nuevo objetivo</button>
   </div></div>`}`;
 }
-function setOF(f){curObjFilter=f;nav('objetivos');}
+function setOF(f){curObjF=f;nav('objetivos');}
 function openObjM(id){
   const o=id?DB.objectives.find(x=>x.id===id):null;
   openM(`<div class="mo">${moHdr(o?'Editar objetivo':'Nuevo objetivo')}
@@ -534,7 +638,7 @@ function openObjM(id){
       <div class="fgr"><label class="flbl">Meta (%)</label>
         <input class="finp" id="o-m" type="number" min="1" max="100" value="${o?.targetPct??100}"></div>
       <div class="fgr full"><label class="flbl">Notas</label>
-        <textarea class="fta" id="o-n" placeholder="Contexto, milestones...">${o?.notes??''}</textarea></div>
+        <textarea class="fta" id="o-n">${o?.notes??''}</textarea></div>
     </div>
     <div class="mo-footer">
       <button class="btn btn-secondary" onclick="closeM()">Cancelar</button>
@@ -547,7 +651,7 @@ function openObjProg(id){
   openM(`<div class="mo" style="max-width:360px">${moHdr('Actualizar progreso')}
     <div style="font-size:14px;font-weight:600;margin-bottom:16px">${esc(o.title)}</div>
     <div class="fgr" style="margin-bottom:12px"><label class="flbl">Progreso (%)</label>
-      <input class="finp" id="op-v" type="number" min="0" max="100" value="${o.currentPct}"></div>
+      <input class="finp" id="op-v" type="number" min="0" max="100" value="${o.currentPct}" style="font-size:24px;font-weight:700;text-align:center"></div>
     <div class="pbar pbar-lg"><div class="pfill" id="op-bar" style="width:${o.currentPct}%"></div></div>
     <div class="mo-footer">
       <button class="btn btn-secondary" onclick="closeM()">Cancelar</button>
@@ -568,29 +672,29 @@ function saveObj(id){
   else DB.objectives.push({id:uid(),...d,createdAt:today()});
   save();closeM();nav('objetivos');
 }
-function delObj(id){if(!confirm('¿Eliminar este objetivo?'))return;DB.objectives=DB.objectives.filter(o=>o.id!==id);save();nav('objetivos');}
+function delObj(id){if(!confirm('¿Eliminar?'))return;DB.objectives=DB.objectives.filter(o=>o.id!==id);save();nav('objetivos');}
 
 // ===== PROYECTOS =====
 function rProyectos(){
   const stats=['todos','activo','pausado','completado'];
   const sl={todos:'Todos',activo:'Activos',pausado:'Pausados',completado:'Completados'};
-  const filtered=curProjFilter==='todos'?DB.projects:DB.projects.filter(p=>p.status===curProjFilter);
-  const pills=stats.map(s=>`<button class="pill ${curProjFilter===s?'active':''}" onclick="setPF('${s}')">${sl[s]}</button>`).join('');
+  const filtered=curProjF==='todos'?DB.projects:DB.projects.filter(p=>p.status===curProjF);
+  const pills=stats.map(s=>`<button class="pill ${curProjF===s?'active':''}" onclick="setPF('${s}')">${sl[s]}</button>`).join('');
   const cards=filtered.map(p=>`<div class="card">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-      <div>
-        <div style="font-size:15px;font-weight:700;margin-bottom:6px">${esc(p.name)}</div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:15px;font-weight:700;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p.name)}</div>
         ${p.area?`<span class="badge badge-muted">${esc(p.area)}</span>`:''}
       </div>
-      ${statusBadge(p.status)}
+      <div style="flex-shrink:0;margin-left:10px">${statusBadge(p.status)}</div>
     </div>
-    ${p.nextAction?`<div class="next-action-box">
+    ${p.nextAction?`<div class="nxt-box">
       <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--txt3);margin-bottom:3px">Próxima acción</div>
       <div style="font-size:13px">${esc(p.nextAction)}</div>
     </div>`:''}
-    ${p.notes?`<div style="font-size:12.5px;color:var(--txt2);margin-bottom:10px">${esc(p.notes)}</div>`:''}
-    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:${p.nextAction||p.notes?'0':'8px'}">
-      <select class="status-select" onchange="chgProjStatus('${p.id}',this.value)">
+    ${p.notes?`<div style="font-size:12px;color:var(--txt2);margin-bottom:10px">${esc(p.notes)}</div>`:''}
+    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:8px">
+      <select class="status-select" onchange="chgProjSt('${p.id}',this.value)">
         <option value="activo" ${p.status==='activo'?'selected':''}>Activo</option>
         <option value="pausado" ${p.status==='pausado'?'selected':''}>Pausado</option>
         <option value="completado" ${p.status==='completado'?'selected':''}>Completado</option>
@@ -601,23 +705,23 @@ function rProyectos(){
   </div>`).join('');
   return`<div class="phdr">
     <div><div class="ptitle">Proyectos</div><div class="psub">Vista general</div></div>
-    <div class="phdr-right"><button class="btn btn-primary" onclick="openProjM()">+ Nuevo proyecto</button></div>
+    <div class="phdr-right"><button class="btn btn-primary" onclick="openProjM()">+ Nuevo</button></div>
   </div>
   <div class="filter-pills">${pills}</div>
   ${filtered.length?`<div class="g2">${cards}</div>`:`<div class="card"><div class="empty">
     <div class="empty-icon">📋</div>
-    <div class="empty-text">${curProjFilter==='todos'?'Sin proyectos todavía':'Sin proyectos en este estado'}</div>
+    <div class="empty-text">${curProjF==='todos'?'Sin proyectos todavía':'Sin proyectos en este estado'}</div>
     <button class="btn btn-primary" onclick="openProjM()">+ Nuevo proyecto</button>
   </div></div>`}`;
 }
-function setPF(f){curProjFilter=f;nav('proyectos');}
-function chgProjStatus(id,s){const p=DB.projects.find(x=>x.id===id);if(p){p.status=s;p.updatedAt=today();save();}}
+function setPF(f){curProjF=f;nav('proyectos');}
+function chgProjSt(id,s){const p=DB.projects.find(x=>x.id===id);if(p){p.status=s;p.updatedAt=today();save();}}
 function openProjM(id){
   const p=id?DB.projects.find(x=>x.id===id):null;
   openM(`<div class="mo">${moHdr(p?'Editar proyecto':'Nuevo proyecto')}
     <div class="fg">
       <div class="fgr full"><label class="flbl">Nombre</label>
-        <input class="finp" id="p-n" value="${p?esc(p.name):''}" placeholder="Nombre del proyecto" maxlength="80" autofocus></div>
+        <input class="finp" id="p-n" value="${p?esc(p.name):''}" placeholder="Nombre del proyecto" autofocus></div>
       <div class="fgr"><label class="flbl">Área</label>
         <input class="finp" id="p-a" value="${p?esc(p.area||''):''}" placeholder="Trabajo, Personal..."></div>
       <div class="fgr"><label class="flbl">Estado</label>
@@ -627,9 +731,9 @@ function openProjM(id){
           <option value="completado" ${p?.status==='completado'?'selected':''}>Completado</option>
         </select></div>
       <div class="fgr full"><label class="flbl">Próxima acción</label>
-        <input class="finp" id="p-x" value="${p?esc(p.nextAction||''):''}" placeholder="La siguiente cosa concreta a hacer"></div>
+        <input class="finp" id="p-x" value="${p?esc(p.nextAction||''):''}" placeholder="Lo siguiente concreto que hay que hacer"></div>
       <div class="fgr full"><label class="flbl">Notas</label>
-        <textarea class="fta" id="p-no" placeholder="Contexto, links, ideas...">${p?.notes??''}</textarea></div>
+        <textarea class="fta" id="p-no">${p?.notes??''}</textarea></div>
     </div>
     <div class="mo-footer">
       <button class="btn btn-secondary" onclick="closeM()">Cancelar</button>
@@ -645,45 +749,44 @@ function saveProj(id){
   else DB.projects.push({id:uid(),...d});
   save();closeM();nav('proyectos');
 }
-function delProj(id){if(!confirm('¿Eliminar este proyecto?'))return;DB.projects=DB.projects.filter(p=>p.id!==id);save();nav('proyectos');}
+function delProj(id){if(!confirm('¿Eliminar?'))return;DB.projects=DB.projects.filter(p=>p.id!==id);save();nav('proyectos');}
 
 // ===== ESTUDIOS =====
 function rEstudios(){
   const types=['todos','curso','libro','podcast'];
   const tl={todos:'Todos',curso:'Cursos',libro:'Libros',podcast:'Podcasts'};
-  const filtered=curStudyFilter==='todos'?DB.courses:DB.courses.filter(c=>c.type===curStudyFilter);
-  const pills=types.map(t=>`<button class="pill ${curStudyFilter===t?'active':''}" onclick="setSF('${t}')">${tl[t]}</button>`).join('');
+  const filtered=curStudyF==='todos'?DB.courses:DB.courses.filter(c=>c.type===curStudyF);
+  const pills=types.map(t=>`<button class="pill ${curStudyF===t?'active':''}" onclick="setSF('${t}')">${tl[t]}</button>`).join('');
   const cards=filtered.map(c=>{
     const pct=c.totalUnits?clamp(Math.round((c.currentUnit/c.totalUnits)*100),0,100):0;
     return`<div class="card">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-        ${typeBadge(c.type)}
-        <span style="font-size:22px;font-weight:700;color:var(--acc)">${pct}%</span>
+        ${typeBadge(c.type)}<span style="font-size:22px;font-weight:700;color:var(--acc)">${pct}%</span>
       </div>
       <div style="font-size:15px;font-weight:700;margin-bottom:10px">${esc(c.title)}</div>
       <div class="pbar pbar-lg"><div class="pfill" style="width:${pct}%"></div></div>
-      <div style="font-size:12px;color:var(--txt2);margin-top:4px;margin-bottom:${c.notes?'8px':'14px'}">${c.currentUnit} / ${c.totalUnits} ${esc(c.unitLabel)}</div>
-      ${c.notes?`<div style="font-size:12.5px;color:var(--txt2);margin-bottom:12px">${esc(c.notes)}</div>`:''}
+      <div style="font-size:12px;color:var(--txt2);margin-top:3px;margin-bottom:${c.notes?'8px':'12px'}">${c.currentUnit} / ${c.totalUnits} ${esc(c.unitLabel)}</div>
+      ${c.notes?`<div style="font-size:12px;color:var(--txt2);margin-bottom:12px">${esc(c.notes)}</div>`:''}
       <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <button class="btn btn-primary btn-sm" onclick="advanceCourse('${c.id}')">+ Avanzar 1</button>
+        <button class="btn btn-primary btn-sm" onclick="advCourse('${c.id}')">+ Avanzar 1</button>
         <button class="btn btn-ghost btn-sm" onclick="openCourseM('${c.id}')">Editar</button>
         <button class="btn btn-danger btn-sm" onclick="delCourse('${c.id}')">Borrar</button>
       </div>
     </div>`;
   }).join('');
   return`<div class="phdr">
-    <div><div class="ptitle">Estudios</div><div class="psub">Cursos, libros y formación en progreso</div></div>
+    <div><div class="ptitle">Estudios</div><div class="psub">Formación en progreso</div></div>
     <div class="phdr-right"><button class="btn btn-primary" onclick="openCourseM()">+ Añadir</button></div>
   </div>
   <div class="filter-pills">${pills}</div>
   ${filtered.length?`<div class="g2">${cards}</div>`:`<div class="card"><div class="empty">
     <div class="empty-icon">📚</div>
-    <div class="empty-text">${curStudyFilter==='todos'?'Sin contenido en progreso':'Sin '+tl[curStudyFilter].toLowerCase()}</div>
+    <div class="empty-text">${curStudyF==='todos'?'Sin contenido en progreso':'Sin '+tl[curStudyF].toLowerCase()}</div>
     <button class="btn btn-primary" onclick="openCourseM()">+ Añadir</button>
   </div></div>`}`;
 }
-function setSF(f){curStudyFilter=f;nav('estudios');}
-function advanceCourse(id){const c=DB.courses.find(x=>x.id===id);if(c&&c.currentUnit<c.totalUnits){c.currentUnit++;save();nav('estudios');}}
+function setSF(f){curStudyF=f;nav('estudios');}
+function advCourse(id){const c=DB.courses.find(x=>x.id===id);if(c&&c.currentUnit<c.totalUnits){c.currentUnit++;save();nav('estudios');}}
 function openCourseM(id){
   const c=id?DB.courses.find(x=>x.id===id):null;
   openM(`<div class="mo">${moHdr(c?'Editar':'Nuevo contenido')}
@@ -700,12 +803,12 @@ function openCourseM(id){
         <select class="fsel" id="c-ul">
           ${['módulos','páginas','capítulos','episodios','lecciones'].map(u=>`<option value="${u}" ${c?.unitLabel===u?'selected':''}>${u[0].toUpperCase()+u.slice(1)}</option>`).join('')}
         </select></div>
-      <div class="fgr"><label class="flbl">Total unidades</label>
+      <div class="fgr"><label class="flbl">Total</label>
         <input class="finp" id="c-tot" type="number" min="1" value="${c?.totalUnits??''}"></div>
-      <div class="fgr"><label class="flbl">Unidad actual</label>
+      <div class="fgr"><label class="flbl">Actual</label>
         <input class="finp" id="c-cur" type="number" min="0" value="${c?.currentUnit??0}"></div>
       <div class="fgr full"><label class="flbl">Notas</label>
-        <textarea class="fta" id="c-no" placeholder="Plataforma, autor, enlace...">${c?.notes??''}</textarea></div>
+        <textarea class="fta" id="c-no" placeholder="Plataforma, autor...">${c?.notes??''}</textarea></div>
     </div>
     <div class="mo-footer">
       <button class="btn btn-secondary" onclick="closeM()">Cancelar</button>
@@ -726,8 +829,7 @@ function delCourse(id){if(!confirm('¿Eliminar?'))return;DB.courses=DB.courses.f
 
 // ===== DEPORTE =====
 function rDeporte(){
-  const wk=weekSessions();
-  const sessions=[...DB.trainingSessions].sort((a,b)=>b.date.localeCompare(a.date));
+  const wk=weekSess();const sessions=[...DB.trainingSessions].sort((a,b)=>b.date.localeCompare(a.date));
   const tc={fuerza:'var(--red)',cardio:'var(--blue)',movilidad:'var(--green)',deporte:'var(--acc)',otro:'var(--txt3)'};
 
   const goalsCard=`<div class="card">
@@ -753,38 +855,39 @@ function rDeporte(){
 
   const wkBreak=Object.entries(wk.byType).map(([t,n])=>
     `<span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:${tc[t]||'var(--txt2)'}">
-      <span style="width:8px;height:8px;border-radius:50%;background:${tc[t]||'var(--txt3)'}"></span>${n} ${t}
-    </span>`).join('<span style="color:var(--txt3);margin:0 6px">·</span>');
+      <span style="width:7px;height:7px;border-radius:50%;background:${tc[t]||'var(--txt3)'}"></span>${n} ${t}
+    </span>`).join('<span style="color:var(--txt3);margin:0 5px">·</span>');
 
   const weekCard=`<div class="card">
     <div class="card-title">Esta semana</div>
     <div style="display:flex;gap:24px;margin-bottom:12px">
-      <div><div style="font-size:28px;font-weight:700;letter-spacing:-.5px">${wk.count}</div><div style="font-size:11.5px;color:var(--txt2)">sesiones</div></div>
-      <div><div style="font-size:28px;font-weight:700;letter-spacing:-.5px">${wk.mins}</div><div style="font-size:11.5px;color:var(--txt2)">minutos</div></div>
+      <div><div style="font-size:26px;font-weight:700;letter-spacing:-.5px">${wk.count}</div><div style="font-size:11px;color:var(--txt2)">sesiones</div></div>
+      <div><div style="font-size:26px;font-weight:700;letter-spacing:-.5px">${wk.mins}</div><div style="font-size:11px;color:var(--txt2)">minutos</div></div>
     </div>
     ${wkBreak?`<div style="display:flex;flex-wrap:wrap;gap:8px">${wkBreak}</div>`:`<div style="color:var(--txt3);font-size:13px">Sin sesiones esta semana</div>`}
   </div>`;
 
-  const rows=sessions.length?sessions.map(s=>`<tr>
-    <td>${fmtShort(s.date)}</td>
+  const rows=sessions.length?sessions.slice(0,50).map(s=>`<tr>
+    <td style="white-space:nowrap">${fmtS(s.date)}</td>
     <td>${trainBadge(s.type)}</td>
-    <td>${s.duration?s.duration+' min':'—'}</td>
-    <td style="color:var(--txt2);font-size:12.5px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.notes||'—'}</td>
+    <td style="white-space:nowrap">${s.duration?s.duration+' min':'—'}</td>
+    <td style="color:var(--txt2);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.notes||'—'}</td>
     <td style="text-align:right;white-space:nowrap">
       <button class="btn btn-ghost btn-sm" onclick="openTrainM('${s.id}')">Editar</button>
-      <button class="btn btn-danger btn-sm" onclick="delTrain('${s.id}')">Borrar</button>
+      <button class="btn btn-danger btn-sm" onclick="delTrain('${s.id}')">✕</button>
     </td>
   </tr>`).join(''):`<tr><td colspan="5"><div class="empty"><div class="empty-icon">💪</div><div class="empty-text">Sin sesiones registradas</div></div></td></tr>`;
 
   return`<div class="phdr">
     <div><div class="ptitle">Deporte & Salud</div><div class="psub">Entrenamientos y objetivos físicos</div></div>
-    <div class="phdr-right"><button class="btn btn-primary" onclick="openTrainM()">+ Registrar sesión</button></div>
+    <div class="phdr-right"><button class="btn btn-primary" onclick="openTrainM()">+ Sesión</button></div>
   </div>
-  <div class="g2" style="margin-bottom:16px">${goalsCard}${weekCard}</div>
+  <div class="g2" style="margin-bottom:14px">${goalsCard}${weekCard}</div>
   <div class="card">
-    <div class="card-title">Historial de sesiones</div>
-    <table class="tbl"><thead><tr><th>Fecha</th><th>Tipo</th><th>Duración</th><th>Notas</th><th></th></tr></thead>
-    <tbody>${rows}</tbody></table>
+    <div class="card-title">Historial</div>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr>
+      <th>Fecha</th><th>Tipo</th><th>Duración</th><th>Notas</th><th></th>
+    </tr></thead><tbody>${rows}</tbody></table></div>
   </div>`;
 }
 function openTrainM(id){
@@ -797,10 +900,10 @@ function openTrainM(id){
         <select class="fsel" id="tr-t">
           ${['fuerza','cardio','movilidad','deporte','otro'].map(t=>`<option value="${t}" ${s?.type===t?'selected':''}>${t[0].toUpperCase()+t.slice(1)}</option>`).join('')}
         </select></div>
-      <div class="fgr full"><label class="flbl">Duración (minutos)</label>
-        <input class="finp" id="tr-dur" type="number" min="1" value="${s?.duration??''}"></div>
+      <div class="fgr full"><label class="flbl">Duración (min)</label>
+        <input class="finp" id="tr-dur" type="number" min="1" value="${s?.duration??''}" autofocus></div>
       <div class="fgr full"><label class="flbl">Notas</label>
-        <textarea class="fta" id="tr-no" placeholder="Qué entrenaste, cómo fue...">${s?.notes??''}</textarea></div>
+        <textarea class="fta" id="tr-no" placeholder="Qué entrenaste...">${s?.notes??''}</textarea></div>
     </div>
     <div class="mo-footer">
       <button class="btn btn-secondary" onclick="closeM()">Cancelar</button>
@@ -815,13 +918,13 @@ function saveTrain(id){
   else DB.trainingSessions.push({id:uid(),...d});
   save();closeM();nav('deporte');
 }
-function delTrain(id){if(!confirm('¿Eliminar esta sesión?'))return;DB.trainingSessions=DB.trainingSessions.filter(s=>s.id!==id);save();nav('deporte');}
+function delTrain(id){if(!confirm('¿Eliminar?'))return;DB.trainingSessions=DB.trainingSessions.filter(s=>s.id!==id);save();nav('deporte');}
 function openPGoalM(id){
   const g=id?DB.physicalGoals.find(x=>x.id===id):null;
-  openM(`<div class="mo" style="max-width:400px">${moHdr(g?'Editar objetivo físico':'Nuevo objetivo físico')}
+  openM(`<div class="mo" style="max-width:400px">${moHdr(g?'Editar objetivo':'Nuevo objetivo físico')}
     <div class="fg">
       <div class="fgr full"><label class="flbl">Título</label>
-        <input class="finp" id="pg-t" value="${g?esc(g.title):''}" placeholder="Ej: Peso corporal, Press banca..." autofocus></div>
+        <input class="finp" id="pg-t" value="${g?esc(g.title):''}" placeholder="Ej: Peso corporal" autofocus></div>
       <div class="fgr"><label class="flbl">Valor actual</label>
         <input class="finp" id="pg-c" type="number" step="0.1" value="${g?.currentValue??''}"></div>
       <div class="fgr"><label class="flbl">Valor objetivo</label>
@@ -846,37 +949,34 @@ function delPGoal(id){if(!confirm('¿Eliminar?'))return;DB.physicalGoals=DB.phys
 
 // ===== FINANZAS =====
 function rFinanzas(){
-  const months=availableMonths();
-  if(!curFinMonth||!months.includes(curFinMonth))curFinMonth=curMonth();
-  const fin=finSummary(curFinMonth);
-  const entries=DB.financeEntries.filter(e=>e.date.startsWith(curFinMonth)).sort((a,b)=>b.date.localeCompare(a.date));
+  const months=availMonths();
+  if(!curFinM||!months.includes(curFinM))curFinM=curMonth();
+  const fin=finSum(curFinM);
+  const entries=DB.financeEntries.filter(e=>e.date.startsWith(curFinM)).sort((a,b)=>b.date.localeCompare(a.date));
   const sg=DB.savingsGoal;
   const sgPct=sg.target?clamp(Math.round((sg.current/sg.target)*100),0,100):0;
-  const mopts=months.map(m=>`<option value="${m}" ${m===curFinMonth?'selected':''}>${fmtMonth(m)}</option>`).join('');
+  const mopts=months.map(m=>`<option value="${m}" ${m===curFinM?'selected':''}>${fmtMonth(m)}</option>`).join('');
 
-  const kpis=`<div class="g3" style="margin-bottom:16px">
+  const kpis=`<div class="g3" style="margin-bottom:14px">
     <div class="kpi-card"><div class="kpi-label">Ingresos</div>
-      <div class="kpi-value" style="color:var(--green)">${fe(fin.inc)}</div>
-      <div class="kpi-sub">${fmtMonth(curFinMonth)}</div></div>
+      <div class="kpi-value" style="color:var(--green)">${fe(fin.inc)}</div></div>
     <div class="kpi-card"><div class="kpi-label">Gastos</div>
-      <div class="kpi-value" style="color:var(--red)">${fe(fin.exp)}</div>
-      <div class="kpi-sub">${fmtMonth(curFinMonth)}</div></div>
+      <div class="kpi-value" style="color:var(--red)">${fe(fin.exp)}</div></div>
     <div class="kpi-card"><div class="kpi-label">Balance</div>
-      <div class="kpi-value" style="color:${fin.bal>=0?'var(--green)':'var(--red)'}">${fe(fin.bal)}</div>
-      <div class="kpi-sub">${fin.bal>=0?'Positivo ✓':'En negativo'}</div></div>
+      <div class="kpi-value" style="color:${fin.bal>=0?'var(--green)':'var(--red)'}">${fe(fin.bal)}</div></div>
   </div>`;
 
   const rows=entries.length?entries.map(e=>`<tr>
-    <td style="white-space:nowrap">${fmtShort(e.date)}</td>
-    <td><span class="badge ${e.type==='ingreso'?'badge-green':'badge-red'}">${e.type==='ingreso'?'Ingreso':'Gasto'}</span></td>
-    <td>${e.category?`<span class="badge badge-muted">${esc(e.category)}</span>`:''}</td>
-    <td style="font-weight:600;color:${e.type==='ingreso'?'var(--green)':'var(--red)'}">${e.type==='ingreso'?'+':'-'}${fe(e.amount)}</td>
-    <td style="color:var(--txt2);font-size:12px">${esc(e.notes||'')}</td>
+    <td style="white-space:nowrap">${fmtS(e.date)}</td>
+    <td><span class="badge ${e.type==='ingreso'?'badge-green':'badge-red'}">${e.type==='ingreso'?'↑':'↓'}</span></td>
+    <td>${e.category?`<span class="badge badge-muted" style="font-size:10px">${esc(e.category)}</span>`:''}</td>
+    <td style="font-weight:600;color:${e.type==='ingreso'?'var(--green)':'var(--red)'};white-space:nowrap">${e.type==='ingreso'?'+':'-'}${fe(e.amount)}</td>
+    <td style="color:var(--txt2);font-size:12px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(e.notes||'')}</td>
     <td style="text-align:right;white-space:nowrap">
       <button class="btn btn-ghost btn-sm" onclick="openFinM('${e.id}')">Editar</button>
-      <button class="btn btn-danger btn-sm" onclick="delFin('${e.id}')">Borrar</button>
+      <button class="btn btn-danger btn-sm" onclick="delFin('${e.id}')">✕</button>
     </td>
-  </tr>`).join(''):`<tr><td colspan="6"><div class="empty"><div class="empty-icon">💰</div><div class="empty-text">Sin entradas en ${fmtMonth(curFinMonth)}</div></div></td></tr>`;
+  </tr>`).join(''):`<tr><td colspan="6"><div class="empty"><div class="empty-icon">💰</div><div class="empty-text">Sin entradas en ${fmtMonth(curFinM)}</div></div></td></tr>`;
 
   const savCard=`<div class="card" style="height:fit-content">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
@@ -884,13 +984,13 @@ function rFinanzas(){
       <button class="btn btn-ghost btn-sm" onclick="openSavM()">Editar</button>
     </div>
     ${sg.target>0?`
-      <div style="font-size:28px;font-weight:700;letter-spacing:-.5px;margin-bottom:4px">${fe(sg.current)}</div>
-      <div style="font-size:12.5px;color:var(--txt2);margin-bottom:12px">de ${fe(sg.target)}</div>
+      <div style="font-size:28px;font-weight:700;letter-spacing:-.5px;color:var(--green);margin-bottom:3px">${fe(sg.current)}</div>
+      <div style="font-size:12px;color:var(--txt2);margin-bottom:12px">de ${fe(sg.target)}</div>
       <div class="pbar pbar-lg"><div class="pfill pfill-green" style="width:${sgPct}%"></div></div>
-      <div style="font-size:13px;font-weight:600;color:var(--green);margin-top:6px">${sgPct}% logrado</div>
+      <div style="font-size:13px;font-weight:600;color:var(--green);margin-top:5px">${sgPct}% logrado</div>
     `:`<div class="empty" style="padding:20px 0">
       <div class="empty-text">Sin meta configurada</div>
-      <button class="btn btn-primary btn-sm" onclick="openSavM()">Configurar meta</button>
+      <button class="btn btn-primary btn-sm" style="margin-top:4px" onclick="openSavM()">Configurar</button>
     </div>`}
   </div>`;
 
@@ -898,20 +998,21 @@ function rFinanzas(){
     <div><div class="ptitle">Finanzas</div><div class="psub">Ingresos, gastos y ahorro</div></div>
     <div class="phdr-right">
       <select class="month-sel" onchange="setFinM(this.value)">${mopts}</select>
-      <button class="btn btn-primary" onclick="openFinM()">+ Añadir entrada</button>
+      <button class="btn btn-primary" onclick="openFinM()">+ Entrada</button>
     </div>
   </div>
   ${kpis}
   <div class="g2">
     <div class="card">
-      <div class="card-title">Movimientos — ${fmtMonth(curFinMonth)}</div>
-      <table class="tbl"><thead><tr><th>Fecha</th><th>Tipo</th><th>Categoría</th><th>Importe</th><th>Notas</th><th></th></tr></thead>
-      <tbody>${rows}</tbody></table>
+      <div class="card-title">Movimientos — ${fmtMonth(curFinM)}</div>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr>
+        <th>Fecha</th><th></th><th>Categoría</th><th>Importe</th><th>Notas</th><th></th>
+      </tr></thead><tbody>${rows}</tbody></table></div>
     </div>
     ${savCard}
   </div>`;
 }
-function setFinM(m){curFinMonth=m;nav('finanzas');}
+function setFinM(m){curFinM=m;nav('finanzas');}
 function openFinM(id){
   const e=id?DB.financeEntries.find(x=>x.id===id):null;
   const isInc=e?e.type==='ingreso':true;
@@ -919,8 +1020,8 @@ function openFinM(id){
     <div style="margin-bottom:16px">
       <label class="flbl" style="display:block;margin-bottom:8px">Tipo</label>
       <div class="type-toggle">
-        <button class="type-btn ${isInc?'active':''}" id="fi-bi" onclick="setFinType('ingreso')">Ingreso</button>
-        <button class="type-btn ${!isInc?'active':''}" id="fi-bg" onclick="setFinType('gasto')">Gasto</button>
+        <button class="type-btn ${isInc?'active':''}" id="fi-bi" onclick="setFT('ingreso')">↑ Ingreso</button>
+        <button class="type-btn ${!isInc?'active':''}" id="fi-bg" onclick="setFT('gasto')">↓ Gasto</button>
       </div>
       <input type="hidden" id="fi-t" value="${e?.type??'ingreso'}">
     </div>
@@ -928,9 +1029,9 @@ function openFinM(id){
       <div class="fgr"><label class="flbl">Fecha</label>
         <input class="finp" id="fi-d" type="date" value="${e?.date??today()}"></div>
       <div class="fgr"><label class="flbl">Categoría</label>
-        <input class="finp" id="fi-c" value="${e?esc(e.category||''):''}" placeholder="Salario, Alquiler, Ocio..."></div>
+        <input class="finp" id="fi-c" value="${e?esc(e.category||''):''}" placeholder="Salario, Alquiler..."></div>
       <div class="fgr full"><label class="flbl">Importe (€)</label>
-        <input class="finp" id="fi-a" type="number" min="0" step="0.01" value="${e?.amount??''}" autofocus></div>
+        <input class="finp" id="fi-a" type="number" min="0" step="0.01" value="${e?.amount??''}" autofocus style="font-size:18px;font-weight:700"></div>
       <div class="fgr full"><label class="flbl">Notas</label>
         <input class="finp" id="fi-no" value="${e?esc(e.notes||''):''}" placeholder="Descripción opcional"></div>
     </div>
@@ -940,11 +1041,7 @@ function openFinM(id){
     </div>
   </div>`);
 }
-function setFinType(t){
-  document.getElementById('fi-t').value=t;
-  document.getElementById('fi-bi').classList.toggle('active',t==='ingreso');
-  document.getElementById('fi-bg').classList.toggle('active',t==='gasto');
-}
+function setFT(t){document.getElementById('fi-t').value=t;document.getElementById('fi-bi').classList.toggle('active',t==='ingreso');document.getElementById('fi-bg').classList.toggle('active',t==='gasto');}
 function saveFin(id){
   const a=parseFloat(document.getElementById('fi-a').value);
   const date=document.getElementById('fi-d').value;
@@ -952,10 +1049,10 @@ function saveFin(id){
   const d={date,type:document.getElementById('fi-t').value,category:document.getElementById('fi-c').value.trim(),amount:a,notes:document.getElementById('fi-no').value.trim()};
   if(id){const e=DB.financeEntries.find(x=>x.id===id);if(e)Object.assign(e,d);}
   else DB.financeEntries.push({id:uid(),...d});
-  curFinMonth=d.date.slice(0,7);
+  curFinM=d.date.slice(0,7);
   save();closeM();nav('finanzas');
 }
-function delFin(id){if(!confirm('¿Eliminar esta entrada?'))return;DB.financeEntries=DB.financeEntries.filter(e=>e.id!==id);save();nav('finanzas');}
+function delFin(id){if(!confirm('¿Eliminar?'))return;DB.financeEntries=DB.financeEntries.filter(e=>e.id!==id);save();nav('finanzas');}
 function openSavM(){
   const sg=DB.savingsGoal;
   openM(`<div class="mo" style="max-width:400px">${moHdr('Meta de ahorro')}
