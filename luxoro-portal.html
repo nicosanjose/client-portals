@@ -27,7 +27,8 @@ body{background:var(--bg);color:var(--txt);font-family:var(--sans);font-size:14p
 .lcard{width:420px;background:var(--bg2);border:1px solid var(--gold-b);border-radius:22px;padding:52px 44px;
   box-shadow:0 28px 80px rgba(0,0,0,.55),0 0 0 1px rgba(201,168,76,.08)}
 .llogo{display:flex;align-items:center;justify-content:center;margin-bottom:10px}
-.llogo img{height:48px;width:auto}
+.llogo img{height:48px;width:auto;mix-blend-mode:multiply}
+.logo-bg{background:#1A5252;border-radius:10px;padding:8px 16px;display:inline-flex;align-items:center}
 .lsub{text-align:center;color:var(--txt2);font-size:11.5px;margin-bottom:36px;letter-spacing:.12em;text-transform:uppercase}
 .ll{display:block;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--txt2);margin-bottom:7px}
 .li{width:100%;background:var(--bg3);border:1px solid var(--brd);border-radius:10px;padding:11px 15px;color:var(--txt);
@@ -46,7 +47,8 @@ body{background:var(--bg);color:var(--txt);font-family:var(--sans);font-size:14p
 /* ── TOPBAR ─────────────────────────────────────────── */
 .tb{height:58px;background:var(--sb);border-bottom:1px solid var(--brd);display:flex;align-items:center;
   padding:0 22px;gap:18px;position:sticky;top:0;z-index:200}
-.tb-logo img{height:30px;width:auto}
+.tb-logo img{height:26px;width:auto;mix-blend-mode:multiply}
+.tb-logo .logo-bg{padding:5px 12px;border-radius:7px}
 .tb-tickers{display:flex;align-items:center;gap:12px}
 .tick{display:flex;align-items:center;gap:7px;padding:5px 13px;background:var(--bg3);border:1px solid var(--gold-b);
   border-radius:20px;font-size:12px;font-weight:600}
@@ -207,7 +209,7 @@ tbody tr:hover{background:var(--bg2)}
 <!-- ═══════════════ LOGIN ═══════════════ -->
 <div id="login">
   <div class="lcard">
-    <div class="llogo"><img src="https://luxoro.es/wp-content/uploads/2024/03/Logo-Luxoro-.png" alt="Luxoro"></div>
+    <div class="llogo"><div class="logo-bg"><img src="https://luxoro.es/wp-content/uploads/2024/03/Logo-Luxoro-.png" alt="Luxoro"></div></div>
     <div class="lsub">Portal de Gestión · Grupo Luxoro</div>
     <label class="ll">Usuario</label>
     <input class="li" type="email" id="lemail" value="gerente@grupoluxoro.com" placeholder="usuario@grupoluxoro.com">
@@ -236,7 +238,7 @@ tbody tr:hover{background:var(--bg2)}
 <div id="app">
   <!-- TOPBAR -->
   <header class="tb">
-    <div class="tb-logo"><img src="https://luxoro.es/wp-content/uploads/2024/03/Logo-Luxoro-.png" alt="Luxoro"></div>
+    <div class="tb-logo"><div class="logo-bg"><img src="https://luxoro.es/wp-content/uploads/2024/03/Logo-Luxoro-.png" alt="Luxoro"></div></div>
     <div class="tb-tickers">
       <div class="tick"><span class="live"></span><span class="tick-lbl">24K</span><span class="tick-p" id="p24">€92.40/g</span><span class="tick-up" id="ptrend">▲ +0.32%</span></div>
       <div class="tick"><span class="tick-lbl">18K</span><span class="tick-p" id="p18">€69.30/g</span></div>
